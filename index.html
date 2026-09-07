@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekend Trading Plans</title>
+<style>
+:root{
+  color-scheme: light;
+  --ground:#f6f7f8; --surface:#ffffff; --sunk:#eceef1;
+  --ink:#111827; --ink2:#4b5563; --ink3:#8b95a3;
+  --rule:#dfe3e8; --rule2:#eceef1;
+  --accent:#1d4ed8; --accent-soft:#e6ecfd; --accent-ink:#1d4ed8;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme: dark;
+  --ground:#0e1116; --surface:#161b22; --sunk:#11151b;
+  --ink:#e6edf3; --ink2:#9aa6b2; --ink3:#6e7a87;
+  --rule:#262d36; --rule2:#1d232b;
+  --accent:#6a9bff; --accent-soft:#182338; --accent-ink:#9bbaff;
+}}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#0e1116; --surface:#161b22; --sunk:#11151b;
+  --ink:#e6edf3; --ink2:#9aa6b2; --ink3:#6e7a87;
+  --rule:#262d36; --rule2:#1d232b;
+  --accent:#6a9bff; --accent-soft:#182338; --accent-ink:#9bbaff;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font:15px/1.5 var(--sans); -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; min-height:100dvh;
+}
+
+/* ---------- top bar ---------- */
+.bar{
+  background:var(--surface); border-bottom:1px solid var(--rule);
+  padding:14px 20px 0; flex:0 0 auto;
+}
+.bar-in{max-width:1400px; margin:0 auto}
+.brand{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:12px}
+.brand h1{margin:0; font-size:16px; font-weight:640; letter-spacing:-.01em}
+.brand .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:0 0 auto;align-self:center}
+.brand .meta{font-size:12.5px;color:var(--ink3);font-family:var(--mono)}
+
+.row{display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap}
+
+/* ---------- plan picker ---------- */
+.pick{display:flex; flex-direction:column; gap:5px; padding-bottom:11px}
+.pick label{
+  font-size:10.5px; font-weight:660; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink3);
+}
+.selwrap{position:relative; display:inline-flex}
+select{
+  appearance:none; -webkit-appearance:none;
+  font:500 13.5px/1 var(--sans); color:var(--ink);
+  background:var(--sunk); border:1px solid var(--rule);
+  border-radius:7px; padding:8px 32px 8px 11px; min-width:210px;
+  cursor:pointer; outline:none;
+}
+select:focus-visible{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.selwrap::after{
+  content:""; position:absolute; right:12px; top:50%; width:7px; height:7px;
+  margin-top:-5px; border-right:1.6px solid var(--ink3); border-bottom:1.6px solid var(--ink3);
+  transform:rotate(45deg); pointer-events:none;
+}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex; gap:2px; margin-left:auto}
+.tab{
+  appearance:none; background:none; border:0; cursor:pointer;
+  font:600 13.5px/1 var(--sans); color:var(--ink2);
+  padding:11px 15px 13px; border-bottom:2px solid transparent;
+  margin-bottom:-1px; white-space:nowrap; border-radius:6px 6px 0 0;
+}
+.tab:hover:not(:disabled){color:var(--ink); background:var(--rule2)}
+.tab[aria-selected="true"]{color:var(--accent-ink); border-bottom-color:var(--accent)}
+.tab:disabled{color:var(--ink3); opacity:.5; cursor:not-allowed}
+.tab:focus-visible{outline:2px solid var(--accent); outline-offset:-3px}
+.tab .n{
+  font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--ink3);
+  margin-left:7px; padding:1.5px 5px; border-radius:4px; background:var(--sunk);
+  vertical-align:1px;
+}
+.tab[aria-selected="true"] .n{background:var(--accent-soft); color:var(--accent-ink)}
+.tab .n:empty{display:none}
+
+/* ---------- stage ---------- */
+.stage{flex:1 1 auto; position:relative; background:var(--ground); min-height:0}
+iframe{width:100%; height:100%; border:0; display:block; background:var(--surface)}
+/* The type selector above outranks the UA [hidden] rule, so restate it. */
+iframe[hidden]{display:none}
+
+.state{
+  position:absolute; inset:0; display:none; flex-direction:column;
+  align-items:center; justify-content:center; gap:10px; padding:40px 24px;
+  text-align:center; background:var(--ground);
+}
+.state.on{display:flex}
+.state h2{margin:0; font-size:15px; font-weight:620; color:var(--ink)}
+.state p{margin:0; font-size:13.5px; color:var(--ink3); max-width:46ch; line-height:1.65}
+.state code{font-family:var(--mono); font-size:12.5px; background:var(--sunk);
+  padding:1px 5px; border-radius:4px; color:var(--ink2)}
+.spinner{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--rule); border-top-color:var(--accent);
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation-duration:2s}}
+
+/* ---------- footer strip ---------- */
+.strip{
+  flex:0 0 auto; background:var(--surface); border-top:1px solid var(--rule);
+  padding:7px 20px; font-size:12px; color:var(--ink3);
+}
+.strip-in{
+  max-width:1400px; margin:0 auto; display:flex; gap:14px;
+  align-items:center; justify-content:space-between; flex-wrap:wrap;
+}
+.strip .gen{font-family:var(--mono)}
+.strip a{color:var(--accent-ink); text-decoration:none; font-weight:560}
+.strip a:hover{text-decoration:underline}
+.strip a:not([href]){opacity:.4; pointer-events:none}
+
+@media (max-width:680px){
+  .bar{padding:12px 14px 0}
+  .row{gap:10px}
+  .tabs{margin-left:0; width:100%; border-top:1px solid var(--rule2)}
+  .tab{flex:1; padding:12px 8px 13px; font-size:13px}
+  .pick{width:100%; padding-bottom:8px}
+  select{width:100%}
+  .strip{padding:7px 14px}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="brand">
+      <span class="dot"></span>
+      <h1>Weekend Trading Plans</h1>
+      <span class="meta" id="planCount"></span>
+    </div>
+    <div class="row">
+      <div class="pick">
+        <label for="planPick">Plan date</label>
+        <div class="selwrap"><select id="planPick"></select></div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Strategy">
+        <button class="tab" role="tab" id="tab-equities" data-tab="equities" aria-selected="true">
+          Equities Breakout<span class="n" id="n-equities"></span>
+        </button>
+        <button class="tab" role="tab" id="tab-wheel" data-tab="wheel" aria-selected="false">
+          Wheel Strategy<span class="n" id="n-wheel"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stage">
+  <iframe id="frame" title="Selected plan" hidden></iframe>
+  <div class="state on" id="stLoad"><div class="spinner"></div><p>Loading plan&hellip;</p></div>
+  <div class="state" id="stEmpty">
+    <h2>No plan for this tab</h2>
+    <p id="emptyMsg"></p>
+  </div>
+  <div class="state" id="stErr">
+    <h2>Couldn't load the plan index</h2>
+    <p><code>plans/manifest.js</code> is missing or malformed. If you opened this file straight from
+       disk, use the published GitHub&nbsp;Pages URL instead.</p>
+  </div>
+</div>
+
+<div class="strip">
+  <div class="strip-in">
+    <span class="gen" id="genLine"></span>
+    <a id="openNew" target="_blank" rel="noopener">Open this report full-page &#8599;</a>
+  </div>
+</div>
+
+<script src="plans/manifest.js" onerror="window.__manifestFailed=true"></script>
+<script>
+(function(){
+  "use strict";
+
+  var TABS  = ["equities", "wheel"];
+  var LABEL = { equities: "Equities Breakout", wheel: "Wheel Strategy" };
+
+  var elPick  = document.getElementById("planPick");
+  var elFrame = document.getElementById("frame");
+  var elCount = document.getElementById("planCount");
+  var elGen   = document.getElementById("genLine");
+  var elOpen  = document.getElementById("openNew");
+  var elEmpty = document.getElementById("emptyMsg");
+  var stLoad  = document.getElementById("stLoad");
+  var stEmpty = document.getElementById("stEmpty");
+  var stErr   = document.getElementById("stErr");
+
+  function show(el){
+    [stLoad, stEmpty, stErr].forEach(function(s){ s.classList.toggle("on", s === el); });
+    elFrame.hidden = (el !== null);
+  }
+
+  var data = window.PLAN_MANIFEST;
+  if (window.__manifestFailed || !data || !Array.isArray(data.plans) || !data.plans.length){
+    show(stErr);
+    elPick.disabled = true;
+    TABS.forEach(function(t){ document.getElementById("tab-" + t).disabled = true; });
+    return;
+  }
+
+  // Newest first, whatever order entries were appended in.
+  var plans = data.plans.slice().sort(function(a, b){
+    return String(b.id).localeCompare(String(a.id));
+  });
+  var byId = {};
+  plans.forEach(function(p){ byId[p.id] = p; });
+
+  elCount.textContent = plans.length + (plans.length === 1 ? " plan" : " plans");
+
+  plans.forEach(function(p, i){
+    var o = document.createElement("option");
+    o.value = p.id;
+    o.textContent = (p.label || p.id) + (i === 0 ? "  ·  latest" : "");
+    elPick.appendChild(o);
+  });
+
+  var state = { id: plans[0].id, tab: "equities" };
+
+  function entryFor(plan, tab){
+    var e = plan && plan[tab];
+    if (!e) return null;
+    return (typeof e === "string") ? { file: e } : e;
+  }
+
+  function fmtDate(iso){
+    if (!iso) return "";
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    if (!m) return iso;
+    var d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+    return d.toLocaleDateString(undefined, {
+      weekday: "short", year: "numeric", month: "short", day: "numeric", timeZone: "UTC"
+    });
+  }
+
+  function readHash(){
+    var h = (location.hash || "").replace(/^#\/?/, "");
+    if (!h) return;
+    var bits = h.split("/");
+    if (bits[0] && byId[bits[0]]) state.id = bits[0];
+    if (bits[1] && TABS.indexOf(bits[1]) !== -1) state.tab = bits[1];
+  }
+
+  var writingHash = false;
+  function writeHash(){
+    writingHash = true;
+    location.replace("#" + state.id + "/" + state.tab);
+    setTimeout(function(){ writingHash = false; }, 0);
+  }
+
+  function render(){
+    var plan = byId[state.id];
+    elPick.value = state.id;
+
+    // Tab availability, plus a date badge when that report was generated
+    // on a different day than the plan itself.
+    TABS.forEach(function(t){
+      var btn = document.getElementById("tab-" + t);
+      var e = entryFor(plan, t);
+      btn.disabled = !e;
+      btn.setAttribute("aria-selected", String(t === state.tab));
+      var badge = document.getElementById("n-" + t);
+      badge.textContent = (e && e.generated && e.generated !== plan.id) ? e.generated.slice(5) : "";
+    });
+
+    var entry = entryFor(plan, state.tab);
+
+    if (!entry){
+      show(stEmpty);
+      elEmpty.textContent = "The " + (plan.label || plan.id) + " upload didn't include a " +
+                            LABEL[state.tab] + " report.";
+      elGen.textContent = "";
+      elOpen.removeAttribute("href");
+      return;
+    }
+
+    var src = "plans/" + plan.id + "/" + entry.file;
+    elOpen.href = src;
+    elGen.textContent = LABEL[state.tab] + " — generated " + fmtDate(entry.generated || plan.id);
+
+    if (elFrame.getAttribute("src") !== src){
+      show(stLoad);
+      elFrame.setAttribute("src", src);
+    } else {
+      show(null);
+    }
+  }
+
+  // Reports are same-origin, so send their outbound links to a new tab rather
+  // than letting them navigate away inside the frame. In-page anchors stay put.
+  function retargetLinks(){
+    var doc;
+    try { doc = elFrame.contentDocument; } catch (e) { return; }
+    if (!doc) return;
+    var links = doc.getElementsByTagName("a");
+    for (var i = 0; i < links.length; i++){
+      var href = links[i].getAttribute("href") || "";
+      if (/^(https?:)?\/\//i.test(href)){
+        links[i].target = "_blank";
+        links[i].rel = "noopener noreferrer";
+      }
+    }
+  }
+
+  elFrame.addEventListener("load", function(){
+    if (!elFrame.getAttribute("src")) return;
+    retargetLinks();
+    show(null);
+  });
+
+  elPick.addEventListener("change", function(){
+    state.id = elPick.value;
+    var plan = byId[state.id];
+    // Keep the current tab if this plan has it; otherwise fall to the first it does.
+    if (!entryFor(plan, state.tab)){
+      for (var i = 0; i < TABS.length; i++){
+        if (entryFor(plan, TABS[i])){ state.tab = TABS[i]; break; }
+      }
+    }
+    writeHash(); render();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(btn){
+    btn.addEventListener("click", function(){
+      if (btn.disabled) return;
+      state.tab = btn.getAttribute("data-tab");
+      writeHash(); render();
+    });
+  });
+
+  window.addEventListener("hashchange", function(){
+    if (writingHash) return;
+    readHash(); render();
+  });
+
+  readHash();
+  writeHash();
+  render();
+})();
+</script>
+</body>
+</html>
