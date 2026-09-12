@@ -252,12 +252,22 @@ iframe[hidden]{display:none}
     });
   }
 
+  function firstAvailableTab(plan){
+    for (var i = 0; i < TABS.length; i++){
+      if (entryFor(plan, TABS[i])) return TABS[i];
+    }
+    return null;
+  }
+
+  // Returns true when the hash named a tab explicitly - a deep link to a tab
+  // this plan lacks should say so rather than silently landing somewhere else.
   function readHash(){
     var h = (location.hash || "").replace(/^#\/?/, "");
-    if (!h) return;
+    if (!h) return false;
     var bits = h.split("/");
     if (bits[0] && byId[bits[0]]) state.id = bits[0];
-    if (bits[1] && TABS.indexOf(bits[1]) !== -1) state.tab = bits[1];
+    if (bits[1] && TABS.indexOf(bits[1]) !== -1){ state.tab = bits[1]; return true; }
+    return false;
   }
 
   var writingHash = false;
@@ -332,9 +342,8 @@ iframe[hidden]{display:none}
     var plan = byId[state.id];
     // Keep the current tab if this plan has it; otherwise fall to the first it does.
     if (!entryFor(plan, state.tab)){
-      for (var i = 0; i < TABS.length; i++){
-        if (entryFor(plan, TABS[i])){ state.tab = TABS[i]; break; }
-      }
+      var t = firstAvailableTab(plan);
+      if (t) state.tab = t;
     }
     writeHash(); render();
   });
@@ -352,7 +361,11 @@ iframe[hidden]{display:none}
     readHash(); render();
   });
 
-  readHash();
+  // On a plain visit, open whichever tab this plan actually has.
+  if (!readHash()){
+    var initial = firstAvailableTab(byId[state.id]);
+    if (initial) state.tab = initial;
+  }
   writeHash();
   render();
 })();
