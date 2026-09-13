@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Weekend Trading Plans</title>
+<title>Trading Plans</title>
 <style>
 :root{
   color-scheme: light;
@@ -11,6 +11,7 @@
   --ink:#111827; --ink2:#4b5563; --ink3:#8b95a3;
   --rule:#dfe3e8; --rule2:#eceef1;
   --accent:#1d4ed8; --accent-soft:#e6ecfd; --accent-ink:#1d4ed8;
+  --up:#0f7a55; --dn:#b42318;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
 }
@@ -20,6 +21,7 @@
   --ink:#e6edf3; --ink2:#9aa6b2; --ink3:#6e7a87;
   --rule:#262d36; --rule2:#1d232b;
   --accent:#6a9bff; --accent-soft:#182338; --accent-ink:#9bbaff;
+  --up:#3ec48f; --dn:#f07167;
 }}
 :root[data-theme="dark"]{
   color-scheme: dark;
@@ -27,6 +29,7 @@
   --ink:#e6edf3; --ink2:#9aa6b2; --ink3:#6e7a87;
   --rule:#262d36; --rule2:#1d232b;
   --accent:#6a9bff; --accent-soft:#182338; --accent-ink:#9bbaff;
+  --up:#3ec48f; --dn:#f07167;
 }
 
 *{box-sizing:border-box}
@@ -50,7 +53,7 @@ body{
 
 .row{display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap}
 
-/* ---------- plan picker ---------- */
+/* ---------- date picker ---------- */
 .pick{display:flex; flex-direction:column; gap:5px; padding-bottom:11px}
 .pick label{
   font-size:10.5px; font-weight:660; letter-spacing:.07em; text-transform:uppercase;
@@ -71,7 +74,7 @@ select:focus-visible{border-color:var(--accent); box-shadow:0 0 0 3px var(--acce
   transform:rotate(45deg); pointer-events:none;
 }
 
-/* ---------- tabs ---------- */
+/* ---------- main tabs ---------- */
 .tabs{display:flex; gap:2px; margin-left:auto}
 .tab{
   appearance:none; background:none; border:0; cursor:pointer;
@@ -90,6 +93,38 @@ select:focus-visible{border-color:var(--accent); box-shadow:0 0 0 3px var(--acce
 }
 .tab[aria-selected="true"] .n{background:var(--accent-soft); color:var(--accent-ink)}
 .tab .n:empty{display:none}
+
+/* ---------- context row: futures products + cross-links ---------- */
+.ctx{
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;
+  gap:8px 18px; border-top:1px solid var(--rule2); padding:8px 0 9px;
+}
+.ctx[hidden], .subtabs[hidden]{display:none}
+.subtabs{
+  display:inline-flex; gap:3px; padding:3px;
+  background:var(--sunk); border:1px solid var(--rule); border-radius:8px;
+}
+.sub{
+  appearance:none; border:0; background:none; cursor:pointer;
+  font:650 13px/1 var(--sans); color:var(--ink2);
+  padding:7px 12px; border-radius:6px;
+  display:inline-flex; align-items:baseline; gap:6px; white-space:nowrap;
+}
+.sub small{font-size:11.5px; font-weight:500; color:var(--ink3)}
+.sub:hover:not(:disabled){color:var(--ink)}
+.sub[aria-selected="true"]{background:var(--surface); color:var(--ink); box-shadow:0 0 0 1px var(--rule), 0 1px 2px rgba(16,24,40,.06)}
+.sub:disabled{opacity:.45; cursor:not-allowed}
+.sub:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.dirb{font-size:10px}
+.dirb:empty{display:none}
+.dirb.up{color:var(--up)}
+.dirb.dn{color:var(--dn)}
+.xlink{
+  margin-left:auto; display:flex; flex-wrap:wrap; align-items:baseline; gap:3px 12px;
+  font-size:12.5px; color:var(--ink3);
+}
+.xlink a{color:var(--accent-ink); text-decoration:none; font-weight:580}
+.xlink a:hover{text-decoration:underline}
 
 /* ---------- stage ---------- */
 .stage{flex:1 1 auto; position:relative; background:var(--ground); min-height:0}
@@ -133,9 +168,13 @@ iframe[hidden]{display:none}
   .bar{padding:12px 14px 0}
   .row{gap:10px}
   .tabs{margin-left:0; width:100%; border-top:1px solid var(--rule2)}
-  .tab{flex:1; padding:12px 8px 13px; font-size:13px}
+  .tab{flex:1; padding:12px 6px 13px; font-size:13px}
   .pick{width:100%; padding-bottom:8px}
   select{width:100%}
+  .subtabs{width:100%}
+  .sub{flex:1; justify-content:center}
+  .sub small{display:none}
+  .xlink{margin-left:0}
   .strip{padding:7px 14px}
 }
 </style>
@@ -146,37 +185,48 @@ iframe[hidden]{display:none}
   <div class="bar-in">
     <div class="brand">
       <span class="dot"></span>
-      <h1>Weekend Trading Plans</h1>
+      <h1>Trading Plans</h1>
       <span class="meta" id="planCount"></span>
     </div>
     <div class="row">
       <div class="pick">
-        <label for="planPick">Plan date</label>
+        <label for="planPick" id="pickLabel">Plan date</label>
         <div class="selwrap"><select id="planPick"></select></div>
       </div>
-      <div class="tabs" role="tablist" aria-label="Strategy">
+      <div class="tabs" role="tablist" aria-label="Report">
         <button class="tab" role="tab" id="tab-equities" data-tab="equities" aria-selected="true">
           Equities Breakout<span class="n" id="n-equities"></span>
         </button>
         <button class="tab" role="tab" id="tab-wheel" data-tab="wheel" aria-selected="false">
           Wheel Strategy<span class="n" id="n-wheel"></span>
         </button>
+        <button class="tab" role="tab" id="tab-futures" data-tab="futures" aria-selected="false">
+          Futures
+        </button>
       </div>
+    </div>
+    <div class="ctx" id="ctx" hidden>
+      <div class="subtabs" id="subtabs" role="tablist" aria-label="Futures product" hidden>
+        <button class="sub" role="tab" id="sub-ES" data-p="ES" aria-selected="false">ES <small>S&amp;P 500</small><span class="dirb" id="d-ES"></span></button>
+        <button class="sub" role="tab" id="sub-NQ" data-p="NQ" aria-selected="false">NQ <small>Nasdaq-100</small><span class="dirb" id="d-NQ"></span></button>
+        <button class="sub" role="tab" id="sub-GC" data-p="GC" aria-selected="false">GC <small>Gold</small><span class="dirb" id="d-GC"></span></button>
+      </div>
+      <div class="xlink" id="xlink"></div>
     </div>
   </div>
 </div>
 
 <div class="stage">
-  <iframe id="frame" title="Selected plan" hidden></iframe>
-  <div class="state on" id="stLoad"><div class="spinner"></div><p>Loading plan&hellip;</p></div>
+  <iframe id="frame" title="Selected report" hidden></iframe>
+  <div class="state on" id="stLoad"><div class="spinner"></div><p>Loading&hellip;</p></div>
   <div class="state" id="stEmpty">
-    <h2>No plan for this tab</h2>
+    <h2 id="emptyTitle">Nothing here</h2>
     <p id="emptyMsg"></p>
   </div>
   <div class="state" id="stErr">
-    <h2>Couldn't load the plan index</h2>
-    <p><code>plans/manifest.js</code> is missing or malformed. If you opened this file straight from
-       disk, use the published GitHub&nbsp;Pages URL instead.</p>
+    <h2>Couldn't load the report index</h2>
+    <p>Neither <code>plans/manifest.js</code> nor <code>futures/manifest.js</code> loaded. If you opened
+       this file straight from disk, use the published GitHub&nbsp;Pages URL instead.</p>
   </div>
 </div>
 
@@ -187,59 +237,79 @@ iframe[hidden]{display:none}
   </div>
 </div>
 
-<script src="plans/manifest.js" onerror="window.__manifestFailed=true"></script>
+<script src="plans/manifest.js" onerror="window.__plansFailed=true"></script>
+<script src="futures/manifest.js" onerror="window.__futuresFailed=true"></script>
 <script>
 (function(){
   "use strict";
 
-  var TABS  = ["equities", "wheel"];
-  var LABEL = { equities: "Equities Breakout", wheel: "Wheel Strategy" };
+  var WEEKLY   = ["equities", "wheel"];
+  var TABS     = ["equities", "wheel", "futures"];
+  var PRODUCTS = ["ES", "NQ", "GC"];
+  var LABEL    = { equities: "Equities Breakout", wheel: "Wheel Strategy", futures: "Futures" };
 
-  var elPick  = document.getElementById("planPick");
-  var elFrame = document.getElementById("frame");
-  var elCount = document.getElementById("planCount");
-  var elGen   = document.getElementById("genLine");
-  var elOpen  = document.getElementById("openNew");
-  var elEmpty = document.getElementById("emptyMsg");
-  var stLoad  = document.getElementById("stLoad");
-  var stEmpty = document.getElementById("stEmpty");
-  var stErr   = document.getElementById("stErr");
+  function $(id){ return document.getElementById(id); }
+
+  var elPick = $("planPick"), elPickLabel = $("pickLabel"), elFrame = $("frame"),
+      elCount = $("planCount"), elGen = $("genLine"), elOpen = $("openNew"),
+      elEmptyT = $("emptyTitle"), elEmpty = $("emptyMsg"),
+      elCtx = $("ctx"), elSubs = $("subtabs"), elX = $("xlink");
+  var stLoad = $("stLoad"), stEmpty = $("stEmpty"), stErr = $("stErr");
 
   function show(el){
     [stLoad, stEmpty, stErr].forEach(function(s){ s.classList.toggle("on", s === el); });
     elFrame.hidden = (el !== null);
   }
 
-  var data = window.PLAN_MANIFEST;
-  if (window.__manifestFailed || !data || !Array.isArray(data.plans) || !data.plans.length){
+  function newestFirst(list){
+    return list.slice().sort(function(a, b){ return String(b.id).localeCompare(String(a.id)); });
+  }
+  function indexById(list){
+    var m = {};
+    list.forEach(function(x){ m[x.id] = x; });
+    return m;
+  }
+
+  var pm = window.__plansFailed ? null : window.PLAN_MANIFEST;
+  var fm = window.__futuresFailed ? null : window.FUTURES_MANIFEST;
+  var plans = (pm && Array.isArray(pm.plans)) ? newestFirst(pm.plans) : [];
+  var days  = (fm && Array.isArray(fm.days))  ? newestFirst(fm.days)  : [];
+  var planById = indexById(plans), dayById = indexById(days);
+
+  if (!plans.length && !days.length){
     show(stErr);
     elPick.disabled = true;
-    TABS.forEach(function(t){ document.getElementById("tab-" + t).disabled = true; });
+    TABS.forEach(function(t){ $("tab-" + t).disabled = true; });
     return;
   }
 
-  // Newest first, whatever order entries were appended in.
-  var plans = data.plans.slice().sort(function(a, b){
-    return String(b.id).localeCompare(String(a.id));
-  });
-  var byId = {};
-  plans.forEach(function(p){ byId[p.id] = p; });
+  function plural(n, one, many){ return n + " " + (n === 1 ? one : many); }
+  var counts = [];
+  if (plans.length) counts.push(plural(plans.length, "weekly plan", "weekly plans"));
+  if (days.length)  counts.push(plural(days.length, "futures day", "futures days"));
+  elCount.textContent = counts.join(" · ");
 
-  elCount.textContent = plans.length + (plans.length === 1 ? " plan" : " plans");
+  var state = {
+    tab:     plans.length ? "equities" : "futures",
+    planId:  plans.length ? plans[0].id : null,
+    dayId:   days.length ? days[0].id : null,
+    product: "ES"
+  };
 
-  plans.forEach(function(p, i){
-    var o = document.createElement("option");
-    o.value = p.id;
-    o.textContent = (p.label || p.id) + (i === 0 ? "  ·  latest" : "");
-    elPick.appendChild(o);
-  });
-
-  var state = { id: plans[0].id, tab: "equities" };
-
-  function entryFor(plan, tab){
-    var e = plan && plan[tab];
+  function entryFor(obj, key){
+    var e = obj && obj[key];
     if (!e) return null;
     return (typeof e === "string") ? { file: e } : e;
+  }
+  function productFor(day, key){ return day ? entryFor(day.products, key) : null; }
+
+  function firstWeeklyTab(plan){
+    for (var i = 0; i < WEEKLY.length; i++) if (entryFor(plan, WEEKLY[i])) return WEEKLY[i];
+    return null;
+  }
+  function firstProduct(day){
+    for (var i = 0; i < PRODUCTS.length; i++) if (productFor(day, PRODUCTS[i])) return PRODUCTS[i];
+    return null;
   }
 
   function fmtDate(iso){
@@ -252,61 +322,180 @@ iframe[hidden]{display:none}
     });
   }
 
-  function firstAvailableTab(plan){
-    for (var i = 0; i < TABS.length; i++){
-      if (entryFor(plan, TABS[i])) return TABS[i];
+  // The weekly plan a futures day belongs to: the newest plan dated on or before it.
+  function planForDay(dayId){
+    for (var i = 0; i < plans.length; i++) if (plans[i].id <= dayId) return plans[i];
+    return null;
+  }
+  // The newest futures day inside a plan's week: on/after the plan, before the next plan.
+  function dayForPlan(planId){
+    var newer = null;
+    for (var i = 0; i < plans.length; i++){
+      if (plans[i].id === planId){ newer = i > 0 ? plans[i - 1].id : null; break; }
+    }
+    for (var j = 0; j < days.length; j++){
+      if (days[j].id >= planId && (!newer || days[j].id < newer)) return days[j];
     }
     return null;
   }
 
-  // Returns true when the hash named a tab explicitly - a deep link to a tab
-  // this plan lacks should say so rather than silently landing somewhere else.
+  // Settle state onto something that exists. `explicit` means the tab or
+  // product was picked on purpose (a click or a deep link), so a missing one is
+  // reported rather than silently swapped for another.
+  function normalize(explicit){
+    if (state.tab === "futures" && !days.length){ state.tab = "equities"; explicit = false; }
+    if (state.tab !== "futures" && !plans.length){ state.tab = "futures"; explicit = false; }
+
+    if (state.tab === "futures"){
+      if (!dayById[state.dayId]) state.dayId = days[0].id;
+      if (!explicit && !productFor(dayById[state.dayId], state.product)){
+        var p = firstProduct(dayById[state.dayId]);
+        if (p) state.product = p;
+      }
+    } else {
+      if (!planById[state.planId]) state.planId = plans[0].id;
+      if (!explicit && !entryFor(planById[state.planId], state.tab)){
+        var t = firstWeeklyTab(planById[state.planId]);
+        if (t) state.tab = t;
+      }
+    }
+  }
+
+  // Hashes: #<planId>/<equities|wheel>   and   #futures/<dayId>/<ES|NQ|GC>
+  // Returns true when the hash named a tab/product explicitly.
   function readHash(){
     var h = (location.hash || "").replace(/^#\/?/, "");
     if (!h) return false;
     var bits = h.split("/");
-    if (bits[0] && byId[bits[0]]) state.id = bits[0];
-    if (bits[1] && TABS.indexOf(bits[1]) !== -1){ state.tab = bits[1]; return true; }
+    if (bits[0] === "futures"){
+      state.tab = "futures";
+      if (bits[1] && dayById[bits[1]]) state.dayId = bits[1];
+      var k = (bits[2] || "").toUpperCase();
+      if (PRODUCTS.indexOf(k) !== -1){ state.product = k; return true; }
+      return false;
+    }
+    if (planById[bits[0]]) state.planId = bits[0];
+    if (bits[1] && WEEKLY.indexOf(bits[1]) !== -1){ state.tab = bits[1]; return true; }
     return false;
   }
 
   var writingHash = false;
   function writeHash(){
+    var h = state.tab === "futures"
+      ? "#futures/" + state.dayId + "/" + state.product
+      : "#" + state.planId + "/" + state.tab;
+    if (location.hash === h) return;
     writingHash = true;
-    location.replace("#" + state.id + "/" + state.tab);
+    location.replace(h);
     setTimeout(function(){ writingHash = false; }, 0);
   }
 
-  function render(){
-    var plan = byId[state.id];
-    elPick.value = state.id;
+  var pickerKind = null;
+  function fillPicker(kind){
+    if (pickerKind === kind) return;
+    pickerKind = kind;
+    elPick.textContent = "";
+    (kind === "futures" ? days : plans).forEach(function(x, i){
+      var o = document.createElement("option");
+      o.value = x.id;
+      o.textContent = (x.label || x.id) + (i === 0 ? "  ·  latest" : "");
+      elPick.appendChild(o);
+    });
+    elPickLabel.textContent = kind === "futures" ? "Report date" : "Plan date";
+  }
 
-    // Tab availability, plus a date badge when that report was generated
-    // on a different day than the plan itself.
-    TABS.forEach(function(t){
-      var btn = document.getElementById("tab-" + t);
-      var e = entryFor(plan, t);
-      btn.disabled = !e;
+  function addLink(href, text){
+    var a = document.createElement("a");
+    a.href = href;
+    a.textContent = text;
+    elX.appendChild(a);
+  }
+  function addLead(text){
+    var s = document.createElement("span");
+    s.textContent = text;
+    elX.appendChild(s);
+  }
+
+  // Futures pages link to that week's plans, and weekly plans to that week's futures maps.
+  function renderXlink(){
+    elX.textContent = "";
+    if (state.tab === "futures"){
+      var p = planForDay(state.dayId);
+      if (!p) return;
+      addLead("This week's plans · " + (p.label || p.id));
+      WEEKLY.forEach(function(t){ if (entryFor(p, t)) addLink("#" + p.id + "/" + t, LABEL[t]); });
+    } else {
+      var d = dayForPlan(state.planId);
+      if (!d) return;
+      addLead("Futures price maps · " + (d.label || d.id));
+      PRODUCTS.forEach(function(k){ if (productFor(d, k)) addLink("#futures/" + d.id + "/" + k, k); });
+    }
+  }
+
+  function render(){
+    var fut  = state.tab === "futures";
+    var plan = planById[state.planId];
+    var day  = dayById[state.dayId];
+
+    fillPicker(fut ? "futures" : "weekly");
+    elPick.value = fut ? state.dayId : state.planId;
+
+    WEEKLY.forEach(function(t){
+      var btn = $("tab-" + t), e = entryFor(plan, t);
+      btn.disabled = fut ? !plans.some(function(p){ return entryFor(p, t); }) : !e;
       btn.setAttribute("aria-selected", String(t === state.tab));
-      var badge = document.getElementById("n-" + t);
-      badge.textContent = (e && e.generated && e.generated !== plan.id) ? e.generated.slice(5) : "";
+      $("n-" + t).textContent = (!fut && e && e.generated && e.generated !== plan.id) ? e.generated.slice(5) : "";
+    });
+    $("tab-futures").disabled = !days.length;
+    $("tab-futures").setAttribute("aria-selected", String(fut));
+
+    elSubs.hidden = !fut;
+    PRODUCTS.forEach(function(k){
+      var btn = $("sub-" + k), e = productFor(day, k);
+      var f = e && e.favoured ? String(e.favoured).toUpperCase() : "";
+      btn.disabled = !e;
+      btn.setAttribute("aria-selected", String(fut && k === state.product));
+      btn.title = e ? (e.name || k) + (f ? " — favoured " + f : "") : "Not in this run";
+      var badge = $("d-" + k);
+      badge.textContent = f === "LONG" ? "▲" : f === "SHORT" ? "▼" : "";
+      badge.className = "dirb" + (f === "LONG" ? " up" : f === "SHORT" ? " dn" : "");
     });
 
-    var entry = entryFor(plan, state.tab);
+    renderXlink();
+    elCtx.hidden = elSubs.hidden && !elX.childNodes.length;
+
+    var entry, src, gen;
+    if (fut){
+      entry = productFor(day, state.product);
+      if (!entry){
+        elEmptyT.textContent = "No report for this product";
+        elEmpty.textContent = "The " + (day.label || day.id) + " futures run didn't include " + state.product + ".";
+      } else {
+        src = "futures/" + day.id + "/" + entry.file;
+        gen = "Futures · " + (entry.symbol || state.product) + " — " + fmtDate(day.id) +
+              (entry.snapshot ? " · data " + entry.snapshot : "");
+      }
+    } else {
+      entry = entryFor(plan, state.tab);
+      if (!entry){
+        elEmptyT.textContent = "No plan for this tab";
+        elEmpty.textContent = "The " + (plan.label || plan.id) + " upload didn't include a " +
+                              LABEL[state.tab] + " report.";
+      } else {
+        src = "plans/" + plan.id + "/" + entry.file;
+        gen = LABEL[state.tab] + " — generated " + fmtDate(entry.generated || plan.id);
+      }
+    }
 
     if (!entry){
       show(stEmpty);
-      elEmpty.textContent = "The " + (plan.label || plan.id) + " upload didn't include a " +
-                            LABEL[state.tab] + " report.";
       elGen.textContent = "";
       elOpen.removeAttribute("href");
       return;
     }
 
-    var src = "plans/" + plan.id + "/" + entry.file;
     elOpen.href = src;
-    elGen.textContent = LABEL[state.tab] + " — generated " + fmtDate(entry.generated || plan.id);
-
+    elGen.textContent = gen;
     if (elFrame.getAttribute("src") !== src){
       show(stLoad);
       elFrame.setAttribute("src", src);
@@ -338,34 +527,52 @@ iframe[hidden]{display:none}
   });
 
   elPick.addEventListener("change", function(){
-    state.id = elPick.value;
-    var plan = byId[state.id];
-    // Keep the current tab if this plan has it; otherwise fall to the first it does.
-    if (!entryFor(plan, state.tab)){
-      var t = firstAvailableTab(plan);
-      if (t) state.tab = t;
-    }
+    if (state.tab === "futures") state.dayId = elPick.value;
+    else state.planId = elPick.value;
+    normalize(false);
     writeHash(); render();
   });
 
   Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(btn){
     btn.addEventListener("click", function(){
       if (btn.disabled) return;
-      state.tab = btn.getAttribute("data-tab");
+      var t = btn.getAttribute("data-tab");
+      if (t === "futures" && state.tab !== "futures"){
+        // Land on the futures day that belongs to the plan being read.
+        var d = dayForPlan(state.planId);
+        if (d) state.dayId = d.id;
+      } else if (t !== "futures" && state.tab === "futures"){
+        // Land on the plan for this futures day, else the newest plan that has the tab.
+        var p = planForDay(state.dayId);
+        if (p && entryFor(p, t)) state.planId = p.id;
+        else {
+          for (var i = 0; i < plans.length; i++){
+            if (entryFor(plans[i], t)){ state.planId = plans[i].id; break; }
+          }
+        }
+      }
+      state.tab = t;
+      normalize(t !== "futures");
+      writeHash(); render();
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".sub"), function(btn){
+    btn.addEventListener("click", function(){
+      if (btn.disabled) return;
+      state.product = btn.getAttribute("data-p");
+      normalize(true);
       writeHash(); render();
     });
   });
 
   window.addEventListener("hashchange", function(){
     if (writingHash) return;
-    readHash(); render();
+    normalize(readHash());
+    render();
   });
 
-  // On a plain visit, open whichever tab this plan actually has.
-  if (!readHash()){
-    var initial = firstAvailableTab(byId[state.id]);
-    if (initial) state.tab = initial;
-  }
+  normalize(readHash());
   writeHash();
   render();
 })();

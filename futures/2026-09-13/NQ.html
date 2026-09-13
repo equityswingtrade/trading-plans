@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NQ price map — 2026-09-13</title>
+<script>if (window.self !== window.top) document.documentElement.classList.add("framed");</script>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f6f7f8; --surface:#fff; --sunk:#f0f2f4;
+  --ink:#111827; --ink2:#4b5563; --ink3:#8b95a3; --rule:#e1e5ea; --rule2:#eef0f3;
+  --accent:#1d4ed8; --up:#0f7a55; --dn:#b42318; --gold:#a16207; --gold-soft:#fdf6e3;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#0e1116; --surface:#161b22; --sunk:#11151b;
+  --ink:#e6edf3; --ink2:#a4afbb; --ink3:#6e7a87; --rule:#29313b; --rule2:#1e252d;
+  --accent:#8fb2ff; --up:#3ec48f; --dn:#f07167; --gold:#e3b341; --gold-soft:#2a2414;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1116; --surface:#161b22; --sunk:#11151b;
+  --ink:#e6edf3; --ink2:#a4afbb; --ink3:#6e7a87; --rule:#29313b; --rule2:#1e252d;
+  --accent:#8fb2ff; --up:#3ec48f; --dn:#f07167; --gold:#e3b341; --gold-soft:#2a2414;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px 64px}
+a{color:var(--accent)}
+header.top{padding:22px 0 14px}
+.crumbs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--ink3);margin-bottom:12px}
+.crumbs a{text-decoration:none;font-weight:560}
+.sib{margin-left:auto;display:flex;gap:4px}
+.sib a{padding:2px 9px;border-radius:6px;border:1px solid var(--rule);color:var(--ink2);font-weight:600}
+.sib a[aria-current]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.framed .crumbs{display:none}
+h1{margin:0;font-size:26px;line-height:1.2;letter-spacing:-.02em;font-weight:690}
+h1 .desc{font-size:15px;font-weight:500;letter-spacing:0;color:var(--ink3);margin-left:6px}
+.snap{margin:6px 0 0;color:var(--ink2);font-size:13.5px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
+.kpi{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:9px 13px}
+.kpi span{display:block;font-size:10.5px;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)}
+.kpi b{display:block;margin-top:2px;font:650 18px/1.3 var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi b.txt{font-family:var(--sans);font-size:15.5px;white-space:normal}
+.kpi.star{border-left:3px solid var(--gold)}
+.toc{position:sticky;top:0;z-index:5;display:flex;gap:2px;overflow-x:auto;background:var(--bg);
+  border-bottom:1px solid var(--rule);margin:0 -22px;padding:7px 22px;scrollbar-width:thin}
+.toc a{flex:0 0 auto;font-size:12.5px;font-weight:560;color:var(--ink2);text-decoration:none;padding:4px 10px;border-radius:999px}
+.toc a:hover{background:var(--rule2);color:var(--ink)}
+.primary{margin:18px 0 6px;background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--gold);border-radius:10px;padding:13px 18px}
+.primary .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.primary p{margin:5px 0 0;font-size:15px;line-height:1.65}
+.notes{margin-top:12px;font-size:13.5px;color:var(--ink2)}
+.notes p{margin:6px 0}
+section{scroll-margin-top:50px;margin-top:30px}
+h2{font-size:19px;letter-spacing:-.01em;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
+h3{font-size:15.5px;margin:22px 0 8px;scroll-margin-top:50px}
+p,li{max-width:96ch}
+ul,ol{padding-left:22px}
+li{margin:3px 0}
+code{font-family:var(--mono);font-size:.87em;background:var(--sunk);border:1px solid var(--rule2);padding:0 5px;border-radius:4px;white-space:nowrap}
+strong{font-weight:650}
+.tw{overflow-x:auto;margin:10px 0 14px;border:1px solid var(--rule);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:10.5px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);
+  background:var(--sunk);padding:7px 10px;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--rule2);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tr.star td{background:var(--gold-soft)}
+td.k-tgt{white-space:nowrap}
+td.k-pass{color:var(--ink3);font-style:italic;white-space:nowrap}
+.d-LONG{color:var(--up);font-weight:650}
+.d-SHORT{color:var(--dn);font-weight:650}
+.rank{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:2px 18px 8px;margin:14px 0}
+.rank h3{margin-top:14px}
+.rank.star{border-left:4px solid var(--gold)}
+.charts .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px}
+figure{margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+figure a{display:block}
+figure img{display:block;width:100%;height:auto}
+figcaption{font-size:12.5px;color:var(--ink3);padding:8px 12px;border-top:1px solid var(--rule2)}
+footer{margin-top:44px;padding-top:12px;border-top:1px solid var(--rule);font:12px/1.5 var(--mono);color:var(--ink3)}
+@media (max-width:640px){
+  .wrap{padding:0 14px 48px}
+  .toc{margin:0 -14px;padding:7px 14px}
+  h1{font-size:22px}
+  .charts .grid{grid-template-columns:1fr}
+}</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="crumbs">
+    <a href="../../index.html#futures/2026-09-13/NQ">Trading Plans</a><span>/</span><span>Futures · Sun, Sep 13, 2026</span>
+    <nav class="sib" aria-label="Products"><a href="ES.html">ES</a><a href="NQ.html" aria-current="page">NQ</a><a href="GC.html">GC</a></nav>
+  </div>
+  <h1>NQ1!<span class="desc">E-mini Nasdaq-100 · CME</span></h1>
+  <p class="snap">Fri 2026-09-11 post-close, built Sun 2026-09-13 pre-session · Last <strong>29391.75</strong> · RTH H/L <strong>29499.75 / 29334.00</strong> · Daily bar O 29141.00 H 29500.25 L 29040.50 C 29387.00 (539.1K) · ATH ≈ <strong>31100.75</strong></p>
+  <div class="kpis"><div class="kpi"><span>Last</span><b>29391.75</b></div><div class="kpi star"><span>★ Decision</span><b>29397.00</b></div><div class="kpi"><span>Favoured branch</span><b class="d-LONG">▲ LONG</b></div><div class="kpi"><span>Bias</span><b class="txt" title="NEUTRAL inside a two-session bracket (29040.50–29508.25), under the daily top node.">NEUTRAL</b></div></div>
+</header>
+<nav class="toc" aria-label="Sections"><a href="#primary">Setup</a><a href="#scorecard">Scorecard</a><a href="#long-term">Long-term</a><a href="#trend-vol">Trend &amp; vol</a><a href="#price-map">Price map</a><a href="#5-min-tape">5-min tape</a><a href="#profile">Profile</a><a href="#auction">Auction</a><a href="#structure">Structure</a><a href="#scenarios">Scenarios</a><a href="#takeaway">Takeaway</a><a href="#alerts">Alerts</a></nav>
+<section class="primary" id="primary">
+  <div class="lbl">★ Primary setup</div>
+  <p>★ two-sided <code>DECISION&gt; 29397.00</code> (Friday VAL = Wednesday VAL to the tick), <strong>favoured <span class="d-LONG">LONG</span></strong> — the same bet as the ES ★, and <strong>ES carries the better ratio, so take it there</strong> (ES pays 1.31 at its 80% target vs 1.13 here). If traded here: re-entry from below, entry ~29405.00 · T1 29425.50 · T2 29443.50 · T3 29475.00 ·· runner 29500.00 · tac-stop ~29343 (under the buying-tail excess) · <strong>R:R 0.33 to T1 — ⚠ pays 1.13 at T3, 1.53 at the runner.</strong></p>
+  
+</section>
+
+<section id="scorecard"><h2>0. Yesterday&#39;s plan vs what actually happened — SCORECARD</h2><p><strong>Provenance note:</strong> the plan scored here was <strong>not authored in this session</strong> — a separate session created it at 02:15 CT Friday and left no report on disk. It is scored from its own alert text plus the tape, at 5-minute sequencing. Its &quot;Rule 15&quot; threshold (29256.20) implies a 30-min ATR of 118.20, which is used for its scoring.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Level</th>
+<th>Direction (as stated)</th>
+<th>Fired?</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody><tr class="star">
+<td>★</td>
+<td><strong>29275.00</strong> (Thu Weak High)</td>
+<td><strong><span class="d-SHORT">SHORT</span> if fail — favoured</strong></td>
+<td><strong>Fri 03:24 CT (ETH), up-cross</strong></td>
+<td>❌ <strong>FAVOURED DIRECTION WRONG.</strong> Short confirm 29269.75 (03:30) → never reached T1 29244.50 → stopped 29337 at 05:00 CT (−1R). The long branch (confirm 29322.75, 04:00) → T1 29329.50 ✓ → T2 29386/29397 ✓ (07:25) → stopped at 29210 by the 07:30 CT flush to 29204.00 → <strong>≈ scratch</strong> with scale-outs. Then +296 to 29500.25.</td>
+</tr>
+<tr>
+<td></td>
+<td>29329.50 DECISION (naked VAL)</td>
+<td>Two-sided</td>
+<td><strong>Fri 04:00 CT (ETH), up-cross</strong></td>
+<td>❌ <strong>Both branches stopped.</strong> Short (close 29304, 04:30) → low 29285.25, T1 29275 missed by 10.25 → stopped 29391 at 07:25 (−1R). Long (close 29389.75, 07:30) → stopped at 29268 inside the 07:30 flush (−1R) → then 29397 ✓ 29446.50 ✓ printed without the trade; 29505 missed by 4.75.</td>
+</tr>
+<tr>
+<td></td>
+<td>29145.50 <span class="d-SHORT">SHORT</span>&gt;</td>
+<td>Trend resumption</td>
+<td>Never (low after creation 29204.00)</td>
+<td>✅ Correct no-entry. <em>The ETH low 29040.50 printed at 23:00 CT Thursday — before the plan existed.</em></td>
+</tr>
+<tr>
+<td></td>
+<td>29043.25 / 28890.00 DECISION</td>
+<td>Markers</td>
+<td>Never</td>
+<td>✅ Correct no-entries</td>
+</tr>
+<tr>
+<td>(09-08 set)</td>
+<td>29691.75 DECISION (Poor High)</td>
+<td>Marker</td>
+<td>Never</td>
+<td>✅ Still unrepaired</td>
+</tr>
+</tbody></table></div>
+<p><strong>Tally: four ETH entries, all stopped or scratched; zero trades if Rule 6(b) had been followed. Every plan level in the path printed.</strong></p>
+<div class="sub"><h3 id="scorecard-what-did-not">What did NOT</h3><p><strong>The ★ favoured a short after the repair of an unfinished high — and the repair was the beginning of the move, not its end.</strong> The alert text reasoned <em>&quot;unfinished extremes get repaired before trends resume&quot;</em> — correct: the weak high 29275.00 was repaired in ETH. It then assumed that once repaired, the down-trend would resume. It didn&#39;t; NQ ran <strong>225 points past the repaired high</strong>. Playbook §6 does say a repaired poor high &quot;often exhausts&quot; — <em>often</em>, not always, and this session also had a daily structure that had just printed a higher low above the September low. <strong>One occurrence, not a rule.</strong></p>
+<p><strong>Both markets reversed their entire Thursday shift on the same day</strong> — ES&#39;s four-session relocation, NQ&#39;s single 152.50-point drop. Both plans favoured the continuation. The shared tell in hindsight is the ETH: both markets did their whole move overnight on thin volume, then ran into the same 07:30 CT flush.</p>
+</div><div class="sub"><h3 id="scorecard-what-went-to-plan">What went to plan</h3><ul>
+<li><strong>Rule 15 at 2.36×: correct.</strong> RTH open <strong>29417.50</strong> vs Thursday&#39;s 29138.00 close = <code>+279.50 ÷ 118.20</code>. The correction came first — to <strong>29334.00 (−83.50)</strong> — before the 29499.75 high.</li>
+<li><strong>The 07:30 CT five-minute bar</strong> (29385 → <strong>29204.00</strong> → 29338.75 on 9.7K contracts against a 300–800 ETH norm) was the same event that stopped the ES branches. It confirms the ordering: the flush came <em>first</em>, so every long branch waiting on a confirming close was stopped before its targets printed.</li>
+</ul>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Rule 15 demotion — running tally</th>
+<th>Reading</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NQ 2026-08-27</td>
+<td>2.23×</td>
+<td>Correct</td>
+</tr>
+<tr>
+<td>ES 2026-08-27</td>
+<td>1.24×</td>
+<td>Correct</td>
+</tr>
+<tr>
+<td>ES 2026-09-09</td>
+<td><strong>1.09×</strong></td>
+<td><strong>Wrong</strong></td>
+</tr>
+<tr>
+<td>ES 2026-09-10</td>
+<td>2.49×</td>
+<td>Correct</td>
+</tr>
+<tr>
+<td>ES 2026-09-11</td>
+<td>3.56×</td>
+<td>Correct on the demotion; shallow correction</td>
+</tr>
+<tr>
+<td><strong>NQ 2026-09-11</strong></td>
+<td><strong>2.36×</strong></td>
+<td><strong>Correct</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>5-for-6.</strong></p>
+<p><strong>Applied today:</strong> Rule 5 is <strong>2 of 3</strong> (Close Loc fails) → two-sided ★ · Rule 8 finds <strong>no</strong> unfinished extreme inside the window (both of Friday&#39;s extremes are excess) · Rule 13/16(a): nodes <strong>silent</strong> · the new alert format.</p>
+</div></section><section id="long-term"><h2>1. Long-Term Context</h2><p>AVP anchored at the <strong>2020-03-02 COVID low</strong> (<code>1583103600000</code>), Daily config <code>in_1:&quot;60&quot;, in_2:16, in_3:48</code>. 22 labels.</p>
+<ul>
+<li><strong>Major HVNs:</strong> <strong>29545.50 (721.1K — the top node, 0.0%)</strong> · 26393.75 (898.4K) · 25549.25 (969.0K) · 24480.00 (633.2K) · 22678.75 (1.028M) · 21933.00 (1.078M) · 20483.75 (1.883M) · 18049.25 (2.234M)</li>
+<li><strong>LVNs:</strong> <strong>27223.75 (37.4K)</strong> · 25056.75 · 23790.50 · 21637.50</li>
+<li><strong>Price vs HVNs:</strong> <strong>158.50 BELOW the top node 29545.50.</strong> Unlike ES — which sits 188 points above its top node — NQ is trading <em>under</em> its six-year shelf. The nearest daily support is 26393.75, with the almost-empty 27223.75 LVN between.</li>
+<li><strong>Long-term bias: NEUTRAL, capped.</strong> Price has oscillated around the 29545.50 node for a month; the node has stopped growing.</li>
+</ul>
+</section><section id="trend-vol"><h2>2. Daily Trend &amp; Volatility</h2><ul>
+<li><strong>Trend:</strong> mixed — a swing sequence of lower highs with a <strong>provisional higher low</strong>; the EMA structure is up.</li>
+<li><strong>MA slope:</strong> stack ordered <strong>20 29406.75 &gt; 50 29345.25 &gt; 100 28891.00 &gt; 200 27816.75 &gt; 300 26886.50</strong>; 50-EMA rising (+5.00). Study label: <em>Bullish Trend</em>. Price <strong>19.75 below the 20, 41.75 above the 50.</strong></li>
+<li><strong>ATR condition:</strong> <strong>442.00 = 1.50%</strong> — normal-low, rising (425.50 → 442.00). <strong>30-min ATR ≈ 123.75.</strong> Tac-stops 0.5× = <strong>62</strong>; max-chase 0.75× = <strong>92.75</strong>.</li>
+<li><strong>Environment:</strong> compressed correction inside an uptrend, capped by the daily top node.</li>
+<li><strong>Unfilled gaps:</strong> none material (continuous session).</li>
+</ul>
+</section><section id="price-map"><h2>3. Key Price Map</h2><div class="tw"><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Levels</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Long-term HVN (daily AVP)</td>
+<td><strong>29545.50 (721.1K)</strong> · 26393.75 · 25549.25 — LVN 27223.75</td>
+</tr>
+<tr>
+<td>Intraday HVN (30-min AVP)</td>
+<td>P 30845.50 · 30603.75 · 30219.00 · <strong>29529.75</strong> · <strong>29171.75</strong> · 28429.00 · 28169.50 — V 30487.50 · 30084.75 · 28688.50 · 28518.50 · 28303.75</td>
+</tr>
+<tr>
+<td>Intraday HVN (5-min AVP)</td>
+<td>P 29864.50 · 29755.25 · 29604.50 · <strong>29524.00</strong> · <strong>29443.50</strong> · 29308.25 · 29225.00 · <strong>29157.50</strong> · 28918.25 — V 29802.25 · 29693.00 · 29555.25 · <strong>29474.50</strong> · <strong>29370.75</strong> · 29266.75 · 29191.25</td>
+</tr>
+<tr>
+<td>Daily levels</td>
+<td>EMAs 29406.75 / 29345.25 / 28891.00 · pivots 29764.75 · 29811.50 above, 29040.50 · 28927.25 below</td>
+</tr>
+<tr>
+<td>Gap levels</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Confluence zones</td>
+<td><strong>Cap 29500.00–29545.50</strong> (selling tail · ETH high · Wed VAH · 5m+30m HVN · daily top node) · <strong>Friday value 29397.00–29475.00</strong> · <strong>29329.50–29347.00</strong> (naked VAL · buying tail · 50-EMA) · <strong>Floor 29145.50–29171.75</strong> · <strong>Double bottom 29032.25–29043.25</strong></td>
+</tr>
+</tbody></table></div>
+<div class="sub"><h3 id="price-map-hvn-focus-the-twin-table">HVN FOCUS — the twin table</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>Zone</th>
+<th>30-min AVP</th>
+<th>5-min AVP</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Far above</td>
+<td>P 30219.00 (164.3K)</td>
+<td>P 30212.75 (35.7K)</td>
+<td>TWIN HVN</td>
+</tr>
+<tr>
+<td></td>
+<td>V 30084.75 (86.8K)</td>
+<td>V 30085.50 (22.2K)</td>
+<td>TWIN LVN</td>
+</tr>
+<tr>
+<td></td>
+<td>—</td>
+<td>P 29755.25 (80.4K)</td>
+<td>on the Sep 8 lower high 29764.75</td>
+</tr>
+<tr>
+<td></td>
+<td>—</td>
+<td>V 29693.00 (64.8K)</td>
+<td>on the Poor High 29691.75</td>
+</tr>
+<tr>
+<td></td>
+<td>—</td>
+<td>P 29604.50 (93.0K)</td>
+<td>on Wed selling tail 29594 / POC 29595.25</td>
+</tr>
+<tr>
+<td></td>
+<td>—</td>
+<td>V 29555.25 (80.3K)</td>
+<td>thin above the cap</td>
+</tr>
+<tr>
+<td><strong>THE CAP</strong></td>
+<td><strong>P 29529.75 (461.9K, +2.7%, moved UP 9.00)</strong></td>
+<td><strong>P 29524.00 (105.1K)</strong></td>
+<td><strong>TWIN HVN + DAILY TOP NODE 29545.50 (721.1K) — a three-timeframe cap, 132–154 above</strong></td>
+</tr>
+<tr>
+<td>thin edge</td>
+<td>—</td>
+<td><strong>V 29474.50 (73.5K)</strong></td>
+<td><strong>Friday&#39;s VAH (29475.00) sits ON a 5-min LVN</strong></td>
+</tr>
+<tr>
+<td><strong>Friday&#39;s value</strong></td>
+<td>— <strong>the 30m LVN 29350.75 (243.4K) DISSOLVED</strong></td>
+<td><strong>P 29443.50 (84.6K)</strong></td>
+<td><strong>Friday&#39;s value HAS registered on the 5-min — unlike ES</strong></td>
+</tr>
+<tr>
+<td>speed</td>
+<td>—</td>
+<td><strong>V 29370.75 (56.1K)</strong></td>
+<td>Friday closed 16 above a 5-min LVN</td>
+</tr>
+<tr>
+<td></td>
+<td>—</td>
+<td>P 29308.25 (69.6K)</td>
+<td>the overnight balance</td>
+</tr>
+<tr>
+<td></td>
+<td>—</td>
+<td>V 29266.75 (53.4K)</td>
+<td>on the Thu Weak High 29275.00</td>
+</tr>
+<tr>
+<td></td>
+<td>—</td>
+<td>P 29225.00 (69.8K) · V 29191.25 (52.4K)</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>FLOOR</strong></td>
+<td><strong>P 29171.75 (293.7K, +2.2%, moved DOWN 44.75)</strong></td>
+<td><strong>P 29157.50 (67.5K)</strong></td>
+<td><strong>TWIN HVN (14.25 apart) + Thu VAL 29145.50</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>—</td>
+<td>P 28918.25 (20.6K)</td>
+<td>on the Sep 2 low 28927.25</td>
+</tr>
+<tr>
+<td>Deep</td>
+<td>V 28688.50 (50.8K)</td>
+<td>V 28653.25 (12.0K)</td>
+<td>loose twin LVN</td>
+</tr>
+<tr>
+<td></td>
+<td>P 28429.00 (72.8K)</td>
+<td>P 28468.75 (15.8K)</td>
+<td>loose twin</td>
+</tr>
+</tbody></table></div>
+</div><div class="sub"><h3 id="price-map-node-migration-rule-13">Node migration (Rule 13)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>Session</th>
+<th>30m cap</th>
+<th>30m floor</th>
+<th>30m mid LVN</th>
+<th>Daily top node</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>09-11 plan (Fri 02:15 CT)</td>
+<td>29520.75 (449.7K)</td>
+<td>29216.50 (287.5K)</td>
+<td>V 29350.75 (243.4K)</td>
+<td>29545.50 (721.1K)</td>
+</tr>
+<tr>
+<td><strong>09-11 close</strong></td>
+<td><strong>29529.75 (461.9K, +2.7%, up 9.00)</strong></td>
+<td><strong>29171.75 (293.7K, +2.2%, down 44.75)</strong></td>
+<td><strong>DISSOLVED</strong></td>
+<td><strong>29545.50 (721.1K, 0.0%)</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>Both nodes grew by the same ~2.5% while moving apart</strong> — the range widened; nothing accumulated at one edge. Rule 13 recognises no migration toward an edge, so <strong>the nodes are silent</strong> and Rule 16(a) has nothing to adjudicate. <em>(Baseline volumes are from the separate session&#39;s alert text, not a report.)</em></p>
+</div><div class="sub"><h3 id="price-map-market-profile-friday-thursday-2-day">Market Profile — Friday, Thursday, 2-day</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>Session</th>
+<th>VAH</th>
+<th>POC</th>
+<th>VAL</th>
+<th>VA width</th>
+<th>Extremes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Today (Fri Sep 11)</strong></td>
+<td><strong>29475.00</strong></td>
+<td><strong>29425.50</strong></td>
+<td><strong>29397.00</strong></td>
+<td><strong>78.00</strong></td>
+<td><strong>Buying Tail 29347.00 ✅</strong> · <strong>Selling Tail 29500.00 ✅</strong></td>
+</tr>
+<tr>
+<td>Yesterday (Thu Sep 10)</td>
+<td>29244.50</td>
+<td>29198.00</td>
+<td>29145.50</td>
+<td>99.00</td>
+<td>Weak High 29275.00 ⚠ (repaired in ETH) · Buying Tail 29096.50 ✅</td>
+</tr>
+<tr>
+<td>2-day (Wed Sep 9)</td>
+<td>29505.00</td>
+<td>29446.50</td>
+<td>29397.00</td>
+<td>108.00</td>
+<td>Selling Tail 29594.00 ✅ · Buying Tail 29386.00</td>
+</tr>
+</tbody></table></div>
+<p><strong>Raw study read (<code>My Market Profile</code>, RTH):</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Yesterday (Sep 10)</th>
+<th>Today (Sep 11)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Open</td>
+<td>29089.50</td>
+<td>29417.50</td>
+</tr>
+<tr>
+<td>High</td>
+<td>29275.00</td>
+<td>29499.75</td>
+</tr>
+<tr>
+<td>Low</td>
+<td>29057.50</td>
+<td>29334.00</td>
+</tr>
+<tr>
+<td>Close</td>
+<td>29138.00</td>
+<td>29386.75</td>
+</tr>
+<tr>
+<td>VAH</td>
+<td>29244.50</td>
+<td><strong>29475.00</strong></td>
+</tr>
+<tr>
+<td>VAL</td>
+<td>29145.50</td>
+<td><strong>29397.00</strong></td>
+</tr>
+<tr>
+<td>POC</td>
+<td>29198.00</td>
+<td><strong>29425.50</strong></td>
+</tr>
+<tr>
+<td><strong>Close Loc</strong></td>
+<td>Below VA</td>
+<td><strong>Below VA</strong></td>
+</tr>
+<tr>
+<td><strong>VA Shift</strong></td>
+<td>Lower</td>
+<td><strong>Higher</strong></td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>VA Shift: HIGHER, non-overlapping by 152.50</strong> (Fri VAL 29397.00 vs Thu VAH 29244.50) — the <strong>exact size of Thursday&#39;s lower shift</strong>, reversed in one session. <strong>And against the 2-day, Friday&#39;s value sits entirely INSIDE Wednesday&#39;s (29397.00–29505.00), with the same VAL to the tick.</strong> NQ has not relocated anywhere new; it has returned to where it was two days ago.</li>
+<li><strong>Close Loc: BELOW VA</strong> (10.25 under the VAL). <strong>Rule 2(a) FAILS.</strong> Rule 2(b): session one of a new sequence.</li>
+<li><strong>VA width 78.00 vs the 30-min ATR of 123.75 = 0.63×</strong> — narrow.</li>
+</ul>
+</div><div class="sub"><h3 id="price-map-naked-historical-levels-untested">Naked historical levels (untested)</h3><p><strong>Above:</strong> 29475.00 VAH · <strong>29500.00 Selling Tail ✅</strong> · 29505.00 VAH (2D) · 29594.00 Selling Tail ✅ · 29595.25 POC · 29639.75 VAH · 29686.75 Selling Tail · <strong>29691.75 Poor High ⚠</strong> · 29812.25 Selling Tail · 29825.50 Buying Tail · 29850.50 VAL · 29856.00 POC · 30033.50 Buying Tail · 30046.50 VAL · 30065.00 POC · 30078.50 VAL + Buying Tail + Spike Base · 30093.00 POC · 30154.50 Single Print · 30222.50 VAH · 30288.50 Selling Tail · 30357.00 Selling Tail · 30452.00 Single Print · 30524.50 POC · 30595.00 Spike Base · 30600.00 VAH + Selling Tail · 30717.00 VAH · 30744.00 Single Print · 30969.00 Selling Tail · 30985.75 VAH · <strong>31100.75 Selling Tail (ATH)</strong></p>
+<p><strong>Below:</strong> 29397.00 VAL · <strong>29347.00 Buying Tail ✅</strong> · <strong>29329.50 VAL</strong> · 29275.00 Weak High (repaired ETH) · 29244.50 VAH · 29198.00 POC · 29145.50 VAL · 29096.50 Buying Tail ✅ · 29032.25 Buying Tail · 28952.75 Buying Tail · 28890.00 POC · 28864.50 Single Print · 28721.50 Single Print · 28661.50 Single Print · 28606.50 VAL · 28529.50 Buying Tail · 28223.75 VAL · 28114.75 Buying Tail · 28054.25 VAL · 27996.25 Buying Tail · 27715.00 POC · 27509.50 VAL · 27408.50 Buying Tail + Spike Base · 27305.25 Buying Tail · 27186.50 VAL · 27132.50 Buying Tail</p>
+<p>*(Friday&#39;s cash session consumed Wednesday&#39;s POC 29446.50, VAL and buying tail 29386–29397. <strong>Still naked: the VAL 29329.50 — the RTH low stopped 4.50 above it.</strong>)*</p>
+</div><div class="sub"><h3 id="price-map-upside-ladder-from-29391-75">🔼 UPSIDE LADDER (from 29391.75)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Level</th>
+<th>Source</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>29397.00</strong></td>
+<td><strong>Friday VAL = Wed VAL — the ★</strong></td>
+<td class="k-tgt"><strong>TARGET / decision</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>29406.75</td>
+<td>20-EMA</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>3</td>
+<td>29425.50</td>
+<td>Friday POC</td>
+<td class="k-tgt">TARGET (STOP-class for shorts)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>29443.50</td>
+<td>5m HVN 84.6K — Friday&#39;s value registering</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>5</td>
+<td>29474.50 / 29475.00</td>
+<td>5m LVN 73.5K · Friday VAH</td>
+<td class="k-tgt">TARGET — thin edge</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>29500.00 / 29500.25 / 29505.00</strong></td>
+<td><strong>Selling Tail ✅</strong> · ETH high · Wed VAH</td>
+<td class="k-tgt"><strong>TARGET — excess / decision</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>29524.00 / 29529.75 / 29545.50</strong></td>
+<td><strong>TWIN HVN (105.1K / 461.9K) + DAILY TOP NODE 721.1K</strong></td>
+<td class="k-tgt"><strong>TARGET — the cap</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>29555.25</td>
+<td>5m LVN 80.3K</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>9</td>
+<td>29594.00 / 29595.25 / 29604.50</td>
+<td>Selling Tail ✅ · naked POC · 5m HVN 93.0K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>10</td>
+<td>29639.75</td>
+<td>Naked VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>11</td>
+<td>29686.75 / <strong>29691.75</strong> / 29693.00</td>
+<td>Selling Tail · <strong>Poor High ⚠</strong> · 5m LVN</td>
+<td class="k-tgt">TARGET — the repair</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>29755.25 / 29764.75</strong></td>
+<td>5m HVN 80.4K · <strong>Sep 8 lower high</strong></td>
+<td class="k-tgt"><strong>TARGET — break of structure</strong></td>
+</tr>
+<tr>
+<td>13</td>
+<td>29802.25</td>
+<td>5m LVN 61.2K</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>14</td>
+<td>29811.50 / 29812.25 / 29825.50</td>
+<td>Aug 28 lower high · Selling Tail · Buying Tail</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>15</td>
+<td>29850.50 / 29856.00 / 29864.50</td>
+<td>Naked VAL · POC · 5m HVN 71.6K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>16</td>
+<td>30033.50 / 30046.50 / 30065.00 / 30078.50</td>
+<td>Buying Tail · VAL · POC · VAL + BT + Spike Base</td>
+<td class="k-tgt">TARGET <em>(thin air 29865–30033 beneath)</em></td>
+</tr>
+<tr>
+<td>17</td>
+<td>30084.75 / 30085.50</td>
+<td>Twin LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>18</td>
+<td>30093.00 / 30103.75</td>
+<td>Naked POC · 5m HVN</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>19</td>
+<td>30154.50 / 30171.25</td>
+<td>Single Print · 5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>20</td>
+<td><strong>30212.75 / 30219.00 / 30222.50</strong></td>
+<td><strong>TWIN HVN (35.7K / 164.3K)</strong> · VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>21</td>
+<td>30288.50</td>
+<td>Selling Tail</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>22</td>
+<td>30342.75</td>
+<td>5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>23</td>
+<td>30343.00 / 30357.00</td>
+<td>Aug 17 swing high · Selling Tail</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>24</td>
+<td>30439.00</td>
+<td>5m HVN 20.2K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>25</td>
+<td>30452.00 · 30487.50 / 30506.50</td>
+<td>Single Print · 30m/5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>26</td>
+<td>30524.50 / 30530.00</td>
+<td>Naked POC · 5m HVN</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>27</td>
+<td>30595.00 / 30600.00 / 30603.75</td>
+<td>Spike Base · VAH + Selling Tail · 30m HVN 131.2K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>28</td>
+<td>30688.50</td>
+<td>5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>29</td>
+<td>30717.00</td>
+<td>Naked VAH + 5m HVN</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>30</td>
+<td>30744.00 · 30797.75</td>
+<td>Single Print · 5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>31</td>
+<td>30845.50 / 30867.75</td>
+<td>30m HVN 106.8K · 5m HVN 31.5K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>32</td>
+<td>30899.00</td>
+<td>5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>33</td>
+<td>30930.25 / 30969.00 / 30985.75</td>
+<td>5m HVN · Selling Tail · VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>34</td>
+<td><strong>31100.75</strong></td>
+<td><strong>ATH Selling Tail</strong></td>
+<td class="k-tgt"><strong>TARGET — discovery edge</strong></td>
+</tr>
+</tbody></table></div>
+</div><div class="sub"><h3 id="price-map-downside-ladder-from-29391-75">🔽 DOWNSIDE LADDER (from 29391.75)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Level</th>
+<th>Source</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>29378.75 / 29370.75</td>
+<td>MOC low · 5m LVN 56.1K</td>
+<td class="k-pass">PASS-THROUGH — accelerant (the close sits on it)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>29347.00 / 29345.25 / 29334.00</strong></td>
+<td><strong>Buying Tail ✅ · 50-EMA · RTH low</strong></td>
+<td class="k-tgt"><strong>TARGET — excess + EMA</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>29329.50</strong></td>
+<td><strong>Naked VAL</strong> — <span class="d-SHORT">SHORT</span>&gt; trigger just below</td>
+<td class="k-tgt"><strong>TARGET / decision</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>29308.25</td>
+<td>5m HVN 69.6K (overnight balance)</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>5</td>
+<td>29275.00 / 29266.75</td>
+<td>Thu Weak High (repaired) · 5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>6</td>
+<td>29244.50</td>
+<td>Thu naked VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>7</td>
+<td>29225.00 / 29204.00</td>
+<td>5m HVN 69.8K · 07:30 CT flush low</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>8</td>
+<td>29198.00</td>
+<td>Thu POC</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>9</td>
+<td>29191.25</td>
+<td>5m LVN 52.4K</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>29171.75 / 29157.50 / 29145.50</strong></td>
+<td><strong>TWIN HVN (293.7K / 67.5K) · Thu VAL</strong></td>
+<td class="k-tgt"><strong>TARGET — the floor</strong></td>
+</tr>
+<tr>
+<td>11</td>
+<td>29096.50</td>
+<td>Thu Buying Tail ✅</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>29043.25 / 29040.50 / 29032.25</strong></td>
+<td><strong>Double bottom · naked Buying Tail</strong></td>
+<td class="k-tgt"><strong>TARGET — structural</strong></td>
+</tr>
+<tr>
+<td>13</td>
+<td>28952.75 / 28927.25 / 28918.25</td>
+<td>Buying Tail · <strong>Sep 2 swing low</strong> · 5m HVN</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>14</td>
+<td>28891.00 / 28890.00</td>
+<td>100-EMA · naked POC</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>15</td>
+<td>28864.50 / 28850.75</td>
+<td>Single Print · 5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>16</td>
+<td>28796.25</td>
+<td>5m HVN 18.2K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>17</td>
+<td>28721.50 / 28688.50 / 28661.50 / 28653.25</td>
+<td>Single Print · 30m LVN · Single Print · 5m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>18</td>
+<td>28606.50 / 28583.00</td>
+<td>Naked VAL · 5m HVN</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>19</td>
+<td>28529.50</td>
+<td>Buying Tail</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>20</td>
+<td>28518.50 / 28518.00</td>
+<td>Twin LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>21</td>
+<td>28468.75 / 28429.00</td>
+<td>5m HVN · 30m HVN 72.8K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>22</td>
+<td>28411.50 / 28349.00 / 28303.75</td>
+<td>5m LVN · 5m LVN · 30m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>23</td>
+<td>28292.00 / 28242.50 / 28223.75 / 28175.00 / 28169.50</td>
+<td>5m HVNs · naked VAL · 30m HVN 103.6K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>24</td>
+<td>28114.75 / 28054.25 / 27996.25 / 27995.50</td>
+<td>Buying Tail · VAL · Buying Tail · 5m HVN</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>25</td>
+<td>27816.75</td>
+<td>200-EMA</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>26</td>
+<td>27715.00 / 27704.00</td>
+<td>Naked POC · 30m HVN 112.4K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>27</td>
+<td>27509.50 / 27516.00</td>
+<td>VAL · 30m HVN</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>28</td>
+<td>27408.50</td>
+<td>Buying Tail + Spike Base</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>29</td>
+<td>27223.75 / 27202.75</td>
+<td>Daily LVN 37.4K · 30m LVN</td>
+<td class="k-pass">PASS-THROUGH — accelerant</td>
+</tr>
+<tr>
+<td>30</td>
+<td><strong>26886.50 / 26393.75</strong></td>
+<td>300-EMA · <strong>daily HVN 898.4K</strong></td>
+<td class="k-tgt"><strong>TARGET — six-year shelf</strong></td>
+</tr>
+</tbody></table></div>
+</div></section><section id="5-min-tape"><h2>3b. 5-Minute Price Action — Friday Sep 11</h2><div class="tw"><table>
+<thead>
+<tr>
+<th>Time (CT)</th>
+<th>What printed</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Thu 17:00–23:00</td>
+<td>Drift 29157 → <strong>29040.50</strong> (23:00 bar)</td>
+<td>The double bottom with Thursday&#39;s low — before the Friday plan existed</td>
+</tr>
+<tr>
+<td>23:00–03:00</td>
+<td>29040 → 29268</td>
+<td>The repair of the weak high began overnight</td>
+</tr>
+<tr>
+<td>03:24</td>
+<td>★ 29275.00 fires</td>
+<td>Both branches entered ETH and both lost</td>
+</tr>
+<tr>
+<td>03:30–07:25</td>
+<td>Balance 29285–29340</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>07:30</strong></td>
+<td><strong>29385 → 29204.00 → 29338.75, 9.7K</strong> (ETH norm 300–800)</td>
+<td>The same flush as ES: look-below-and-fail, and it came <em>before</em> the rally</td>
+</tr>
+<tr>
+<td>07:35–08:00</td>
+<td>→ <strong>29500.25</strong></td>
+<td>+296 in 25 minutes</td>
+</tr>
+<tr>
+<td><strong>08:30 open</strong></td>
+<td><strong>29417.50</strong>, first bar 29347.25–29426.25 on 19.9K</td>
+<td>The buying tail forms in the first five minutes</td>
+</tr>
+<tr>
+<td>08:30–09:30 IB</td>
+<td><strong>29347.25–29480.75 = 133.50 (1.08× ATR)</strong></td>
+<td>Normal IB</td>
+</tr>
+<tr>
+<td>09:45</td>
+<td>Extension <strong>down</strong> to <strong>29334.00</strong> (11.3K), closed 29398.75</td>
+<td>Absorbed — the tail holds</td>
+</tr>
+<tr>
+<td><strong>10:10</strong></td>
+<td>Extension <strong>up</strong> to <strong>29499.75</strong> — the selling tail</td>
+<td><strong>ES never exceeded its IB high; NQ did.</strong> Brief relative strength</td>
+</tr>
+<tr>
+<td>10:15–14:00</td>
+<td>Rotation 29395–29485</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>14:55 MOC</strong></td>
+<td>14.2K at 29378.75–29408.75, close 29386.75</td>
+<td>Sold into the close below value, onto a 5-min LVN</td>
+</tr>
+</tbody></table></div>
+<p><strong>Day type: NEUTRAL</strong> — range extension both sides, close in the lower third. Playbook §5: neutral day, close location sets the lean → <strong>mild down-lean for Monday&#39;s open</strong>.</p>
+<p><strong>The ETH/RTH split:</strong> daily bar <strong>459.75 = 1.04× ATR</strong>; RTH <strong>165.75 = 0.38× ATR</strong>. <strong>+279.50 overnight, −30.75 in the cash session.</strong> Same as ES.</p>
+</section><section id="profile"><h2>4. Market Profile Context</h2><ul>
+<li><strong>Value Area Relationship:</strong> Higher (non-overlapping 152.50) vs Thursday — but <strong>INSIDE Wednesday&#39;s value</strong> on the 2-day; Close Loc <strong>Below VA</strong>.</li>
+<li><strong>Balance or Imbalance: BALANCE — a two-session horizontal bracket 29040.50–29508.25</strong> (the last two highs 29508.25/29500.25, the last two lows 29043.25/29040.50) = <strong>467.75 points, 1.06× daily ATR.</strong> Friday&#39;s value is back inside Wednesday&#39;s.</li>
+<li><strong>If balanced — the range:</strong> core <strong>29397.00–29475.00</strong>; full working range <strong>29040.50–29545.50</strong> (the double bottom to the daily top node).</li>
+<li><strong>Acceptance / Rejection:</strong> rejected at both extremes with <strong>excess</strong> (tails at 29347.00 and 29500.00) — a finished auction on both sides.</li>
+<li><strong>Structural anomalies:</strong> <strong>symmetric excess.</strong> Rule 1: fading both edges ranks first <strong>only inside an established horizontal balance</strong> — two sessions is forming, not established, so the fades rank <em>alongside</em> the breaks, not above them. Naked VAL 29329.50 just under the buying tail. Poor High 29691.75 still open overhead.</li>
+</ul>
+<div class="sub"><h3 id="profile-opening-read-n-a-pre-session-rule-15">Opening read — <strong>n/a, pre-session</strong> (Rule 15 ⛔)</h3><p>Reference: <strong>Friday RTH close 29386.75</strong>; 1× 30-min ATR = <strong>123.75</strong>.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Monday RTH open</th>
+<th>Inventory</th>
+<th>What it does to the ranking</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>above 29510.50</strong></td>
+<td><strong>extended <span class="d-LONG">LONG</span></strong></td>
+<td>The open is already through the selling-tail excess and the Wed VAH — <code>DECISION&gt; 29500.00</code>&#39;s fade is pre-empted. Correction DOWN first: <strong>don&#39;t take its accept-long on the open</strong>; the ★&#39;s re-entry long is moot (price above value).</td>
+</tr>
+<tr>
+<td><strong>below 29263.00</strong></td>
+<td><strong>extended <span class="d-SHORT">SHORT</span></strong></td>
+<td>The open is below the naked VAL, the buying-tail excess and the 50-EMA — <code><span class="d-SHORT">SHORT</span>&gt; 29330.00</code>&#39;s trigger is above price: <strong>demote it</strong>. Correction UP first; the floor <code>DECISION&gt; 29171.75</code>&#39;s hold-long becomes the first offer.</td>
+</tr>
+<tr>
+<td>29263.00 – 29510.50</td>
+<td>not extended</td>
+<td><strong>Ranking stands.</strong> Sign: above 29386.75 tilts the first offer down; below tilts it up.</td>
+</tr>
+</tbody></table></div>
+<p><strong>Valid for Monday&#39;s RTH open only</strong> (Rule 17).</p>
+</div></section><section id="auction"><h2>4.5 Auction Intent &amp; Outcome</h2><ul>
+<li><strong>Attempted:</strong> reverse Thursday&#39;s 152.50-point relocation and return to Wednesday&#39;s value.</li>
+<li><strong>Outcome: UNRESOLVED.</strong> It <em>got</em> there — non-overlapping higher shift, back inside Wednesday&#39;s value, the origin left as excess. But <strong>the close did not stick</strong> (Below VA, sold into the MOC), and the session extended both ways inside a neutral day. The attempt was well-built and not accepted.</li>
+<li><strong>Unfinished business:</strong></li>
+</ul>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What it is</th>
+<th>Rule 8 distance</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>29347.00</td>
+<td>Friday Buying Tail</td>
+<td>44.75 below = 0.10 daily ATR</td>
+<td>✅ FINISHED excess</td>
+</tr>
+<tr>
+<td>29500.00</td>
+<td>Friday Selling Tail</td>
+<td>108.25 above = 0.24 ATR</td>
+<td>✅ FINISHED excess</td>
+</tr>
+<tr>
+<td>29329.50</td>
+<td>Naked VAL (not an extreme — a magnet)</td>
+<td>62.25 below = 0.14 ATR</td>
+<td>Magnet, not a repair</td>
+</tr>
+<tr>
+<td><strong>29691.75</strong></td>
+<td><strong>Sep 8 Poor High</strong></td>
+<td>300.00 above = <strong>0.68 ATR</strong></td>
+<td>⚠ Outside the window — alert-only</td>
+</tr>
+<tr>
+<td>29096.50</td>
+<td>Thursday Buying Tail</td>
+<td>295.25 below</td>
+<td>✅ FINISHED excess</td>
+</tr>
+</tbody></table></div>
+<p><strong>Rule 5 audit:</strong> (1) non-overlapping shift <strong>✅ (Higher, 152.50)</strong> · (2) Close Loc agrees <strong>❌ (Below VA)</strong> · (3) finished excess at the origin <strong>✅ (buying tail 29347.00)</strong>. <strong>Two of three; test 2 fails, so the ★ is a two-sided <code>DECISION&gt;</code>.</strong></p>
+<p><strong>The asymmetry:</strong> there is none at the extremes — both are finished. <strong>Rule 8 has nothing inside the window.</strong> The tiebreak therefore falls to Rule 2(a) and playbook §1: a non-overlapping higher shift is a go-with-up read that <em>lost its grip at the close</em> → rank the up-case high, keep the ★ two-sided.</p>
+<p><strong>Verdict → Section 6:</strong> UNRESOLVED → S5 base case. Law 3: thrust then horizontal correction.</p>
+</section><section id="structure"><h2>5. Market Structure Summary</h2><div class="tw"><table>
+<thead>
+<tr>
+<th>Pivot</th>
+<th>Level</th>
+<th>Date</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Swing high</td>
+<td>31100.50</td>
+<td>Jun</td>
+<td><strong>ATH</strong></td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>30343.00</strong></td>
+<td><strong>Aug 17</strong></td>
+<td><strong>LH</strong> vs the ATH</td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>28946.75</td>
+<td>Aug 24</td>
+<td>HL</td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>29811.50</strong></td>
+<td><strong>Aug 28</strong></td>
+<td><strong>LH</strong></td>
+</tr>
+<tr>
+<td><strong>Swing low</strong></td>
+<td><strong>28927.25</strong></td>
+<td><strong>Sep 2</strong></td>
+<td><strong>LL</strong> (by 19.50)</td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>29764.75</strong></td>
+<td><strong>Sep 8</strong></td>
+<td><strong>LH</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>29040.50</td>
+<td>Sep 11</td>
+<td><strong>HL (provisional)</strong> — 113.25 above Sep 2</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>Sequence: LOWER HIGHS with a provisional HIGHER LOW — converging.</strong> <strong>This is where NQ and ES now differ:</strong> ES broke its September low by 33 points; NQ held its September low by 113.25.</li>
+<li><strong>Break of structure:</strong> none. Damage requires a daily close above <strong>29764.75</strong>; Friday closed 377.75 beneath it.</li>
+<li><strong>EMA-cluster break:</strong> none.</li>
+<li><strong>Range behavior:</strong> daily bar 1.04× ATR, RTH 0.38× — expansion entirely overnight.</li>
+<li><strong>Current structural position:</strong> 19.75 below the 20-EMA, 41.75 above the 50-EMA; <strong>132–154 below the three-timeframe cap; 220 above the floor.</strong></li>
+<li><strong>Timeframe read:</strong> swing structure converging; EMA structure up; Rule 11: <strong>1 of 3</strong> (lower lows by 2.75 only). <strong>No trend label.</strong></li>
+<li><strong>Structural bias: NEUTRAL — balance 29040.50–29508.25, under the daily top node.</strong></li>
+</ul>
+</section><section id="scenarios"><h2>6. Forward Scenarios (Next Session) — RANKED</h2><p><strong>Governing state (Law 2): BALANCING</strong> — all six live. <strong>Rule 4: NQ and ES are one index position.</strong> Both ★ favour <span class="d-LONG">LONG</span>; <strong>ES carries the better ratio</strong> — take the bet there and treat NQ&#39;s ★ as confirmation, not a second position.</p>
+<article class="rank r1 star"><h3 id="scenarios-rank-1-s2-s5-re-entry-into-friday-s-value">🥇 RANK 1 — [S2/S5] Re-entry into Friday&#39;s value ★</h3><p><strong>Trigger:</strong> price touches <strong>29397.00</strong> — 5.25 away (<strong>0.04× ATR</strong>). The Sunday ETH open will almost certainly decide the approach side.</p>
+<p><strong>Why it ranks first:</strong> Rule 7 distance, and it is the value edge Wednesday and Friday share to the tick. Playbook §3: re-entry from below arms the 80% rule to the VAH 29475.00. <strong>Rule 5 (2 of 3) keeps it two-sided; demoted in size by Rule 4 — the same trade is better in ES.</strong></p>
+<ul>
+<li><strong>↑ From below — <span class="d-LONG">LONG</span> on re-entry:</strong> entry ~29405.00 · T1 <strong>29425.50</strong> (+20.50, POC) · T2 <strong>29443.50</strong> (+38.50, 5m HVN) · T3 <strong>29475.00</strong> (+70.00, VAH) ·· runner <strong>29500.00</strong> (+95.00, selling tail) · tac-stop ~29343 (0.5× ATR, under the buying-tail excess) · invalid 29334.00 · <strong>R:R 0.33 — ⚠ pays T3 (1.13) / runner (1.53)</strong></li>
+<li><strong>↑ From below — <span class="d-SHORT">SHORT</span> if rejected:</strong> entry ~29385.00 · T1 <strong>29347.00</strong> (−38.00) · T2 <strong>29329.50</strong> (−55.50) · T3 <strong>29308.25</strong> (−76.75) ·· runner <strong>29244.50</strong> (−140.50) · stop ~29447 · <strong>R:R 0.61 — ⚠ pays T3 (1.24) / runner (2.27)</strong></li>
+<li><strong>↓ From above:</strong> <span class="d-LONG">LONG</span> if it holds → same long ladder · <span class="d-SHORT">SHORT</span> if it accepts below → entry ~29390.00, T1 29347.00 · T2 29329.50 · T3 29308.25 ·· runner 29244.50, stop ~29452, <strong>R:R 0.69</strong></li>
+<li><strong>Favoured branch (Rule 16b): <span class="d-LONG">LONG</span></strong> — Rule 2(a) (rank the go-with high) + playbook §1 + §3.</li>
+</ul>
+</article><article class="rank r2"><h3 id="scenarios-rank-2-s3-the-excess-fails">🥈 RANK 2 — [S3] The excess fails</h3><p><strong>Trigger:</strong> 30-min close <strong>&lt; 29330.00</strong> — through the naked VAL, the buying tail and the 50-EMA together.</p>
+<p><strong>Why it ranks second:</strong> it is the neutral day&#39;s close-location lean (lower third, MOC sold), <strong>61.75 away = 0.50× ATR</strong>, and when finished excess <em>fails</em> it fails hard. It pays better than the ★ at T2.</p>
+<ul>
+<li><strong>Entry:</strong> 30-min close below 29330.00</li>
+<li><strong>Targets:</strong> T1 <strong>29308.25</strong> (−21.75, 5m HVN) · T2 <strong>29244.50</strong> (−85.50, Thu VAH — <em>29275.00/29266.75 PASS-THROUGH</em>) · T3 <strong>29198.00</strong> (−132.00, Thu POC) ·· runner <strong>29171.75</strong> (−158.25, floor)</li>
+<li><strong>Stop:</strong> tac-stop 62 above the confirming close (~29392) · invalid <strong>29397.00</strong></li>
+<li><strong>R:R 0.35 — ⚠ pays T2 (1.38) / T3 (2.13) / runner (2.55)</strong></li>
+<li><strong>⚠ Max-chase: stale below 29237.25</strong> — beyond T2 already, so a late fill has no trade left.</li>
+</ul>
+</article><article class="rank r3"><h3 id="scenarios-rank-3-s4-s1-the-excess-above-under-the-cap">🥉 RANK 3 — [S4/S1] The excess above, under the cap</h3><p><strong>Trigger:</strong> price reaches <strong>29500.00</strong> — the finished selling tail, 24–46 below the three-timeframe cap.</p>
+<p><strong>Why it ranks third:</strong> <strong>0.87× ATR.</strong> Playbook §6: <em>trade against excess with confidence</em> — the fade has structural backing, and a stop above the daily top node. The accept-long must clear a daily node in its first 45 points.</p>
+<ul>
+<li><strong>↑ From below — <span class="d-SHORT">SHORT</span> if it FAILS:</strong> entry ~29490.00 · T1 <strong>29475.00</strong> (−15.00) · T2 <strong>29443.50</strong> (−46.50) · T3 <strong>29425.50</strong> (−64.50) ·· runner <strong>29397.00</strong> (−93.00, far edge) · stop ~29552 · <strong>R:R 0.24 — ⚠ pays T3 (1.04) / runner (1.50)</strong></li>
+<li><strong>↑ From below — <span class="d-LONG">LONG</span> if it ACCEPTS</strong> (30-min close &gt; 29505.00): entry ~29515.00 · T1 <strong>29545.50</strong> (+30.50, daily top node) · <em>29555.25 PASS-THROUGH</em> · T2 <strong>29604.50</strong> (+89.50) · T3 <strong>29639.75</strong> (+124.75) ·· runner <strong>29691.75</strong> (+176.75, Poor High) · stop ~29453 · <strong>R:R 0.49 — ⚠ pays T2 (1.44) / T3 (2.01)</strong></li>
+<li><strong>↓ From above</strong> (a failed breakout): <span class="d-SHORT">SHORT</span> on re-entry → same short ladder, stop ~29552; <span class="d-LONG">LONG</span> if the retest holds → same long ladder.</li>
+</ul>
+</article><article class="rank r4"><h3 id="scenarios-4-rank-4-s2-s3-the-floor">4️⃣ RANK 4 — [S2/S3] The floor</h3><p><strong>Trigger:</strong> price reaches <strong>29171.75</strong> — the twin HVN floor with Thursday&#39;s VAL 29145.50. <strong>1.78× ATR.</strong></p>
+<ul>
+<li><strong>↓ From above — <span class="d-LONG">LONG</span> if it HOLDS:</strong> entry ~29180.00 · T1 <strong>29198.00</strong> · T2 <strong>29225.00</strong> · T3 <strong>29244.50</strong> ·· runner <strong>29308.25</strong> · stop ~29118 · <strong>R:R 0.29 — ⚠ pays T3 (1.04) / runner (2.07)</strong></li>
+<li><strong>↓ From above — <span class="d-SHORT">SHORT</span> if it ACCEPTS below 29145.50:</strong> entry ~29140.00 · T1 <strong>29096.50</strong> · T2 <strong>29040.50</strong> · T3 <strong>29032.25</strong> ·· runner <strong>28927.25</strong> · stop ~29202 · <strong>R:R 0.70 — ⚠ pays T2 (1.60) / runner (3.43)</strong></li>
+<li><strong>↑ From below</strong> (after acceptance below): <span class="d-SHORT">SHORT</span> if rejected → T1 29096.50 · T2 29040.50 ·· runner 28927.25; <span class="d-LONG">LONG</span> if reclaimed → T1 29198.00 · T2 29244.50 · T3 29308.25</li>
+</ul>
+</article><article class="rank r5"><h3 id="scenarios-5-rank-5-s5-rotation-inside-friday-s-value">5️⃣ RANK 5 — [S5] Rotation inside Friday&#39;s value</h3><p><strong>Trigger:</strong> Monday holds <strong>29397.00–29475.00</strong>.
+<strong>Why fifth:</strong> the base case in principle, but the VA is <strong>78.00 = 0.63× ATR</strong> against a 62-point stop — not a fadeable width.</p>
+<ul>
+<li><strong>Entry:</strong> fade 29475.00 short / 29397.00 long, RTH only · <strong>Target:</strong> POC <strong>29425.50</strong> · <strong>Stop:</strong> 29537 / 29335 · <strong>Quarter size.</strong></li>
+</ul>
+</article><article class="rank r6"><h3 id="scenarios-6-rank-6-s6-the-outer-markers-29764-75-above-29040-50-below">6️⃣ RANK 6 — [S6] The outer markers: 29764.75 above, 29040.50 below</h3><p><strong>Why last:</strong> standing markers (3.01× / 2.84× ATR). <strong>29764.75</strong> is the last lower high — a close above it is the break of structure. <strong>29040.50</strong> is the double bottom; a third test that fails would retest the September low 28927.25.</p>
+<ul>
+<li><strong>29764.75 ↑ from below:</strong> <span class="d-LONG">LONG</span> if accepts → T1 <strong>29812.25</strong> · T2 <strong>29856.00</strong> · T3 <strong>30033.50</strong> ·· runner <strong>30093.00</strong>, stop ~29713 · <span class="d-SHORT">SHORT</span> if fails → T1 <strong>29686.75</strong> · T2 <strong>29639.75</strong> · T3 <strong>29604.50</strong> ·· runner <strong>29545.50</strong>, stop ~29812</li>
+<li><strong>29040.50 ↓ from above:</strong> <span class="d-LONG">LONG</span> if holds → T1 <strong>29096.50</strong> · T2 <strong>29145.50</strong> · T3 <strong>29171.75</strong> ·· runner <strong>29244.50</strong>, stop ~28993 · <span class="d-SHORT">SHORT</span> if accepts below 29032.25 → T1 <strong>28952.75</strong> · T2 <strong>28927.25</strong> · T3 <strong>28890.00</strong> ·· runner <strong>28796.25</strong>, stop ~29087, <strong>R:R 1.17</strong></li>
+</ul>
+</article></section><section id="takeaway"><h2>7. Final Takeaway</h2><ul>
+<li><strong>Current bias:</strong> NEUTRAL inside a two-session bracket (29040.50–29508.25), under the daily top node.</li>
+<li><strong>Auction verdict:</strong> the market reversed Thursday&#39;s drop in one session and returned to Wednesday&#39;s value with excess at both ends — a well-built attempt the close did not accept.</li>
+<li><strong>Best levels to monitor:</strong> <strong>29397.00</strong> ★ · <strong>29329.50–29347.00</strong> · <strong>29500.00–29545.50</strong> (excess + cap) · 29171.75 · 29040.50.</li>
+<li><strong>Primary risk:</strong> NQ sits <strong>under</strong> its six-year top node while ES sits 188 points <strong>above</strong> its own. If the index bet goes long, ES is the stronger vehicle and NQ is the one that can stall at 29545.50. Secondary: the neutral-day close was in the lower third.</li>
+<li><strong>Highest-probability setup:</strong> <strong>★ <code>DECISION&gt; 29397.00</code>, favoured <span class="d-LONG">LONG</span> — but Rule 4 routes the trade to ES.</strong> In NQ: entry ~29405.00, T1 29425.50 · T2 29443.50 · T3 29475.00 ·· runner 29500.00, tac-stop ~29343, <strong>R:R 0.33 — pays 1.13 at T3.</strong>
+<strong>Rules applied:</strong> 1 (symmetric excess, balance not yet established → fades alongside breaks) · 2a (fails) · 4 (<strong>ES carries the bet</strong>) · 5 (<strong>2 of 3 → two-sided</strong>) · 6a (62) · 6b · 7 (★ 0.04×) · 8 (nothing in the window) · 11 (1 of 3) · 12 (checked) · 13/16a (<strong>silent</strong>) · 15 (threshold published) · 16b (favoured <span class="d-LONG">LONG</span>) · 17 · 18.</li>
+</ul>
+</section><section id="alerts"><h2>Alerts — NQ1! (6 repeating level alerts — fire on every cross: the test, the break and the backtest)</h2><div class="tw"><table>
+<thead>
+<tr>
+<th>★</th>
+<th>Level</th>
+<th>Name</th>
+<th><span class="d-LONG">LONG</span> (hold from above / backtest after break up)</th>
+<th><span class="d-SHORT">SHORT</span> (reject from below / backtest after break down)</th>
+<th>ID</th>
+</tr>
+</thead>
+<tbody><tr class="star">
+<td>★</td>
+<td><strong>29397.00</strong></td>
+<td>VAL</td>
+<td>T1 29425.50 T2 29443.50 T3 29475.00 SL 29333.00</td>
+<td>T1 29347.00 T2 29329.50 T3 29308.25 SL 29459.00</td>
+<td>5600809849</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>29347.00</strong></td>
+<td>Buying Tail</td>
+<td>T1 29397.00 T2 29425.50 T3 29443.50 SL 29285.00</td>
+<td>T1 29308.25 T2 29244.50 T3 29198.00 SL 29409.00</td>
+<td>5600809851</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>29500.00</strong></td>
+<td>Selling Tail</td>
+<td>T1 29545.50 T2 29604.50 T3 29639.75 SL 29438.00</td>
+<td>T1 29475.00 T2 29443.50 T3 29425.50 SL 29562.00</td>
+<td>5600809855</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>29171.75</strong></td>
+<td>HVN Floor</td>
+<td>T1 29198.00 T2 29225.00 T3 29244.50 SL 29109.75</td>
+<td>T1 29096.50 T2 29040.50 T3 28952.75 SL 29233.75</td>
+<td>5600809856</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>29040.50</strong></td>
+<td>Double Bottom</td>
+<td>T1 29096.50 T2 29145.50 T3 29171.75 SL 28978.50</td>
+<td>T1 28952.75 T2 28927.25 T3 28890.00 SL 29102.50</td>
+<td>5600809859</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>29764.75</strong></td>
+<td>Last Lower High</td>
+<td>T1 29812.25 T2 29856.00 T3 30033.50 SL 29702.75</td>
+<td>T1 29686.75 T2 29639.75 T3 29604.50 SL 29826.75</td>
+<td>5600809862</td>
+</tr>
+</tbody></table></div>
+<p><em>Replaced the same day: the first alert set was too wordy and fired only once. <code><span class="d-SHORT">SHORT</span>&gt; 29330.00</code> became the level alert at 29347.00. Rule 4 still applies — ES and NQ are one index position.</em></p>
+<p><strong>Hygiene:</strong> deleted 7 stale <code>CLAUDE</code> NQ alerts (the separate session&#39;s 09-11 set of five, plus the 09-08 pins 29573.75 and 29691.75), then the same-day first version of this set. Your own NQ alerts (PLAY E, PLAY F, POOR HIGH REPAIR, TARGET 1, BULL THESIS OFF) were not touched.</p>
+</section>
+<footer>Built from NQ1-structured-2026-09-13.md · 2026-09-13 23:27 UTC</footer>
+</div>
+</body>
+</html>
