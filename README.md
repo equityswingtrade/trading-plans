@@ -50,9 +50,15 @@ GC1-2026-09-14.png          -> "Chart 1"
 GC1-2026-09-14-tpo.png      -> "TPO profile"
 ```
 
-`ES1-` and `ES-` both work. Pictures are scaled down to 1800px wide and saved as
-JPEG, so a full-screen capture ends up at a few hundred KB. Higher timeframes
-are shown first.
+`ES1-` and `ES-` both work. Pictures wider than 1800px are scaled down and saved
+as JPEG; otherwise whichever of PNG or JPEG is smaller is kept (TradingView
+snapshots are usually smaller as PNG, ~130 KB). Higher timeframes are shown
+first.
+
+The easiest way to get the files: in TradingView use the camera menu →
+**Download image** (not *Copy image*). It saves to `Downloads` as
+`ES1!_2026-09-14_18-25-32_xxxxx.png` — move it into `reports\img` and rename it
+to `ES1-2026-09-14-30m.png`.
 
 **Publish**, from the repo root in PowerShell:
 

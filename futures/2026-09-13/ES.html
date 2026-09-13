@@ -101,13 +101,13 @@ footer{margin-top:44px;padding-top:12px;border-top:1px solid var(--rule);font:12
   <p class="snap">Fri 2026-09-11 post-close, built Sun 2026-09-13 pre-session · Last <strong>7660.75</strong> · RTH H/L <strong>7682.00 / 7653.25</strong> · Daily bar O 7599.50 H 7683.50 L 7594.25 C 7659.50 (1.905M, heaviest since Jul 29) · ATH ≈ <strong>7838.50</strong></p>
   <div class="kpis"><div class="kpi"><span>Last</span><b>7660.75</b></div><div class="kpi star"><span>★ Decision</span><b>7665.25</b></div><div class="kpi"><span>Favoured branch</span><b class="d-LONG">▲ LONG</b></div><div class="kpi"><span>Bias</span><b class="txt" title="MIXED, leaning up, inside a new 98-point bracket (7585.50–7688.50).">MIXED, leaning up</b></div></div>
 </header>
-<nav class="toc" aria-label="Sections"><a href="#primary">Setup</a><a href="#scorecard">Scorecard</a><a href="#long-term">Long-term</a><a href="#trend-vol">Trend &amp; vol</a><a href="#price-map">Price map</a><a href="#5-min-tape">5-min tape</a><a href="#profile">Profile</a><a href="#auction">Auction</a><a href="#structure">Structure</a><a href="#scenarios">Scenarios</a><a href="#takeaway">Takeaway</a><a href="#alerts">Alerts</a><a href="#skill-changes">Skill changes</a></nav>
+<nav class="toc" aria-label="Sections"><a href="#primary">Setup</a><a href="#charts">Charts</a><a href="#scorecard">Scorecard</a><a href="#long-term">Long-term</a><a href="#trend-vol">Trend &amp; vol</a><a href="#price-map">Price map</a><a href="#5-min-tape">5-min tape</a><a href="#profile">Profile</a><a href="#auction">Auction</a><a href="#structure">Structure</a><a href="#scenarios">Scenarios</a><a href="#takeaway">Takeaway</a><a href="#alerts">Alerts</a><a href="#skill-changes">Skill changes</a></nav>
 <section class="primary" id="primary">
   <div class="lbl">★ Primary setup</div>
   <p>★ two-sided <code>DECISION&gt; 7665.25</code> (Friday&#39;s VAL), <strong>favoured <span class="d-LONG">LONG</span></strong>. Price closed 5.75 <em>below</em> it, so the first touch comes <strong>from below</strong> — a re-entry into Friday&#39;s value that arms the 80% rule toward the VAH 7680.25 and the <strong>Poor High 7682.00</strong> repair. Entry ~7667.00 on the confirming 30-min close inside value · T1 7673.75 · T2 7680.25 · T3 7682.00 ·· runner 7688.50 · tac-stop 0.5× 30m ATR (~7656.90) · <strong>R:R 0.67 to T1 — ⚠ pays 1.31 at T2, 2.13 at the runner.</strong> If the touch is rejected, the same alert flips <span class="d-SHORT">SHORT</span> to 7653.25 → 7646.25 → 7640.75.</p>
   
 </section>
-
+<section class="charts" id="charts"><h2>Charts</h2><div class="grid"><figure><a href="img/ES-30m.png" target="_blank" rel="noopener"><img src="img/ES-30m.png" alt="ES1! 30-minute chart" loading="lazy"></a><figcaption>30-minute</figcaption></figure></div></section>
 <section id="scorecard"><h2>0. Yesterday&#39;s plan vs what actually happened — SCORECARD</h2><p>The 2026-09-10 plan ran over Friday Sep 11. Full <code>last_fired</code> evidence, sequenced on 5-minute bars. <strong>Every branch that fired did so in ETH.</strong></p>
 <div class="tw"><table>
 <thead>
@@ -1174,7 +1174,7 @@ footer{margin-top:44px;padding-top:12px;border-top:1px solid var(--rule);font:12
 <li><strong>Alert format rewritten</strong> (Step 5): one repeating <code>crossing</code> alert per level (frequency <code>on_bar_close</code>, fires on the test, the break and the backtest), and a fixed 5-line message — HOLD → <span class="d-LONG">LONG</span> / NO HOLD → wait backtest → <span class="d-SHORT">SHORT</span> from above, REJECT → <span class="d-SHORT">SHORT</span> / BREAK → wait backtest → <span class="d-LONG">LONG</span> from below, T1–T3 and SL as numbers only. The local TradingView MCP <code>alert_create</code> gained a <code>repeat</code> option (active after a restart).</li>
 </ul>
 </section>
-<footer>Built from ES1-structured-2026-09-13.md · 2026-09-13 23:27 UTC</footer>
+<footer>Built from ES1-structured-2026-09-13.md · 2026-09-13 23:30 UTC</footer>
 </div>
 </body>
 </html>
