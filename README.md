@@ -89,20 +89,36 @@ the reports already have:
   `---`;
 - `## ` sections, and `### 🥇 RANK 1 …` style headings for the scenarios.
 
-From those it pulls the header cards: last price, the ★ `DECISION>` level, the
-favoured LONG/SHORT branch, and the bias from **Current bias:**.
+From those it pulls the header cards: last price, the ★ level (`★ \`7715.00\`` or
+the older `★ … \`DECISION> 7665.25\``), the favoured LONG/SHORT branch, and the
+bias from **Current bias:**.
+
+A section whose heading contains **⛔** or "read this first" (e.g. a contract
+roll or FOMC notice) is shown open, above the price map.
 
 The interactive parts read three more pieces, all in the skill's fixed format:
 
 - **Price map** — the `🔼 UPSIDE LADDER` / `🔽 DOWNSIDE LADDER` tables
-  (`# | Level | Source | Class`) and the `30-min ATR ≈` / `ATR condition:` lines.
-  TARGET rungs draw as lines, PASS-THROUGH rungs as faint bands.
+  (`# | Level | Source | Class`) and the `30-min ATR ≈` plus `ATR:` (or older
+  `ATR condition:`) lines. TARGET rungs draw as lines, PASS-THROUGH rungs as
+  faint bands.
 - **Trade planner** — the `## Alerts` table
   (`★ | Level | Name | LONG … | SHORT … | ID`, cells `T1 <p> T2 <p> T3 <p> SL <p>`).
   It rebuilds the exact 5-line alert text for copying.
-- **Ranked scenarios** — each `### 🥇 RANK 1 — [S#] name` with its `**Trigger:**`,
-  `**Why it ranks …:**`, `**Favoured branch …: LONG**` lines, and branch bullets
-  carrying `entry ~<p>`, `T1 <p>`, `runner <p>`, `stop ~<p>`, `R:R <n>`.
+- **Ranked scenarios** — each `### 🥇 RANK 1 — [S#] name`, its `**Why …:**` line,
+  and a `Favoured …: LONG|SHORT` line (the ★ scenario falls back to the report's
+  favoured side). Two branch formats are understood:
+  - **from 2026-09-14** — a `**Level <p>**` line, then one bullet per approach:
+    `FROM BELOW: REJECT → SHORT T1 <p> · T2 <p> · T3 <p> · SL <p>`, or two on one
+    line after a level (`7834.25 — last lower high. BREAK → backtest → LONG T1 … SL <p> · REJECT → SHORT T1 … SL <p>`).
+    The direction is the LONG/SHORT word; entry is the level unless the bullet
+    states `entry ~<p>`.
+  - **to 2026-09-13** — a `**Trigger:**` line and prose bullets carrying
+    `entry ~<p>`, `T1 <p>`, `runner <p>`, `stop ~<p>`, `R:R <n>`.
+
+The build prints each product's branch count split into long / short, and
+warns when a ★ level or ATR is missing, a branch has no entry or stop, or every
+branch parsed the same direction — the usual signs the report format drifted.
 
 The build prints what it found per product (rungs, alerts, scenarios, branches).
 If a future report changes that wording, the page still renders in full; only

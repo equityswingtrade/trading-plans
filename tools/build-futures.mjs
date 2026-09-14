@@ -151,9 +151,10 @@ const inline = s => colorDir(">" + marked.parseInline(s) + "<").slice(1, -1);
 
 function tocLabel(title){
   const map = [
+    [/⛔|read this first/i, "⛔ Read first"],
     [/scorecard/i, "Scorecard"], [/long-term/i, "Long-term"], [/daily trend/i, "Trend & vol"],
     [/key price map/i, "Price map"], [/5-minute/i, "5-min tape"], [/market profile context/i, "Profile"],
-    [/auction intent/i, "Auction"], [/market structure/i, "Structure"], [/forward scenarios/i, "Scenarios"],
+    [/auction intent/i, "Auction"], [/market structure/i, "Structure"], [/forward scenarios/i, "Full scenarios"],
     [/final takeaway/i, "Takeaway"], [/^alerts/i, "Alerts"], [/skill changes/i, "Skill changes"],
   ];
   for (const [re, label] of map) if (re.test(title)) return label;
@@ -222,6 +223,8 @@ function parseAlerts(sections){
   }));
 }
 
+// Older reports (to 2026-09-13): prose branches - "LONG if it HOLDS …: entry ~<p> · T1 <p> …
+// runner <p> · stop ~<p> · R:R <n>".
 function parseBranches(body, triggerPrice, triggerText){
   // Top-level bullets, with their indented sub-bullets folded in.
   const blocks = [];
@@ -270,6 +273,47 @@ function parseBranches(body, triggerPrice, triggerText){
   return out;
 }
 
+// Newer reports (from 2026-09-14): alert-style branches, one per approach -
+//   "FROM BELOW: REJECT → SHORT T1 <p> · T2 <p> · T3 <p> · SL <p>"
+// or two on one line after a level -
+//   "7834.25 — last lower high. BREAK → backtest → LONG T1 … SL <p> · REJECT → SHORT T1 … SL <p>".
+// The direction is the word itself, never inferred from where T1 sits.
+function parseLevelBranches(body, level){
+  const out = [];
+  for (const line of body.split("\n")){
+    if (!/^- /.test(line)) continue;
+    const t = plain(line.slice(2));
+    const hits = [...t.matchAll(/\b(LONG|SHORT)\s+(?=T1\b)/g)];
+    if (!hits.length) continue;
+    const lead = /^(\d{3,}(?:\.\d+)?)\s*—\s*([^.]*)\.\s*/.exec(t);
+    const head = lead ? lead[1] + " — " + lead[2].trim() : "";
+    let from = lead ? lead[0].length : 0;
+    hits.forEach((m, i) => {
+      const numsStart = m.index + m[0].length;
+      const seg = t.slice(numsStart, i + 1 < hits.length ? hits[i + 1].index : t.length);
+      const sl = /\bSL\s*(\d{3,}(?:\.\d+)?)/.exec(seg);
+      const numsEnd = sl ? sl.index + sl[0].length : seg.length;
+      const seen = new Set();
+      const targets = [...seg.slice(0, numsEnd).matchAll(/\bT([1-9])\s*(\d{3,}(?:\.\d+)?)/g)]
+        .filter(x => !seen.has(x[1]) && seen.add(x[1]))
+        .map(x => ({ k: "T" + x[1], p: Number(x[2]) }))
+        .sort((a, b) => a.k.localeCompare(b.k));
+      // A stated entry after the stop ("— entry ~29475 → risk 65") beats the level.
+      const ent = /\bentry\s*(?:near|~|≈)\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(seg.slice(numsEnd));
+      const phrase = t.slice(from, m.index).replace(/^[\s·—]+/, "").replace(/[\s→:·]+$/, "").trim();
+      from = numsStart + numsEnd;
+      if (!targets.length) return;
+      let label = [head, phrase].filter(Boolean).join(" · ") || "On the level";
+      if (label.length > 120) label = label.slice(0, 117) + "…";
+      out.push({
+        label, dir: m[1], entry: ent ? Number(ent[1]) : lead ? Number(lead[1]) : level,
+        targets, runner: null, stop: sl ? Number(sl[1]) : null, rr: null,
+      });
+    });
+  }
+  return out;
+}
+
 function parseScenarios(sections){
   const sec = sections.find(s => s.title && /forward scenarios/i.test(s.title));
   if (!sec) return [];
@@ -283,14 +327,18 @@ function parseScenarios(sections){
     let name = slot ? title.slice(title.indexOf("]") + 1) : title.replace(/^.*?RANK\s*\d+\s*—\s*/i, "");
     name = name.replace(/★/g, "").trim();
     const trig = /^\*\*Trigger:\*\*\s*(.+)$/m.exec(c.body);
+    const lvl = /^\*\*Level\s+(\d{3,}(?:\.\d+)?)[.*]*\s*(.*)$/m.exec(c.body);
     const why = /^\*\*Why[^*]*:\*\*\s*(.+)$/m.exec(c.body);
-    const fav = /Favoured branch[^:]*:\s*(LONG|SHORT)/i.exec(plain(c.body));
-    const triggerText = trig ? plain(trig[1]) : "";
+    const fav = /Favou?red(?: branch)?[^:]*:\s*(LONG|SHORT)/i.exec(plain(c.body));
+    const triggerText = trig ? plain(trig[1]) : lvl ? plain("Level " + lvl[1] + " " + lvl[2]) : "";
+    const alertStyle = /\b(?:LONG|SHORT)\s+T1\b/.test(plain(c.body));
     out.push({
       rank: idx + 1, slot, name, star: c.title.includes("★"),
       trigger: triggerText, why: why ? plain(why[1]) : "",
       favoured: fav ? fav[1].toUpperCase() : null,
-      branches: parseBranches(c.body, triggerText ? firstPrice(triggerText) : null, triggerText.length > 70 ? "" : triggerText),
+      branches: alertStyle
+        ? parseLevelBranches(c.body, lvl ? Number(lvl[1]) : triggerText ? firstPrice(triggerText) : null)
+        : parseBranches(c.body, triggerText ? firstPrice(triggerText) : null, triggerText.length > 70 ? "" : triggerText),
     });
   }
   return out;
@@ -341,13 +389,15 @@ function parseReport(text){
     ticker, desc, snapshot, primary, notes, sections,
     last: lastStr ? Number(lastStr.replace(/,/g, "")) : null,
     decimals: lastStr.includes(".") ? lastStr.split(".")[1].length : 0,
-    star: (/`DECISION>\s*([\d.,]+)`/.exec(primary) || [])[1] || "",
+    // "★ two-sided `DECISION> 7665.25`" (to 09-13) or "★ `7715.00`" (from 09-14)
+    star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] || "",
     favoured: ((/favou?red\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
     snapDate: (/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || "",
     biasFull,
     biasShort: (/^([A-Z]+(?:-to-[A-Z]+)?)(,\s*leaning\s+\w+)?/.exec(biasFull) || [])[0] || "",
     atr30: num(/30-min ATR\s*(?:≈|~|=)?\s*([\d,]+(?:\.\d+)?)/),
-    atrD: num(/ATR condition:\s*([\d,]+(?:\.\d+)?)/),
+    // "ATR condition: 72.25 = …" (to 09-13) or "ATR: 67.25 = …" (from 09-14)
+    atrD: num(/\bATR(?: condition)?:\s*([\d,]+(?:\.\d+)?)/),
     ladder: parseLadders(bodyMd),
     alerts: parseAlerts(sections),
     scenarios: parseScenarios(sections),
@@ -401,37 +451,44 @@ function page(r, key, siblings, mdName){
     ? `<small>${sign(starN - r.last)} from last${r.atr30 ? " · " + (Math.abs(starN - r.last) / r.atr30).toFixed(2) + "× 30m ATR" : ""}</small>` : "";
   const kpis = [
     r.last != null && `<div class="kpi"><span>Last</span><b>${esc(r.last.toFixed(r.decimals))}</b>${r.atr30 ? `<small>30m ATR ${esc(r.atr30)}</small>` : ""}</div>`,
-    r.star && `<div class="kpi star"><span>★ Decision</span><b>${esc(r.star)}</b>${starSub}</div>`,
+    r.star && `<div class="kpi star"><span>★ Level</span><b>${esc(r.star)}</b>${starSub}</div>`,
     favTxt && `<div class="kpi"><span>Favoured branch</span><b class="d-${r.favoured}">${favTxt}</b></div>`,
     r.biasShort && `<div class="kpi"><span>Bias</span><b class="txt" title="${esc(r.biasFull)}">${esc(r.biasShort)}</b></div>`,
   ].filter(Boolean).join("");
 
-  const toc = [`<a href="#primary">Setup</a>`];
   const interactive = r.alerts.length > 0;
-  if (interactive) toc.push(`<a href="#desk">Map & planner</a>`);
-  if (r.scenarios.length) toc.push(`<a href="#ranked">Scenarios</a>`);
 
-  // Takeaway leads the collapsible sections and starts open; the rest keep report order.
+  // A "read this first" notice (contract roll, event risk) sits above the map and starts open.
+  const urgent = s => /⛔|read this first/i.test(s.title);
+  // Takeaway leads the remaining collapsible sections and starts open; the rest keep report order.
   const secs = r.sections.filter(s => s.title);
   const take = secs.findIndex(s => /final takeaway/i.test(s.title));
   if (take > 0) secs.unshift(secs.splice(take, 1)[0]);
 
+  const tocPre = [], tocBody = [];
+  let pre = "", body = "";
   const shots = chartsFor(key);
-  let body = "";
   if (shots.length){
-    toc.push(`<a href="#charts">Charts</a>`);
+    tocBody.push(`<a href="#charts">Charts</a>`);
     body += `<details class="sec" id="charts" open><summary><h2>Charts</h2></summary><div class="sec-body"><div class="charts-grid">` +
       shots.map(c => `<figure><a href="${c.file}" target="_blank" rel="noopener"><img src="${c.file}" alt="${esc(r.ticker || key)} ${esc(c.caption)} chart" loading="lazy"></a><figcaption>${esc(c.caption)}</figcaption></figure>`).join("") +
       `</div></div></details>`;
   }
   for (const s of secs){
     const id = uniq(slug(tocLabel(s.title)), seen);
-    toc.push(`<a href="#${id}">${esc(tocLabel(s.title))}</a>`);
+    const u = urgent(s);
     const hint = (HINTS.find(([re]) => re.test(s.title)) || [])[1];
-    body += `<details class="sec" id="${id}"${/final takeaway/i.test(s.title) ? " open" : ""}>` +
+    const html = `<details class="sec${u ? " urgent" : ""}" id="${id}"${u || /final takeaway/i.test(s.title) ? " open" : ""}>` +
       `<summary><h2>${inline(s.title)}</h2>${hint ? `<span class="hint">${esc(hint)}</span>` : ""}</summary>` +
       `<div class="sec-body">${gloss(renderSection(s.md, id, seen))}</div></details>`;
+    (u ? tocPre : tocBody).push(`<a href="#${id}">${esc(tocLabel(s.title))}</a>`);
+    if (u) pre += html; else body += html;
   }
+
+  const toc = [`<a href="#primary">Setup</a>`].concat(tocPre);
+  if (interactive) toc.push(`<a href="#desk">Map & planner</a>`);
+  if (r.scenarios.length) toc.push(`<a href="#ranked">Scenarios</a>`);
+  toc.push(...tocBody);
 
   const sib = siblings.map(k =>
     `<a href="${k}.html"${k === key ? ' aria-current="page"' : ""}>${k}</a>`).join("");
@@ -520,6 +577,7 @@ function page(r, key, siblings, mdName){
   <p>${gloss(inline(r.primary || "—"))}</p>
   ${r.notes.length ? `<div class="notes">${md(r.notes.join("\n\n"))}</div>` : ""}
 </section>
+${pre}
 ${desk}
 ${ranked}
 ${body}
@@ -553,18 +611,28 @@ const built = {};
 console.log(`Futures ${date} — ${longLabel(date)}`);
 for (const f of found){
   const r = parseReport(readFileSync(f.mdPath, "utf8"));
+  // A ★ scenario with no "Favoured" line of its own takes the report's favoured side.
+  r.scenarios.forEach(s => { if (s.star && !s.favoured && r.favoured) s.favoured = r.favoured; });
   const out = join(outDir, `${f.key}.html`);
   writeFileSync(out, page(r, f.key, siblings, basename(f.mdPath)), "utf8");
   const charts = chartsFor(f.key).length;
-  const nb = r.scenarios.reduce((n, s) => n + s.branches.length, 0);
+  const branches = r.scenarios.flatMap(s => s.branches);
   built[f.key] = {
     file: `${f.key}.html`, symbol: r.ticker || f.sym, name: r.desc, snapshot: r.snapDate,
     last: r.last != null ? r.last.toFixed(r.decimals) : "", star: r.star, favoured: r.favoured || null,
     bias: r.biasShort || null, charts,
   };
+  const nL = branches.filter(b => b.dir === "LONG").length, nS = branches.length - nL;
   console.log(`  ${f.key}.html  (${Math.round(statSync(out).size / 1024)} KB) — ${r.ladder.length} rungs, ` +
-    `${r.alerts.length} alerts, ${r.scenarios.length} scenarios / ${nb} branches, ${charts} chart${charts === 1 ? "" : "s"}`);
+    `${r.alerts.length} alerts, ${r.scenarios.length} scenarios / ${branches.length} branches (${nL} long, ${nS} short), ` +
+    `${charts} chart${charts === 1 ? "" : "s"}`);
+  // Loud warnings for the things that silently degrade a page when the report format drifts.
   if (!r.alerts.length) console.warn(`    ! no alert table parsed for ${f.key} - the map and planner are left out`);
+  if (!r.star) console.warn(`    ! no ★ level found in the Primary setup for ${f.key}`);
+  if (r.atr30 == null || r.atrD == null) console.warn(`    ! ATR not found for ${f.key} (30-min ${r.atr30}, daily ${r.atrD})`);
+  const noStop = branches.filter(b => b.stop == null).length, noEntry = branches.filter(b => b.entry == null).length;
+  if (branches.length && (noStop || noEntry)) console.warn(`    ! ${f.key}: ${noEntry} branch(es) without an entry, ${noStop} without a stop`);
+  if (branches.length && (!nL || !nS)) console.warn(`    ! ${f.key}: every scenario branch parsed as ${nL ? "LONG" : "SHORT"} - check the scenario format`);
 }
 
 // ---------- manifest ----------

@@ -247,3 +247,6 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font:12
 #map .price-txt{stroke:none}
 #map .lbl-bg{fill:var(--surface);pointer-events:none}
 #map .wash,#map .rail,#map .mk,#map .mk-entry,#map .sl,#map .t-lbl,#map .side-lbl,#map .zone{pointer-events:none}
+
+/* "Read this first" notices (contract roll, event risk) sit above the map. */
+details.sec.urgent{margin-top:14px;border-left:4px solid var(--ink)}
