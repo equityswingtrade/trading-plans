@@ -237,8 +237,17 @@ iframe[hidden]{display:none}
   </div>
 </div>
 
-<script src="plans/manifest.js" onerror="window.__plansFailed=true"></script>
-<script src="futures/manifest.js" onerror="window.__futuresFailed=true"></script>
+<script>
+  // GitHub Pages lets browsers cache files for 10 minutes. The plan lists change every
+  // day, so fetch them fresh - otherwise a day pushed a minute ago stays invisible and a
+  // link to it quietly opens yesterday instead.
+  (function(){
+    var v = Date.now();
+    document.write(
+      '<script src="plans/manifest.js?v=' + v + '" onerror="window.__plansFailed=true"><\/script>' +
+      '<script src="futures/manifest.js?v=' + v + '" onerror="window.__futuresFailed=true"><\/script>');
+  })();
+</script>
 <script>
 (function(){
   "use strict";

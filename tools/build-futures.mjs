@@ -19,6 +19,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync, readdirSy
 import { dirname, join, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "./vendor/marked.mjs";
+import { createHash } from "node:crypto";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const ORDER = ["ES", "NQ", "GC"];
@@ -558,7 +559,7 @@ function page(r, key, siblings, mdName){
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(key)} price map — ${esc(date)}</title>
 <script>if (window.self !== window.top) document.documentElement.classList.add("framed");</script>
-<link rel="stylesheet" href="../assets/report.css">
+<link rel="stylesheet" href="../assets/report.css?v=${ASSET_V}">
 </head>
 <body>
 <div class="wrap">
@@ -584,7 +585,7 @@ ${body}
 <footer>Built from ${esc(mdName)} · ${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC</footer>
 </div>
 <script type="application/json" id="report-data">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>
-<script src="../assets/report.js"></script>
+<script src="../assets/report.js?v=${ASSET_V}"></script>
 </body>
 </html>
 `;
@@ -604,6 +605,11 @@ mkdirSync(outDir, { recursive: true });
 const assets = join(ROOT, "futures", "assets");
 mkdirSync(assets, { recursive: true });
 for (const f of ["report.css", "report.js"]) copyFileSync(join(ROOT, "tools", "report", f), join(assets, f));
+// GitHub Pages lets browsers cache files for 10 minutes. Versioning the asset URLs by content
+// means a freshly built page never runs against a stale cached script, while unchanged
+// assets keep the same URL.
+const ASSET_V = createHash("sha1").update(readFileSync(join(assets, "report.css")))
+  .update(readFileSync(join(assets, "report.js"))).digest("hex").slice(0, 8);
 
 const siblings = found.map(f => f.key).sort(sortProducts);
 
