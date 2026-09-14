@@ -25,9 +25,11 @@ plans/<date>/wheel.html
 futures/manifest.js             futures days list
 futures/<date>/ES.html          one page per product
 futures/<date>/img/ES-30m.jpg   chart pictures, when supplied
+futures/assets/report.css|js    page styles + price map / planner / scenarios (copied by the build)
 tools/add-plan.ps1              adds a weekly plan
 tools/add-futures.ps1           adds a futures day (pictures + build)
 tools/build-futures.mjs         markdown -> HTML converter (needs Node.js)
+tools/report/                   source of futures/assets - edit here, not in futures/assets
 tools/vendor/marked.mjs         markdown parser, vendored (MIT) - no npm install
 .nojekyll                       stops GitHub Pages running the files through Jekyll
 ```
@@ -88,9 +90,28 @@ the reports already have:
 - `## ` sections, and `### 🥇 RANK 1 …` style headings for the scenarios.
 
 From those it pulls the header cards: last price, the ★ `DECISION>` level, the
-favoured LONG/SHORT branch, and the bias from **Current bias:**. If a future
-report changes that wording, the page still renders; only the affected card is
-left out.
+favoured LONG/SHORT branch, and the bias from **Current bias:**.
+
+The interactive parts read three more pieces, all in the skill's fixed format:
+
+- **Price map** — the `🔼 UPSIDE LADDER` / `🔽 DOWNSIDE LADDER` tables
+  (`# | Level | Source | Class`) and the `30-min ATR ≈` / `ATR condition:` lines.
+  TARGET rungs draw as lines, PASS-THROUGH rungs as faint bands.
+- **Trade planner** — the `## Alerts` table
+  (`★ | Level | Name | LONG … | SHORT … | ID`, cells `T1 <p> T2 <p> T3 <p> SL <p>`).
+  It rebuilds the exact 5-line alert text for copying.
+- **Ranked scenarios** — each `### 🥇 RANK 1 — [S#] name` with its `**Trigger:**`,
+  `**Why it ranks …:**`, `**Favoured branch …: LONG**` lines, and branch bullets
+  carrying `entry ~<p>`, `T1 <p>`, `runner <p>`, `stop ~<p>`, `R:R <n>`.
+
+The build prints what it found per product (rungs, alerts, scenarios, branches).
+If a future report changes that wording, the page still renders in full; only
+the part it could not read is left out — and a missing alert table is flagged
+in the output.
+
+The page script and styles live in `tools/report/` and are copied to
+`futures/assets/` on every build, so a design change reaches every day's pages
+the next time any day is built.
 
 ## Weekly plans — every weekend
 

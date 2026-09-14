@@ -3,12 +3,19 @@
 //   node tools/build-futures.mjs --date 2026-09-13
 //        [--src C:\Users\VINHSANH\.claude\tradingview\reports] [--symbols ES1,NQ1,GC1]
 //
-// Reads <SYM>-structured-<date>.md, writes futures/<date>/<KEY>.html, and
-// upserts the day into futures/manifest.js. Every image in
-// futures/<date>/img/ named <KEY>-<tag>.jpg|png is shown in that page's Charts
-// section (add-futures.ps1 puts them there); the tag becomes the caption.
+// Reads <SYM>-structured-<date>.md, writes futures/<date>/<KEY>.html, copies the
+// shared page script and styles to futures/assets/, and upserts the day into
+// futures/manifest.js.
+//
+// Besides rendering the markdown, it lifts the numbers the interactive parts
+// need - the two ladders, the alert table and the ranked scenarios - into a
+// JSON block on the page. Anything it cannot parse is simply left out of the
+// map; the report text is always rendered in full.
+//
+// Every image in futures/<date>/img/ named <KEY>-<tag>.jpg|png is shown in a
+// Charts section; the tag becomes the caption.
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync, readdirSync, copyFileSync } from "node:fs";
 import { dirname, join, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { marked } from "./vendor/marked.mjs";
@@ -24,19 +31,29 @@ const TAGS = [
   ["15m", "15-minute"], ["5m", "5-minute"], ["tpo", "TPO profile"], ["profile", "Market Profile"],
 ];
 
-function chartsFor(key){
-  const dir = join(outDir, "img");
-  if (!existsSync(dir)) return [];
-  const rank = tag => { const i = TAGS.findIndex(t => t[0] === tag); return i < 0 ? 99 : i; };
-  return readdirSync(dir)
-    .filter(f => f.toUpperCase().startsWith(key + "-") && /\.(jpe?g|png)$/i.test(f))
-    .map(f => {
-      const tag = f.slice(key.length + 1).replace(/\.(jpe?g|png)$/i, "").toLowerCase();
-      const known = TAGS.find(t => t[0] === tag);
-      return { file: "img/" + f, tag, caption: known ? known[1] : /^\d+$/.test(tag) ? "Chart " + tag : tag.replace(/-/g, " ") };
-    })
-    .sort((a, b) => rank(a.tag) - rank(b.tag) || a.tag.localeCompare(b.tag, undefined, { numeric: true }));
-}
+// Hover definitions, condensed from the skill's mp-playbook.md and market-dynamics-laws.md.
+const GLOSSARY = [
+  ["VAH", "Value Area High — top of the range where ~70% of the session traded."],
+  ["VAL", "Value Area Low — bottom of the value area."],
+  ["POC", "Point of Control — the most-traded price; a magnet."],
+  ["HVN", "High-volume node — heavy trade at a price: acceptance, price slows here (Law 9)."],
+  ["LVN", "Low-volume node — thin trade: rejection, price moves fast through it (Law 9)."],
+  ["ETH", "Electronic (overnight) session, 17:00–08:30 CT."],
+  ["RTH", "Regular trading hours, 08:30–15:00 CT."],
+  ["IB", "Initial Balance — the first hour's range. Narrow = trend-day risk; wide = range day."],
+  ["MOC", "Market-on-close — the closing auction."],
+  ["ATR", "Average True Range. Stops here are sized ~0.5× the 30-minute ATR."],
+  ["80% rule", "Re-enter yesterday's value and hold two 30-min periods → ~80% odds of crossing to the far edge."],
+  ["Poor High", "Unfinished high with no excess — a repair magnet likely to be revisited."],
+  ["Poor Low", "Unfinished low with no excess — a repair magnet likely to be revisited."],
+  ["Weak High", "Unfinished high — a repair magnet likely to be revisited."],
+  ["Weak Low", "Unfinished low — a repair magnet likely to be revisited."],
+  ["Buying Tail", "Excess at a low — a finished, decisive rejection. Trade against it with confidence."],
+  ["Selling Tail", "Excess at a high — a finished, decisive rejection. Trade against it with confidence."],
+  ["Single Print", "One-timeframe zone left by a fast move; revisits travel fast."],
+  ["Spike Base", "Where the prior session's closing spike began. Open above = support; below = rejected."],
+  ["DECISION>", "A two-sided level: hold or rejection on a 30-min close decides the side."],
+];
 
 function fail(msg){ console.error("build-futures: " + msg); process.exit(1); }
 
@@ -59,9 +76,12 @@ const outDir = join(ROOT, "futures", date);
 
 marked.setOptions({ gfm: true });
 
-// ---------- helpers ----------
+// ---------- text helpers ----------
 
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const plain = s => String(s).replace(/\*/g, "").replace(/`/g, "").replace(/\s+/g, " ").trim();
+const PRICE = /\d{3,}(?:\.\d+)?/;
+const firstPrice = s => { const m = PRICE.exec(s); return m ? Number(m[0]) : null; };
 
 function slug(s){
   return s.toLowerCase().replace(/<[^>]+>/g, "").replace(/&[a-z#0-9]+;/g, "")
@@ -73,12 +93,15 @@ function uniq(id, seen){
   seen.add(out);
   return out;
 }
-
 function longLabel(iso){
   return new Date(iso + "T00:00:00Z").toLocaleDateString("en-US", {
     weekday: "short", month: "short", day: "numeric", year: "numeric", timeZone: "UTC",
   });
 }
+const sortProducts = (a, b) => {
+  const ia = ORDER.indexOf(a), ib = ORDER.indexOf(b);
+  return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
+};
 
 // Colour LONG / SHORT in text nodes only, never inside tags or attributes.
 const colorDir = html => html.replace(/>([^<]+)</g, (m, t) =>
@@ -86,7 +109,6 @@ const colorDir = html => html.replace(/>([^<]+)</g, (m, t) =>
 
 function polish(html){
   html = html.replace(/<table>/g, '<div class="tw"><table>').replace(/<\/table>/g, "</table></div>");
-  // Ladder "Class" cells: targets read solid, pass-through levels recede.
   html = html.replace(/<td([^>]*)>([\s\S]*?)<\/td>/g, (m, attr, inner) => {
     const t = inner.replace(/<[^>]+>/g, "").trim();
     const cls = /^PASS-THROUGH/.test(t) ? "k-pass" : /^TARGET/.test(t) ? "k-tgt" : "";
@@ -94,6 +116,34 @@ function polish(html){
   });
   html = html.replace(/<tr>(\s*<td[^>]*>)★<\/td>/g, '<tr class="star">$1★</td>');
   return colorDir(html);
+}
+
+// Wrap the first use of each glossary term in a section with <abbr title>.
+// Skips text inside code, links, headings, table headers and existing abbr.
+function gloss(html){
+  const used = new Set();
+  const terms = GLOSSARY.map(g => g[0]).sort((a, b) => b.length - a.length);
+  const re = new RegExp("(?<![\\w-])(" + terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/&gt;|>/, "&gt;")).join("|") + ")(?![\\w-])", "gi");
+  const defs = new Map(GLOSSARY.map(([k, v]) => [k.toLowerCase().replace(">", "&gt;"), [k, v]]));
+  let skip = 0;
+  return html.replace(/(<[^>]+>)|([^<]+)/g, (m, tag, text) => {
+    if (tag){
+      if (/^<(code|a|abbr|h[1-6]|th)[\s>]/i.test(tag)) skip++;
+      else if (/^<\/(code|a|abbr|h[1-6]|th)>/i.test(tag)) skip = Math.max(0, skip - 1);
+      return tag;
+    }
+    if (skip) return text;
+    return text.replace(re, word => {
+      const hit = defs.get(word.toLowerCase());
+      if (!hit) return word;
+      const [key, def] = hit;
+      // Acronyms must match case exactly ("val" in prose is not VAL).
+      if (/^[A-Z]{2,4}$/.test(key) && word !== key) return word;
+      if (used.has(key)) return word;
+      used.add(key);
+      return `<abbr title="${esc(def)}">${word}</abbr>`;
+    });
+  });
 }
 
 const md = s => polish(marked.parse(s));
@@ -107,8 +157,143 @@ function tocLabel(title){
     [/final takeaway/i, "Takeaway"], [/^alerts/i, "Alerts"], [/skill changes/i, "Skill changes"],
   ];
   for (const [re, label] of map) if (re.test(title)) return label;
-  const plain = title.replace(/^\d+(\.\d+)?[a-z]?\.\s*/i, "").replace(/[*`]/g, "");
-  return plain.length > 24 ? plain.slice(0, 23) + "…" : plain;
+  const p = title.replace(/^\d+(\.\d+)?[a-z]?\.\s*/i, "").replace(/[*`]/g, "");
+  return p.length > 24 ? p.slice(0, 23) + "…" : p;
+}
+
+// Markdown tables in a chunk -> [{ head, rows }]
+function tables(text){
+  const out = [];
+  let cur = null;
+  for (const line of text.split("\n")){
+    const t = line.trim();
+    if (!t.startsWith("|")){ cur = null; continue; }
+    const cells = t.replace(/^\||\|$/g, "").split("|").map(c => c.trim());
+    if (!cur){ cur = { head: cells, rows: [] }; out.push(cur); continue; }
+    if (cells.every(c => /^:?-{2,}:?$/.test(c))) continue;
+    cur.rows.push(cells);
+  }
+  return out;
+}
+
+const chunks = text => text.split(/^(?=### )/m).map(c => {
+  const m = /^### (.*)\n?/.exec(c);
+  return m ? { title: m[1].trim(), body: c.slice(m[0].length) } : { title: null, body: c };
+});
+
+// ---------- structured extraction ----------
+
+function parseLadders(bodyMd){
+  const rungs = [];
+  for (const c of chunks(bodyMd)){
+    if (!c.title) continue;
+    const side = /UPSIDE LADDER/i.test(c.title) ? "up" : /DOWNSIDE LADDER/i.test(c.title) ? "down" : null;
+    if (!side) continue;
+    const t = tables(c.body)[0];
+    if (!t) continue;
+    for (const r of t.rows){
+      if (r.length < 4) continue;
+      const p = (plain(r[1]).match(/\d{3,}(?:\.\d+)?/g) || []).map(Number);
+      if (!p.length) continue;
+      const cls = plain(r[3]);
+      rungs.push({
+        side, p, src: plain(r[2]),
+        cls: /^PASS/i.test(cls) ? "pass" : /^STOP/i.test(cls) ? "stop" : "target",
+        dec: /\*\*/.test(r[1]) || /decision|★/i.test(cls),
+      });
+    }
+  }
+  return rungs;
+}
+
+function parseAlerts(sections){
+  const sec = sections.find(s => s.title && /^Alerts/i.test(s.title));
+  const t = sec && tables(sec.md)[0];
+  if (!t) return [];
+  const plan = cell => {
+    const c = plain(cell);
+    const tg = [...c.matchAll(/T(\d)\s+(\d{3,}(?:\.\d+)?)/g)].sort((a, b) => a[1] - b[1]).map(m => Number(m[2]));
+    const sl = /SL\s+(\d{3,}(?:\.\d+)?)/.exec(c);
+    return tg.length ? { t: tg, sl: sl ? Number(sl[1]) : null } : null;
+  };
+  return t.rows.filter(r => r.length >= 5 && firstPrice(plain(r[1])) != null).map(r => ({
+    star: r[0].includes("★"), level: firstPrice(plain(r[1])), name: plain(r[2]),
+    long: plan(r[3]), short: plan(r[4]),
+  }));
+}
+
+function parseBranches(body, triggerPrice, triggerText){
+  // Top-level bullets, with their indented sub-bullets folded in.
+  const blocks = [];
+  let cur = null;
+  for (const line of body.split("\n")){
+    if (/^- /.test(line)){ cur = [line.slice(2)]; blocks.push(cur); }
+    else if (cur && /^\s+\S/.test(line)) cur.push(line.trim().replace(/^- /, ""));
+    else if (line.trim()) cur = null;
+  }
+  let texts = blocks.map(b => plain(b.join(" · ")));
+  // One-branch scenarios list Entry / Targets / Stop / R:R as separate bullets.
+  if (blocks.some(b => /^Targets?:/i.test(plain(b[0])))) texts = [texts.join(" · ")];
+  const single = texts.length === 1 && /^Entry:/i.test(texts[0]);
+
+  const out = [];
+  for (const text of texts){
+    const colon = text.indexOf(":");
+    const blockNum = colon > 0 && colon < 40 ? firstPrice(text.slice(0, colon)) : null;
+    for (const part of text.split(/\s·\s(?=(?:LONG|SHORT)\b)|;\s(?=(?:LONG|SHORT)\b)/)){
+      if (!/\bT1\b/.test(part)) continue;
+      const pre = part.split(/R:R/)[0];
+      const seen = new Set();
+      const targets = [...pre.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)]
+        .filter(m => !seen.has(m[1]) && seen.add(m[1]))
+        .map(m => ({ k: "T" + m[1], p: Number(m[2]) }))
+        .sort((a, b) => a.k.localeCompare(b.k));
+      if (!targets.length) continue;
+      const num = re => { const m = re.exec(part); return m ? Number(m[m.length - 1]) : null; };
+      let entry = num(/entry[^·]{0,60}?(\d{3,}(?:\.\d+)?)/i);
+      if (entry == null) entry = blockNum != null ? blockNum : triggerPrice;
+      const runner = (() => { const m = /runner\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(pre); return m ? Number(m[1]) : null; })();
+      let stop = num(/stop[^·]*?~\s*(\d{3,}(?:\.\d+)?)/i);
+      if (stop == null) stop = num(/stop\s*~?\s*(\d{3,}(?:\.\d+)?)/i);
+      const rr = num(/R:R\s*(?:to T1\s*)?(\d+(?:\.\d+)?)/);
+      const dir = entry != null && targets[0].p < entry ? "SHORT" : "LONG";
+
+      const arrow = part.indexOf("→"), t1 = part.search(/\bT1\b/), c = part.indexOf(":");
+      let label = arrow > 0 && arrow < t1 ? part.slice(0, arrow) : c > 0 && c < t1 ? part.slice(0, c) : "";
+      label = label.replace(/\s*·\s*$/, "").trim();
+      if (single || label.length < 8) label = triggerText ? "On the trigger: " + triggerText : "On the trigger";
+      if (label.length > 120) label = label.slice(0, 117) + "…";
+
+      out.push({ label, dir, entry, targets, runner, stop, rr });
+    }
+  }
+  return out;
+}
+
+function parseScenarios(sections){
+  const sec = sections.find(s => s.title && /forward scenarios/i.test(s.title));
+  if (!sec) return [];
+  const out = [];
+  for (const c of chunks(sec.md)){
+    if (!c.title) continue;
+    const idx = RANKS.findIndex(r => c.title.startsWith(r));
+    if (idx < 0) continue;
+    const title = plain(c.title);
+    const slot = (/\[([^\]]+)\]/.exec(title) || [])[1] || "";
+    let name = slot ? title.slice(title.indexOf("]") + 1) : title.replace(/^.*?RANK\s*\d+\s*—\s*/i, "");
+    name = name.replace(/★/g, "").trim();
+    const trig = /^\*\*Trigger:\*\*\s*(.+)$/m.exec(c.body);
+    const why = /^\*\*Why[^*]*:\*\*\s*(.+)$/m.exec(c.body);
+    const fav = /Favoured branch[^:]*:\s*(LONG|SHORT)/i.exec(plain(c.body));
+    const triggerText = trig ? plain(trig[1]) : "";
+    out.push({
+      rank: idx + 1, slot, name, star: c.title.includes("★"),
+      trigger: triggerText, why: why ? plain(why[1]) : "",
+      favoured: fav ? fav[1].toUpperCase() : null,
+      branches: parseBranches(c.body, triggerText ? firstPrice(triggerText) : null, triggerText.length > 70 ? "" : triggerText),
+    });
+  }
+  return out;
 }
 
 // ---------- report parsing ----------
@@ -147,146 +332,167 @@ function parseReport(text){
     sections.push({ title: m ? m[1].trim() : null, md: body });
   }
 
-  const last = (/Last \*\*([\d.,]+)\*\*/.exec(snapshot) || [])[1] || "";
-  const star = (/`DECISION>\s*([\d.,]+)`/.exec(primary) || [])[1] || "";
-  const favoured = ((/favou?red\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase();
-  const snapDate = (/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || "";
+  const lastStr = (/Last \*\*([\d.,]+)\*\*/.exec(snapshot) || [])[1] || "";
+  const flat = plain(bodyMd);
+  const num = re => { const m = re.exec(flat); return m ? Number(m[1].replace(/,/g, "")) : null; };
   const biasFull = ((/\*\*Current bias:\*\*\s*([^\n]+)/.exec(bodyMd) || [])[1] || "").replace(/\*\*/g, "").trim();
-  const biasShort = (/^([A-Z]+(?:-to-[A-Z]+)?)(,\s*leaning\s+\w+)?/.exec(biasFull) || [])[0] || "";
 
-  return { ticker, desc, snapshot, primary, notes, sections, last, star, favoured, snapDate, biasFull, biasShort };
+  return {
+    ticker, desc, snapshot, primary, notes, sections,
+    last: lastStr ? Number(lastStr.replace(/,/g, "")) : null,
+    decimals: lastStr.includes(".") ? lastStr.split(".")[1].length : 0,
+    star: (/`DECISION>\s*([\d.,]+)`/.exec(primary) || [])[1] || "",
+    favoured: ((/favou?red\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
+    snapDate: (/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || "",
+    biasFull,
+    biasShort: (/^([A-Z]+(?:-to-[A-Z]+)?)(,\s*leaning\s+\w+)?/.exec(biasFull) || [])[0] || "",
+    atr30: num(/30-min ATR\s*(?:≈|~|=)?\s*([\d,]+(?:\.\d+)?)/),
+    atrD: num(/ATR condition:\s*([\d,]+(?:\.\d+)?)/),
+    ladder: parseLadders(bodyMd),
+    alerts: parseAlerts(sections),
+    scenarios: parseScenarios(sections),
+  };
+}
+
+// ---------- page ----------
+
+function chartsFor(key){
+  const dir = join(outDir, "img");
+  if (!existsSync(dir)) return [];
+  const rank = tag => { const i = TAGS.findIndex(t => t[0] === tag); return i < 0 ? 99 : i; };
+  return readdirSync(dir)
+    .filter(f => f.toUpperCase().startsWith(key + "-") && /\.(jpe?g|png)$/i.test(f))
+    .map(f => {
+      const tag = f.slice(key.length + 1).replace(/\.(jpe?g|png)$/i, "").toLowerCase();
+      const known = TAGS.find(t => t[0] === tag);
+      return { file: "img/" + f, tag, caption: known ? known[1] : /^\d+$/.test(tag) ? "Chart " + tag : tag.replace(/-/g, " ") };
+    })
+    .sort((a, b) => rank(a.tag) - rank(b.tag) || a.tag.localeCompare(b.tag, undefined, { numeric: true }));
 }
 
 function renderSection(body, prefix, seen){
   let html = "";
-  for (const chunk of body.split(/^(?=### )/m)){
-    const m = /^### (.*)\n?/.exec(chunk);
-    if (!m){ if (chunk.trim()) html += md(chunk); continue; }
-    const title = m[1].trim();
-    const h3 = `<h3 id="${uniq(prefix + "-" + slug(title), seen)}">${inline(title)}</h3>`;
-    const inner = md(chunk.slice(m[0].length));
-    const rank = RANKS.findIndex(r => title.startsWith(r));
+  for (const c of chunks(body)){
+    if (!c.title){ if (c.body.trim()) html += md(c.body); continue; }
+    const h3 = `<h3 id="${uniq(prefix + "-" + slug(c.title), seen)}">${inline(c.title)}</h3>`;
+    const inner = md(c.body);
+    const rank = RANKS.findIndex(r => c.title.startsWith(r));
     html += rank >= 0
-      ? `<article class="rank r${rank + 1}${title.includes("★") ? " star" : ""}">${h3}${inner}</article>`
+      ? `<article class="rank${c.title.includes("★") ? " star" : ""}" data-rank="${rank + 1}">${h3}${inner}</article>`
       : `<div class="sub">${h3}${inner}</div>`;
   }
   return html;
 }
 
-// ---------- page ----------
-
-const CSS = `
-:root{
-  color-scheme:light;
-  --bg:#f6f7f8; --surface:#fff; --sunk:#f0f2f4;
-  --ink:#111827; --ink2:#4b5563; --ink3:#8b95a3; --rule:#e1e5ea; --rule2:#eef0f3;
-  --accent:#1d4ed8; --up:#0f7a55; --dn:#b42318; --gold:#a16207; --gold-soft:#fdf6e3;
-  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  color-scheme:dark;
-  --bg:#0e1116; --surface:#161b22; --sunk:#11151b;
-  --ink:#e6edf3; --ink2:#a4afbb; --ink3:#6e7a87; --rule:#29313b; --rule2:#1e252d;
-  --accent:#8fb2ff; --up:#3ec48f; --dn:#f07167; --gold:#e3b341; --gold-soft:#2a2414;
-}}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#0e1116; --surface:#161b22; --sunk:#11151b;
-  --ink:#e6edf3; --ink2:#a4afbb; --ink3:#6e7a87; --rule:#29313b; --rule2:#1e252d;
-  --accent:#8fb2ff; --up:#3ec48f; --dn:#f07167; --gold:#e3b341; --gold-soft:#2a2414;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
-.wrap{max-width:1180px;margin:0 auto;padding:0 22px 64px}
-a{color:var(--accent)}
-header.top{padding:22px 0 14px}
-.crumbs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--ink3);margin-bottom:12px}
-.crumbs a{text-decoration:none;font-weight:560}
-.sib{margin-left:auto;display:flex;gap:4px}
-.sib a{padding:2px 9px;border-radius:6px;border:1px solid var(--rule);color:var(--ink2);font-weight:600}
-.sib a[aria-current]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
-.framed .crumbs{display:none}
-h1{margin:0;font-size:26px;line-height:1.2;letter-spacing:-.02em;font-weight:690}
-h1 .desc{font-size:15px;font-weight:500;letter-spacing:0;color:var(--ink3);margin-left:6px}
-.snap{margin:6px 0 0;color:var(--ink2);font-size:13.5px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
-.kpi{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:9px 13px}
-.kpi span{display:block;font-size:10.5px;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)}
-.kpi b{display:block;margin-top:2px;font:650 18px/1.3 var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kpi b.txt{font-family:var(--sans);font-size:15.5px;white-space:normal}
-.kpi.star{border-left:3px solid var(--gold)}
-.toc{position:sticky;top:0;z-index:5;display:flex;gap:2px;overflow-x:auto;background:var(--bg);
-  border-bottom:1px solid var(--rule);margin:0 -22px;padding:7px 22px;scrollbar-width:thin}
-.toc a{flex:0 0 auto;font-size:12.5px;font-weight:560;color:var(--ink2);text-decoration:none;padding:4px 10px;border-radius:999px}
-.toc a:hover{background:var(--rule2);color:var(--ink)}
-.primary{margin:18px 0 6px;background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--gold);border-radius:10px;padding:13px 18px}
-.primary .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
-.primary p{margin:5px 0 0;font-size:15px;line-height:1.65}
-.notes{margin-top:12px;font-size:13.5px;color:var(--ink2)}
-.notes p{margin:6px 0}
-section{scroll-margin-top:50px;margin-top:30px}
-h2{font-size:19px;letter-spacing:-.01em;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
-h3{font-size:15.5px;margin:22px 0 8px;scroll-margin-top:50px}
-p,li{max-width:96ch}
-ul,ol{padding-left:22px}
-li{margin:3px 0}
-code{font-family:var(--mono);font-size:.87em;background:var(--sunk);border:1px solid var(--rule2);padding:0 5px;border-radius:4px;white-space:nowrap}
-strong{font-weight:650}
-.tw{overflow-x:auto;margin:10px 0 14px;border:1px solid var(--rule);border-radius:8px;background:var(--surface)}
-table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
-th{text-align:left;font-size:10.5px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);
-  background:var(--sunk);padding:7px 10px;border-bottom:1px solid var(--rule);white-space:nowrap}
-td{padding:7px 10px;border-bottom:1px solid var(--rule2);vertical-align:top}
-tr:last-child td{border-bottom:0}
-tr.star td{background:var(--gold-soft)}
-td.k-tgt{white-space:nowrap}
-td.k-pass{color:var(--ink3);font-style:italic;white-space:nowrap}
-.d-LONG{color:var(--up);font-weight:650}
-.d-SHORT{color:var(--dn);font-weight:650}
-.rank{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:2px 18px 8px;margin:14px 0}
-.rank h3{margin-top:14px}
-.rank.star{border-left:4px solid var(--gold)}
-.charts .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px}
-figure{margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
-figure a{display:block}
-figure img{display:block;width:100%;height:auto}
-figcaption{font-size:12.5px;color:var(--ink3);padding:8px 12px;border-top:1px solid var(--rule2)}
-footer{margin-top:44px;padding-top:12px;border-top:1px solid var(--rule);font:12px/1.5 var(--mono);color:var(--ink3)}
-@media (max-width:640px){
-  .wrap{padding:0 14px 48px}
-  .toc{margin:0 -14px;padding:7px 14px}
-  h1{font-size:22px}
-  .charts .grid{grid-template-columns:1fr}
-}`;
+const HINTS = [
+  [/key price map/i, "full ladders, profile tables, naked levels"],
+  [/forward scenarios/i, "all six in full"],
+  [/^alerts/i, "repeating level alerts"],
+  [/scorecard/i, "how yesterday's plan did"],
+];
 
 function page(r, key, siblings, mdName){
-  const seen = new Set(["primary", "charts"]);
+  const seen = new Set(["primary", "desk", "ranked", "charts"]);
+  const sign = n => (n > 0 ? "+" : n < 0 ? "−" : "") + Math.abs(n).toFixed(r.decimals);
+  const starN = r.star ? Number(r.star.replace(/,/g, "")) : null;
   const favTxt = r.favoured === "LONG" ? "▲ LONG" : r.favoured === "SHORT" ? "▼ SHORT" : "";
 
+  const starSub = starN != null && r.last != null
+    ? `<small>${sign(starN - r.last)} from last${r.atr30 ? " · " + (Math.abs(starN - r.last) / r.atr30).toFixed(2) + "× 30m ATR" : ""}</small>` : "";
   const kpis = [
-    r.last && `<div class="kpi"><span>Last</span><b>${esc(r.last)}</b></div>`,
-    r.star && `<div class="kpi star"><span>★ Decision</span><b>${esc(r.star)}</b></div>`,
+    r.last != null && `<div class="kpi"><span>Last</span><b>${esc(r.last.toFixed(r.decimals))}</b>${r.atr30 ? `<small>30m ATR ${esc(r.atr30)}</small>` : ""}</div>`,
+    r.star && `<div class="kpi star"><span>★ Decision</span><b>${esc(r.star)}</b>${starSub}</div>`,
     favTxt && `<div class="kpi"><span>Favoured branch</span><b class="d-${r.favoured}">${favTxt}</b></div>`,
     r.biasShort && `<div class="kpi"><span>Bias</span><b class="txt" title="${esc(r.biasFull)}">${esc(r.biasShort)}</b></div>`,
   ].filter(Boolean).join("");
 
-  const shots = chartsFor(key).map(c =>
-    `<figure><a href="${c.file}" target="_blank" rel="noopener"><img src="${c.file}" alt="${esc(r.ticker || key)} ${esc(c.caption)} chart" loading="lazy"></a><figcaption>${esc(c.caption)}</figcaption></figure>`);
-
   const toc = [`<a href="#primary">Setup</a>`];
-  if (shots.length) toc.push(`<a href="#charts">Charts</a>`);
+  const interactive = r.alerts.length > 0;
+  if (interactive) toc.push(`<a href="#desk">Map & planner</a>`);
+  if (r.scenarios.length) toc.push(`<a href="#ranked">Scenarios</a>`);
 
+  // Takeaway leads the collapsible sections and starts open; the rest keep report order.
+  const secs = r.sections.filter(s => s.title);
+  const take = secs.findIndex(s => /final takeaway/i.test(s.title));
+  if (take > 0) secs.unshift(secs.splice(take, 1)[0]);
+
+  const shots = chartsFor(key);
   let body = "";
-  for (const s of r.sections){
-    if (!s.title){ body += md(s.md); continue; }
+  if (shots.length){
+    toc.push(`<a href="#charts">Charts</a>`);
+    body += `<details class="sec" id="charts" open><summary><h2>Charts</h2></summary><div class="sec-body"><div class="charts-grid">` +
+      shots.map(c => `<figure><a href="${c.file}" target="_blank" rel="noopener"><img src="${c.file}" alt="${esc(r.ticker || key)} ${esc(c.caption)} chart" loading="lazy"></a><figcaption>${esc(c.caption)}</figcaption></figure>`).join("") +
+      `</div></div></details>`;
+  }
+  for (const s of secs){
     const id = uniq(slug(tocLabel(s.title)), seen);
     toc.push(`<a href="#${id}">${esc(tocLabel(s.title))}</a>`);
-    body += `<section id="${id}"><h2>${inline(s.title)}</h2>${renderSection(s.md, id, seen)}</section>`;
+    const hint = (HINTS.find(([re]) => re.test(s.title)) || [])[1];
+    body += `<details class="sec" id="${id}"${/final takeaway/i.test(s.title) ? " open" : ""}>` +
+      `<summary><h2>${inline(s.title)}</h2>${hint ? `<span class="hint">${esc(hint)}</span>` : ""}</summary>` +
+      `<div class="sec-body">${gloss(renderSection(s.md, id, seen))}</div></details>`;
   }
 
   const sib = siblings.map(k =>
     `<a href="${k}.html"${k === key ? ' aria-current="page"' : ""}>${k}</a>`).join("");
+
+  const data = {
+    key, ticker: r.ticker || key, decimals: r.decimals, last: r.last, star: starN,
+    favoured: r.favoured || null, atr30: r.atr30, atrD: r.atrD,
+    ladder: r.ladder, alerts: r.alerts, scenarios: r.scenarios,
+  };
+
+  const desk = interactive ? `
+<section class="desk" id="desk">
+  <div class="desk-grid">
+    <div class="card map-card" id="map-card">
+      <div class="card-head">
+        <h2>Price map</h2>
+        <div class="seg" id="zoomSeg" role="group" aria-label="Map range">
+          <button type="button" data-zoom="plan" aria-pressed="true">This plan</button>
+          <button type="button" data-zoom="levels" aria-pressed="false">All levels</button>
+          <button type="button" data-zoom="wide" aria-pressed="false">±2 daily ATR</button>
+        </div>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="k-line k-price"></i>Last price</span>
+        <span><i class="k-star">★</i>Decision level</span>
+        <span><i class="k-line"></i>Alert level</span>
+        <span><i class="k-dot k-long"></i>Long targets</span>
+        <span><i class="k-dot k-short"></i>Short targets</span>
+        <span><i class="k-zone"></i>Thin zone / risk</span>
+      </div>
+      <div class="map-wrap"><svg id="map" role="img" aria-label="Price map"></svg><div class="tip" id="tip" hidden></div></div>
+      <p class="map-note">Hover a line for its source; click an alert level to plan it. Every level is also in the <a href="#price-map">Price map</a> tables.</p>
+    </div>
+    <div class="card plan-card">
+      <div class="card-head"><h2>Trade planner</h2><span class="sub">${esc(String(r.alerts.length))} alert levels</span></div>
+      <div class="lvls" id="lvls" role="listbox" aria-label="Alert levels"></div>
+      <div class="plan-ctl">
+        <div class="seg" id="dirSeg" role="group" aria-label="Direction">
+          <button type="button" data-dir="long">▲ Long</button>
+          <button type="button" data-dir="short">▼ Short</button>
+          <button type="button" data-dir="both">Both</button>
+        </div>
+        <span class="note">R measured from the level — your fill is the confirming 30-min close.</span>
+      </div>
+      <div id="planOut"></div>
+      <div class="popup" id="popupBox">
+        <div class="popup-head"><span>Alert text</span><button type="button" class="btn" id="copyBtn">Copy</button></div>
+        <pre id="popupText"></pre>
+      </div>
+    </div>
+  </div>
+</section>` : "";
+
+  const ranked = r.scenarios.length ? `
+<section class="scen" id="ranked">
+  <div class="card">
+    <div class="card-head"><h2>Ranked scenarios</h2><span class="sub">best first · ★ = today's A+ level</span></div>
+    <div class="rank-tabs" id="rankTabs" role="tablist" aria-label="Scenarios"></div>
+    <div id="rankOut"></div>
+  </div>
+</section>` : "";
 
   return `<!doctype html>
 <html lang="en">
@@ -295,7 +501,7 @@ function page(r, key, siblings, mdName){
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(key)} price map — ${esc(date)}</title>
 <script>if (window.self !== window.top) document.documentElement.classList.add("framed");</script>
-<style>${CSS}</style>
+<link rel="stylesheet" href="../assets/report.css">
 </head>
 <body>
 <div class="wrap">
@@ -311,13 +517,16 @@ function page(r, key, siblings, mdName){
 <nav class="toc" aria-label="Sections">${toc.join("")}</nav>
 <section class="primary" id="primary">
   <div class="lbl">★ Primary setup</div>
-  <p>${inline(r.primary || "—")}</p>
+  <p>${gloss(inline(r.primary || "—"))}</p>
   ${r.notes.length ? `<div class="notes">${md(r.notes.join("\n\n"))}</div>` : ""}
 </section>
-${shots.length ? `<section class="charts" id="charts"><h2>Charts</h2><div class="grid">${shots.join("")}</div></section>` : ""}
+${desk}
+${ranked}
 ${body}
 <footer>Built from ${esc(mdName)} · ${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC</footer>
 </div>
+<script type="application/json" id="report-data">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>
+<script src="../assets/report.js"></script>
 </body>
 </html>
 `;
@@ -334,24 +543,28 @@ for (const sym of symbols){
 if (!found.length) fail(`no reports for ${date} in ${srcDir}`);
 
 mkdirSync(outDir, { recursive: true });
-const siblings = found.map(f => f.key).sort((a, b) => {
-  const ia = ORDER.indexOf(a), ib = ORDER.indexOf(b);
-  return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b);
-});
+const assets = join(ROOT, "futures", "assets");
+mkdirSync(assets, { recursive: true });
+for (const f of ["report.css", "report.js"]) copyFileSync(join(ROOT, "tools", "report", f), join(assets, f));
+
+const siblings = found.map(f => f.key).sort(sortProducts);
 
 const built = {};
 console.log(`Futures ${date} — ${longLabel(date)}`);
 for (const f of found){
   const r = parseReport(readFileSync(f.mdPath, "utf8"));
-  const html = page(r, f.key, siblings, basename(f.mdPath));
   const out = join(outDir, `${f.key}.html`);
-  writeFileSync(out, html, "utf8");
+  writeFileSync(out, page(r, f.key, siblings, basename(f.mdPath)), "utf8");
   const charts = chartsFor(f.key).length;
+  const nb = r.scenarios.reduce((n, s) => n + s.branches.length, 0);
   built[f.key] = {
     file: `${f.key}.html`, symbol: r.ticker || f.sym, name: r.desc, snapshot: r.snapDate,
-    last: r.last, star: r.star, favoured: r.favoured || null, bias: r.biasShort || null, charts,
+    last: r.last != null ? r.last.toFixed(r.decimals) : "", star: r.star, favoured: r.favoured || null,
+    bias: r.biasShort || null, charts,
   };
-  console.log(`  ${f.key}.html  (${Math.round(statSync(out).size / 1024)} KB, ${charts} chart${charts === 1 ? "" : "s"}, ${r.sections.length} sections)`);
+  console.log(`  ${f.key}.html  (${Math.round(statSync(out).size / 1024)} KB) — ${r.ladder.length} rungs, ` +
+    `${r.alerts.length} alerts, ${r.scenarios.length} scenarios / ${nb} branches, ${charts} chart${charts === 1 ? "" : "s"}`);
+  if (!r.alerts.length) console.warn(`    ! no alert table parsed for ${f.key} - the map and planner are left out`);
 }
 
 // ---------- manifest ----------
@@ -368,9 +581,7 @@ const prev = days.find(d => d.id === date);
 // Products rebuilt now replace their old entries; ones not in this run are kept.
 const merged = Object.assign({}, prev && prev.products, built);
 const products = {};
-Object.keys(merged)
-  .sort((a, b) => { const ia = ORDER.indexOf(a), ib = ORDER.indexOf(b); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b); })
-  .forEach(k => { products[k] = merged[k]; });
+Object.keys(merged).sort(sortProducts).forEach(k => { products[k] = merged[k]; });
 
 const day = { id: date, label: longLabel(date), products };
 const all = days.filter(d => d.id !== date).concat(day).sort((a, b) => String(b.id).localeCompare(String(a.id)));
