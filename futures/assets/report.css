@@ -250,3 +250,10 @@ footer{margin-top:40px;padding-top:12px;border-top:1px solid var(--rule);font:12
 
 /* "Read this first" notices (contract roll, event risk) sit above the map. */
 details.sec.urgent{margin-top:14px;border-left:4px solid var(--ink)}
+
+/* Block quotes carry the event warnings and rule notes in the 09-15 template. */
+blockquote{margin:10px 0;padding:8px 14px;border-left:3px solid var(--rule);background:var(--sunk);
+  border-radius:0 8px 8px 0;color:var(--ink2)}
+blockquote p{margin:5px 0}
+blockquote p:first-child{margin-top:0}
+blockquote p:last-child{margin-bottom:0}

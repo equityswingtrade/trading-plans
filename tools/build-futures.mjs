@@ -1,6 +1,6 @@
 // Build the futures price-map pages for one report date.
 //
-//   node tools/build-futures.mjs --date 2026-09-13
+//   node tools/build-futures.mjs --date 2026-09-15
 //        [--src C:\Users\VINHSANH\.claude\tradingview\reports] [--symbols ES1,NQ1,GC1]
 //
 // Reads <SYM>-structured-<date>.md, writes futures/<date>/<KEY>.html, copies the
@@ -10,7 +10,14 @@
 // Besides rendering the markdown, it lifts the numbers the interactive parts
 // need - the two ladders, the alert table and the ranked scenarios - into a
 // JSON block on the page. Anything it cannot parse is simply left out of the
-// map; the report text is always rendered in full.
+// map; the report text is always rendered in full, and the console warns.
+//
+// The report template has changed twice; all three shapes are read:
+//   to 2026-09-13  "# Symbol: ES1! (...)", "**Primary setup:**", "**Trigger:**",
+//                  prose branches with "entry ~x ... stop ~x ... R:R n"
+//   2026-09-14     "**Level <p>**" + "FROM BELOW: REJECT -> SHORT T1 .. SL .."
+//   from 2026-09-15 "# ES1! — Structured Market Analysis", "## Section N — ...",
+//                  "### ★ RANK 1 — <p> · name", "Hold from above -> LONG T1 .. SL .."
 //
 // Every image in futures/<date>/img/ named <KEY>-<tag>.jpg|png is shown in a
 // Charts section; the tag becomes the caption.
@@ -112,7 +119,7 @@ function polish(html){
   html = html.replace(/<table>/g, '<div class="tw"><table>').replace(/<\/table>/g, "</table></div>");
   html = html.replace(/<td([^>]*)>([\s\S]*?)<\/td>/g, (m, attr, inner) => {
     const t = inner.replace(/<[^>]+>/g, "").trim();
-    const cls = /^PASS-THROUGH/.test(t) ? "k-pass" : /^TARGET/.test(t) ? "k-tgt" : "";
+    const cls = /^PASS-THROUGH/.test(t) ? "k-pass" : /^(TARGET|PIVOT)/.test(t) ? "k-tgt" : "";
     return cls ? `<td${attr} class="${cls}">${inner}</td>` : m;
   });
   html = html.replace(/<tr>(\s*<td[^>]*>)★<\/td>/g, '<tr class="star">$1★</td>');
@@ -150,6 +157,9 @@ function gloss(html){
 const md = s => polish(marked.parse(s));
 const inline = s => colorDir(">" + marked.parseInline(s) + "<").slice(1, -1);
 
+// Sections whose full text opens by default.
+const isTakeaway = title => /final takeaway/i.test(title) || /^section\s+\d+\s*[—–-]\s*summary/i.test(title);
+
 function tocLabel(title){
   const map = [
     [/⛔|read this first/i, "⛔ Read first"],
@@ -157,9 +167,14 @@ function tocLabel(title){
     [/key price map/i, "Price map"], [/5-minute/i, "5-min tape"], [/market profile context/i, "Profile"],
     [/auction intent/i, "Auction"], [/market structure/i, "Structure"], [/forward scenarios/i, "Full scenarios"],
     [/final takeaway/i, "Takeaway"], [/^alerts/i, "Alerts"], [/skill changes/i, "Skill changes"],
+    // from 2026-09-15
+    [/scoring|step\s*[−–-]\s*1/i, "Scorecard"], [/multi-timeframe/i, "Structure"],
+    [/level inventory/i, "Price map"], [/ranked scenarios/i, "Full scenarios"],
+    [/alerts set/i, "Alerts"], [/summary/i, "Takeaway"],
   ];
   for (const [re, label] of map) if (re.test(title)) return label;
-  const p = title.replace(/^\d+(\.\d+)?[a-z]?\.\s*/i, "").replace(/[*`]/g, "");
+  const p = title.replace(/^(?:section\s+[\d.]+|step\s*[−–-]?\s*\d+)\s*[—–-]\s*/i, "")
+                 .replace(/^\d+(\.\d+)?[a-z]?\.\s*/i, "").replace(/[*`]/g, "");
   return p.length > 24 ? p.slice(0, 23) + "…" : p;
 }
 
@@ -185,32 +200,36 @@ const chunks = text => text.split(/^(?=### )/m).map(c => {
 
 // ---------- structured extraction ----------
 
+// Ladder tables are "# | Level | Source | Class" (to 09-14) or "Price | Source | Tag" (from 09-15).
 function parseLadders(bodyMd){
   const rungs = [];
   for (const c of chunks(bodyMd)){
     if (!c.title) continue;
     const side = /UPSIDE LADDER/i.test(c.title) ? "up" : /DOWNSIDE LADDER/i.test(c.title) ? "down" : null;
     if (!side) continue;
-    const t = tables(c.body)[0];
-    if (!t) continue;
-    for (const r of t.rows){
-      if (r.length < 4) continue;
-      const p = (plain(r[1]).match(/\d{3,}(?:\.\d+)?/g) || []).map(Number);
-      if (!p.length) continue;
-      const cls = plain(r[3]);
-      rungs.push({
-        side, p, src: plain(r[2]),
-        cls: /^PASS/i.test(cls) ? "pass" : /^STOP/i.test(cls) ? "stop" : "target",
-        dec: /\*\*/.test(r[1]) || /decision|★/i.test(cls),
-      });
+    for (const t of tables(c.body)){
+      const col = re => t.head.findIndex(h => re.test(plain(h)));
+      const iP = col(/^(level|price)$/i), iS = col(/^source/i), iC = col(/^(class|tag)$/i);
+      if (iP < 0 || iC < 0) continue;
+      for (const r of t.rows){
+        if (r.length <= Math.max(iP, iC)) continue;
+        const p = (plain(r[iP]).match(/\d{3,}(?:\.\d+)?/g) || []).map(Number);
+        if (!p.length) continue;
+        const cls = plain(r[iC]);
+        rungs.push({
+          side, p, src: iS >= 0 ? plain(r[iS]) : "",
+          cls: /^PASS/i.test(cls) ? "pass" : /^STOP/i.test(cls) ? "stop" : "target",
+          dec: /\*\*/.test(r[iP]) || /decision|★/i.test(cls) || /^(?:★\s*)?PIVOT\b/i.test(cls),
+        });
+      }
     }
   }
   return rungs;
 }
 
 function parseAlerts(sections){
-  const sec = sections.find(s => s.title && /^Alerts/i.test(s.title));
-  const t = sec && tables(sec.md)[0];
+  const sec = sections.find(s => s.title && /alerts/i.test(s.title));
+  const t = sec && tables(sec.md).find(x => x.head.length >= 5);
   if (!t) return [];
   const plan = cell => {
     const c = plain(cell);
@@ -276,6 +295,7 @@ function parseBranches(body, triggerPrice, triggerText){
 
 // Newer reports (from 2026-09-14): alert-style branches, one per approach -
 //   "FROM BELOW: REJECT → SHORT T1 <p> · T2 <p> · T3 <p> · SL <p>"
+//   "Hold from above → LONG T1 <p> · T2 <p> · T3 <p> · SL <p>"
 // or two on one line after a level -
 //   "7834.25 — last lower high. BREAK → backtest → LONG T1 … SL <p> · REJECT → SHORT T1 … SL <p>".
 // The direction is the word itself, never inferred from where T1 sits.
@@ -316,33 +336,61 @@ function parseLevelBranches(body, level){
 }
 
 function parseScenarios(sections){
-  const sec = sections.find(s => s.title && /forward scenarios/i.test(s.title));
+  const sec = sections.find(s => s.title && /(forward|ranked) scenarios/i.test(s.title));
   if (!sec) return [];
   const out = [];
   for (const c of chunks(sec.md)){
     if (!c.title) continue;
-    const idx = RANKS.findIndex(r => c.title.startsWith(r));
-    if (idx < 0) continue;
+    // "🥇 RANK 1 — [S2/S5] name ★" (to 09-14) or "★ RANK 1 — 7656.25 · name" (from 09-15)
+    const emoji = RANKS.findIndex(r => c.title.startsWith(r));
+    const numbered = /^★?\s*RANK\s+(\d+)\b/i.exec(plain(c.title));
+    if (emoji < 0 && !numbered) continue;
+    const rank = emoji >= 0 ? emoji + 1 : Number(numbered[1]);
     const title = plain(c.title);
     const slot = (/\[([^\]]+)\]/.exec(title) || [])[1] || "";
-    let name = slot ? title.slice(title.indexOf("]") + 1) : title.replace(/^.*?RANK\s*\d+\s*—\s*/i, "");
+    let name = slot ? title.slice(title.indexOf("]") + 1)
+                    : title.replace(/^.*?RANK\s*\d+\s*[—–-]\s*/i, "");
     name = name.replace(/★/g, "").trim();
+
     const trig = /^\*\*Trigger:\*\*\s*(.+)$/m.exec(c.body);
     const lvl = /^\*\*Level\s+(\d{3,}(?:\.\d+)?)[.*]*\s*(.*)$/m.exec(c.body);
     const why = /^\*\*Why[^*]*:\*\*\s*(.+)$/m.exec(c.body);
     const fav = /Favou?red(?: branch)?[^:]*:\s*(LONG|SHORT)/i.exec(plain(c.body));
     const triggerText = trig ? plain(trig[1]) : lvl ? plain("Level " + lvl[1] + " " + lvl[2]) : "";
-    const alertStyle = /\b(?:LONG|SHORT)\s+T1\b/.test(plain(c.body));
+    // From 09-15 the level is in the heading and the lead paragraph replaces "Why".
+    const headingLevel = emoji < 0 ? firstPrice(title.replace(/RANK\s*\d+/i, "")) : null;
+    let whyText = why ? plain(why[1]) : "";
+    if (!whyText && !trig && !lvl){
+      const lead = c.body.split(/\n\s*\n/).find(b => b.trim() && !/^[-|>]/.test(b.trim())) || "";
+      whyText = plain(lead.split("\n").filter(l => !/^\s*-/.test(l)).join(" "));
+    }
+
     out.push({
-      rank: idx + 1, slot, name, star: c.title.includes("★"),
-      trigger: triggerText, why: why ? plain(why[1]) : "",
+      rank, slot, name, star: c.title.includes("★"),
+      trigger: triggerText, why: whyText,
       favoured: fav ? fav[1].toUpperCase() : null,
-      branches: alertStyle
-        ? parseLevelBranches(c.body, lvl ? Number(lvl[1]) : triggerText ? firstPrice(triggerText) : null)
+      branches: /\b(?:LONG|SHORT)\s+T1\b/.test(plain(c.body))
+        ? parseLevelBranches(c.body, lvl ? Number(lvl[1]) : headingLevel != null ? headingLevel : triggerText ? firstPrice(triggerText) : null)
         : parseBranches(c.body, triggerText ? firstPrice(triggerText) : null, triggerText.length > 70 ? "" : triggerText),
     });
   }
-  return out;
+  return out.sort((a, b) => a.rank - b.rank);
+}
+
+// From 09-15 there is no "**Primary setup:**" line; build the callout from the ★ scenario
+// using only its own words and numbers.
+function synthPrimary(scenarios, decimals){
+  const s = scenarios.find(x => x.star) || scenarios[0];
+  if (!s || !s.branches.length) return "";
+  const lvl = s.branches[0].entry;
+  // The 09-15 headings start with the level itself ("7656.25 · HVN 920K …"); don't repeat it.
+  const nm = s.name.replace(/^\s*[\d.,]+\s*[·—–-]\s*/, "");
+  const head = "★ `" + (lvl != null ? lvl.toFixed(decimals) : s.name) + "` — " + nm + ".";
+  const legs = s.branches.map(b => {
+    const t = b.targets.map(x => x.k + " " + x.p.toFixed(decimals)).join(" · ");
+    return " " + b.label + " → **" + b.dir + "** " + t + (b.stop != null ? " · SL " + b.stop.toFixed(decimals) : "") + ".";
+  }).join("");
+  return head + (s.why ? " " + s.why : "") + legs;
 }
 
 // ---------- report parsing ----------
@@ -353,25 +401,39 @@ function parseReport(text){
   let i = 0;
   while (i < lines.length && !lines[i].trim()) i++;
 
+  // "# Symbol: ES1! (E-mini S&P 500 · CME)" or "# ES1! — Structured Market Analysis"
   const head = /^#\s*Symbol:\s*(\S+)\s*(?:\((.*)\))?\s*$/.exec(lines[i] || "");
-  const ticker = head ? head[1] : "";
-  const desc = head ? (head[2] || "") : "";
-  if (head) i++;
+  const headNew = head ? null : /^#\s*(\S+)\s*[—–-]\s*(.*)$/.exec(lines[i] || "");
+  const ticker = head ? head[1] : headNew ? headNew[1] : "";
+  let desc = head ? (head[2] || "") : "";
+  if (head || headNew) i++;
 
   const rest = lines.slice(i).join("\n");
   const hr = rest.search(/^---\s*$/m);
   const headMd = hr >= 0 ? rest.slice(0, hr) : "";
   const bodyMd = hr >= 0 ? rest.slice(hr).replace(/^---\s*\n/, "") : rest;
 
+  const metaLine = re => { const m = re.exec(headMd); return m ? m[1].trim() : ""; };
+  const planFor = metaLine(/^\*\*Plan for:\*\*\s*(.+)$/m);
+  const lastLine = metaLine(/^\*\*Last:\*\*\s*(.+)$/m);
+  const contract = metaLine(/^\*\*Contract:\*\*\s*(.+)$/m);
+  const scored = metaLine(/^\*\*Session scored:\*\*\s*(.+)$/m);
+
   let snapshot = "", primary = "";
   const notes = [];
   for (const block of headMd.split(/\n\s*\n/)){
     const b = block.trim();
     if (!b) continue;
-    if (/^Snapshot:/i.test(b)) snapshot = b.replace(/^Snapshot:\s*/i, "");
-    else if (/^\*\*Primary setup:\*\*/i.test(b)) primary = b.replace(/^\*\*Primary setup:\*\*\s*/i, "");
-    else notes.push(b);
+    if (/^Snapshot:/i.test(b)){ snapshot = b.replace(/^Snapshot:\s*/i, ""); continue; }
+    if (/^\*\*Primary setup:\*\*/i.test(b)){ primary = b.replace(/^\*\*Primary setup:\*\*\s*/i, ""); continue; }
+    // The newer metadata block: keep it as a note, minus the two lines shown in the header.
+    const keep = b.split("\n").filter(l => !/^\*\*(Plan for|Last):\*\*/i.test(l)).join("\n").trim();
+    if (keep) notes.push(keep);
   }
+  if (!snapshot){
+    snapshot = [planFor && "Plan for " + planFor, lastLine && "Last " + lastLine].filter(Boolean).join(" · ");
+  }
+  if (!desc && contract) desc = contract.replace(/\.\s*Roll.*$/i, "").trim();
 
   const sections = [];
   for (const part of bodyMd.split(/^(?=## )/m)){
@@ -381,27 +443,44 @@ function parseReport(text){
     sections.push({ title: m ? m[1].trim() : null, md: body });
   }
 
-  const lastStr = (/Last \*\*([\d.,]+)\*\*/.exec(snapshot) || [])[1] || "";
+  const lastStr = (/Last \*\*([\d.,]+)\*\*/.exec(snapshot) || [])[1] ||
+                  (/^\*\*Last:\*\*\s*\**([\d.,]+)/m.exec(headMd) || [])[1] || "";
   const flat = plain(bodyMd);
   const num = re => { const m = re.exec(flat); return m ? Number(m[1].replace(/,/g, "")) : null; };
-  const biasFull = ((/\*\*Current bias:\*\*\s*([^\n]+)/.exec(bodyMd) || [])[1] || "").replace(/\*\*/g, "").trim();
+
+  // "**Current bias:** …", "**Bias:** …" or "**Bias: … .**"
+  const biasLine = (bodyMd.split("\n").find(l => /^\s*[-*>]?\s*\*{0,2}(current bias|bias)\*{0,2}\s*:/i.test(l)) || "");
+  const biasFull = plain(biasLine).replace(/^(current bias|bias)\s*:\s*/i, "").replace(/\s*$/, "");
+  let biasShort = (/^([A-Z]+(?:-to-[A-Z]+)?)(,\s*leaning\s+\w+)?/.exec(biasFull) || [])[0] || "";
+  if (!biasShort && biasFull){
+    biasShort = biasFull.split(/(?<=\.)\s|\.\s/)[0].replace(/\.$/, "");
+    if (biasShort.length > 46) biasShort = biasShort.slice(0, 44) + "…";
+  }
+
+  const decimals = lastStr.includes(".") ? lastStr.split(".")[1].length : 0;
+  const scenarios = parseScenarios(sections);
 
   return {
-    ticker, desc, snapshot, primary, notes, sections,
+    ticker, desc, snapshot, notes, sections, scenarios,
+    primary: primary || synthPrimary(scenarios, decimals),
+    primarySynth: !primary,
     last: lastStr ? Number(lastStr.replace(/,/g, "")) : null,
-    decimals: lastStr.includes(".") ? lastStr.split(".")[1].length : 0,
-    // "★ two-sided `DECISION> 7665.25`" (to 09-13) or "★ `7715.00`" (from 09-14)
-    star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] || "",
+    decimals,
+    // "★ two-sided `DECISION> 7665.25`" / "★ `7715.00`" / "### ★ RANK 1 — 7656.25 · …"
+    star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] ||
+          ((scenarios.find(s => s.star) || {}).branches || []).reduce((v, b) => v || (b.entry != null ? String(b.entry) : ""), "") || "",
     favoured: ((/favou?red\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
-    snapDate: (/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || "",
-    biasFull,
-    biasShort: (/^([A-Z]+(?:-to-[A-Z]+)?)(,\s*leaning\s+\w+)?/.exec(biasFull) || [])[0] || "",
-    atr30: num(/30-min ATR\s*(?:≈|~|=)?\s*([\d,]+(?:\.\d+)?)/),
-    // "ATR condition: 72.25 = …" (to 09-13) or "ATR: 67.25 = …" (from 09-14)
-    atrD: num(/\bATR(?: condition)?:\s*([\d,]+(?:\.\d+)?)/),
+    // Newer reports name the session they scored; older ones lead the Snapshot line with it.
+    snapDate: scored ? plain(scored).replace(/\s*\(.*$/, "")
+                     : (/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || "",
+    biasFull, biasShort,
+    // "30-min ATR ≈ 18.85" or "30-min ATR = 0.28 × 66.50 = **18.62**"
+    atr30: num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
+           num(/30-min ATR\s*(?:≈|~|=)\s*([\d,]+(?:\.\d+)?)/),
+    // "ATR condition: 72.25 …", "ATR: 67.25 …" or "ATR 66.50."
+    atrD: num(/\bATR(?: condition)?:\s*([\d,]+(?:\.\d+)?)/) || num(/\bATR\s+([\d,]+(?:\.\d+)?)\b/),
     ladder: parseLadders(bodyMd),
     alerts: parseAlerts(sections),
-    scenarios: parseScenarios(sections),
   };
 }
 
@@ -427,32 +506,34 @@ function renderSection(body, prefix, seen){
     if (!c.title){ if (c.body.trim()) html += md(c.body); continue; }
     const h3 = `<h3 id="${uniq(prefix + "-" + slug(c.title), seen)}">${inline(c.title)}</h3>`;
     const inner = md(c.body);
-    const rank = RANKS.findIndex(r => c.title.startsWith(r));
-    html += rank >= 0
-      ? `<article class="rank${c.title.includes("★") ? " star" : ""}" data-rank="${rank + 1}">${h3}${inner}</article>`
+    const emoji = RANKS.findIndex(r => c.title.startsWith(r));
+    const numbered = /^★?\s*RANK\s+(\d+)\b/i.exec(plain(c.title));
+    const rank = emoji >= 0 ? emoji + 1 : numbered ? Number(numbered[1]) : 0;
+    html += rank
+      ? `<article class="rank${c.title.includes("★") ? " star" : ""}" data-rank="${rank}">${h3}${inner}</article>`
       : `<div class="sub">${h3}${inner}</div>`;
   }
   return html;
 }
 
 const HINTS = [
-  [/key price map/i, "full ladders, profile tables, naked levels"],
-  [/forward scenarios/i, "all six in full"],
-  [/^alerts/i, "repeating level alerts"],
-  [/scorecard/i, "how yesterday's plan did"],
+  [/key price map|level inventory/i, "full ladders, profile tables, naked levels"],
+  [/(forward|ranked) scenarios/i, "all six in full"],
+  [/alerts/i, "repeating level alerts"],
+  [/scorecard|scoring/i, "how yesterday's plan did"],
 ];
 
 function page(r, key, siblings, mdName){
   const seen = new Set(["primary", "desk", "ranked", "charts"]);
   const sign = n => (n > 0 ? "+" : n < 0 ? "−" : "") + Math.abs(n).toFixed(r.decimals);
-  const starN = r.star ? Number(r.star.replace(/,/g, "")) : null;
+  const starN = r.star ? Number(String(r.star).replace(/,/g, "")) : null;
   const favTxt = r.favoured === "LONG" ? "▲ LONG" : r.favoured === "SHORT" ? "▼ SHORT" : "";
 
   const starSub = starN != null && r.last != null
     ? `<small>${sign(starN - r.last)} from last${r.atr30 ? " · " + (Math.abs(starN - r.last) / r.atr30).toFixed(2) + "× 30m ATR" : ""}</small>` : "";
   const kpis = [
     r.last != null && `<div class="kpi"><span>Last</span><b>${esc(r.last.toFixed(r.decimals))}</b>${r.atr30 ? `<small>30m ATR ${esc(r.atr30)}</small>` : ""}</div>`,
-    r.star && `<div class="kpi star"><span>★ Level</span><b>${esc(r.star)}</b>${starSub}</div>`,
+    starN != null && `<div class="kpi star"><span>★ Level</span><b>${esc(starN.toFixed(r.decimals))}</b>${starSub}</div>`,
     favTxt && `<div class="kpi"><span>Favoured branch</span><b class="d-${r.favoured}">${favTxt}</b></div>`,
     r.biasShort && `<div class="kpi"><span>Bias</span><b class="txt" title="${esc(r.biasFull)}">${esc(r.biasShort)}</b></div>`,
   ].filter(Boolean).join("");
@@ -461,9 +542,9 @@ function page(r, key, siblings, mdName){
 
   // A "read this first" notice (contract roll, event risk) sits above the map and starts open.
   const urgent = s => /⛔|read this first/i.test(s.title);
-  // Takeaway leads the remaining collapsible sections and starts open; the rest keep report order.
+  // The summary leads the remaining collapsible sections and starts open; the rest keep report order.
   const secs = r.sections.filter(s => s.title);
-  const take = secs.findIndex(s => /final takeaway/i.test(s.title));
+  const take = secs.findIndex(s => isTakeaway(s.title));
   if (take > 0) secs.unshift(secs.splice(take, 1)[0]);
 
   const tocPre = [], tocBody = [];
@@ -479,7 +560,7 @@ function page(r, key, siblings, mdName){
     const id = uniq(slug(tocLabel(s.title)), seen);
     const u = urgent(s);
     const hint = (HINTS.find(([re]) => re.test(s.title)) || [])[1];
-    const html = `<details class="sec${u ? " urgent" : ""}" id="${id}"${u || /final takeaway/i.test(s.title) ? " open" : ""}>` +
+    const html = `<details class="sec${u ? " urgent" : ""}" id="${id}"${u || isTakeaway(s.title) ? " open" : ""}>` +
       `<summary><h2>${inline(s.title)}</h2>${hint ? `<span class="hint">${esc(hint)}</span>` : ""}</summary>` +
       `<div class="sec-body">${gloss(renderSection(s.md, id, seen))}</div></details>`;
     (u ? tocPre : tocBody).push(`<a href="#${id}">${esc(tocLabel(s.title))}</a>`);
@@ -574,7 +655,7 @@ function page(r, key, siblings, mdName){
 </header>
 <nav class="toc" aria-label="Sections">${toc.join("")}</nav>
 <section class="primary" id="primary">
-  <div class="lbl">★ Primary setup</div>
+  <div class="lbl">★ Primary setup${r.primarySynth ? " — from RANK 1" : ""}</div>
   <p>${gloss(inline(r.primary || "—"))}</p>
   ${r.notes.length ? `<div class="notes">${md(r.notes.join("\n\n"))}</div>` : ""}
 </section>
@@ -634,7 +715,10 @@ for (const f of found){
     `${charts} chart${charts === 1 ? "" : "s"}`);
   // Loud warnings for the things that silently degrade a page when the report format drifts.
   if (!r.alerts.length) console.warn(`    ! no alert table parsed for ${f.key} - the map and planner are left out`);
-  if (!r.star) console.warn(`    ! no ★ level found in the Primary setup for ${f.key}`);
+  if (!r.scenarios.length) console.warn(`    ! no ranked scenarios parsed for ${f.key}`);
+  if (!r.ladder.length) console.warn(`    ! no ladder rungs parsed for ${f.key} - the map has no levels`);
+  if (!r.star) console.warn(`    ! no ★ level found for ${f.key}`);
+  if (r.last == null) console.warn(`    ! no last price found for ${f.key}`);
   if (r.atr30 == null || r.atrD == null) console.warn(`    ! ATR not found for ${f.key} (30-min ${r.atr30}, daily ${r.atrD})`);
   const noStop = branches.filter(b => b.stop == null).length, noEntry = branches.filter(b => b.entry == null).length;
   if (branches.length && (noStop || noEntry)) console.warn(`    ! ${f.key}: ${noEntry} branch(es) without an entry, ${noStop} without a stop`);
