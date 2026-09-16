@@ -304,7 +304,7 @@ function parseLevelBranches(body, level){
   for (const line of body.split("\n")){
     if (!/^- /.test(line)) continue;
     const t = plain(line.slice(2));
-    const hits = [...t.matchAll(/\b(LONG|SHORT)\s+(?=T1\b)/g)];
+    const hits = [...t.matchAll(/\b(LONG|SHORT):?\s+(?=T1\b)/g)];
     if (!hits.length) continue;
     const lead = /^(\d{3,}(?:\.\d+)?)\s*—\s*([^.]*)\.\s*/.exec(t);
     const head = lead ? lead[1] + " — " + lead[2].trim() : "";
@@ -343,7 +343,7 @@ function parseLevelBranches(body, level){
 // - separated by blank lines, plus alert-style one-liners ("If it BREAKS instead … → LONG T1 …
 // · tactical SL …"), some indented under a level bullet ("7540.25 / 7541.75 — the six-year shelf").
 const groupedStyle = body => /^- \*\*Trigger\b/m.test(body) ||
-  body.split("\n").some(l => /^\s+- /.test(l) && /\b(?:LONG|SHORT)\s+T1\b/.test(plain(l)));
+  body.split("\n").some(l => /^\s+- /.test(l) && /\b(?:LONG|SHORT):?\s+T1\b/.test(plain(l)));
 
 function parseGroupedBranches(body, level){
   const out = [];
@@ -356,6 +356,8 @@ function parseGroupedBranches(body, level){
     const trigT = get("trigger"), entryT = get("entry"), targetT = get("target"), stopT = get("stop loss"), rrT = get("r:r");
     group = [];
     if (!entryT || !targetT) return;
+    // A two-edge fade ("long ≈ 7626 / short ≈ 7696") describes a range, not one trade.
+    if (/\blong\b/i.test(entryT) && /\bshort\b/i.test(entryT)) return;
     const seen = new Set();
     const targets = [...targetT.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)]
       .filter(m => !seen.has(m[1]) && seen.add(m[1]))
@@ -386,7 +388,7 @@ function parseGroupedBranches(body, level){
     const field = top ? fieldOf(t) : null;
     if (field){ group.push({ field, text: t }); continue; }
     flush();
-    const alertLine = /\b(?:LONG|SHORT)\s+T1\b/.test(t);
+    const alertLine = /\b(?:LONG|SHORT):?\s+T1\b/.test(t);
     if (top){
       // A level bullet heads the indented alert-style lines beneath it.
       const head = /^(\d{3,}(?:\.\d+)?)(?:\s*\/\s*[\d.]+)*\s*—\s*[^(.]*/.exec(t);
@@ -440,7 +442,7 @@ function parseScenarios(sections){
       branches: (() => {
         const at = lvl ? Number(lvl[1]) : headingLevel != null ? headingLevel : triggerText ? firstPrice(triggerText) : null;
         if (groupedStyle(c.body)) return parseGroupedBranches(c.body, at);
-        if (/\b(?:LONG|SHORT)\s+T1\b/.test(plain(c.body))) return parseLevelBranches(c.body, at);
+        if (/\b(?:LONG|SHORT):?\s+T1\b/.test(plain(c.body))) return parseLevelBranches(c.body, at);
         return parseBranches(c.body, triggerText ? firstPrice(triggerText) : null, triggerText.length > 70 ? "" : triggerText);
       })(),
     });
@@ -541,7 +543,7 @@ function parseReport(text){
     // "★ two-sided `DECISION> 7665.25`" / "★ `7715.00`" / "### ★ RANK 1 — 7656.25 · …"
     star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] ||
           ((scenarios.find(s => s.star) || {}).branches || []).reduce((v, b) => v || (b.entry != null ? String(b.entry) : ""), "") || "",
-    favoured: ((/favou?red\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
+    favoured: ((/favou?red(?:\s+branch)?\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
     // Newer reports name the session they scored; older ones lead the Snapshot line with it.
     snapDate: scored ? plain(scored).replace(/\s*\(.*$/, "")
                      : (/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || "",
