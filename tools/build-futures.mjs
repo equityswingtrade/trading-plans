@@ -328,10 +328,78 @@ function parseLevelBranches(body, level){
       if (label.length > 120) label = label.slice(0, 117) + "…";
       out.push({
         label, dir: m[1], entry: ent ? Number(ent[1]) : lead ? Number(lead[1]) : level,
-        targets, runner: null, stop: sl ? Number(sl[1]) : null, rr: null,
+        targets,
+        runner: (r => r ? Number(r[1]) : null)(/\brunner\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(seg.slice(0, numsEnd))),
+        stop: sl ? Number(sl[1]) : null, rr: null,
       });
     });
   }
+  return out;
+}
+
+// The rewritten 2026-09-15 reports: a branch is a block of bullets -
+//   "Trigger (with-trend): …", "Entry: short ≈ 7654", "Target: T1 … · runner …",
+//   "Stop Loss: tactical 7666.00 …", "R:R: T1 0.54 …"
+// - separated by blank lines, plus alert-style one-liners ("If it BREAKS instead … → LONG T1 …
+// · tactical SL …"), some indented under a level bullet ("7540.25 / 7541.75 — the six-year shelf").
+const groupedStyle = body => /^- \*\*Trigger\b/m.test(body) ||
+  body.split("\n").some(l => /^\s+- /.test(l) && /\b(?:LONG|SHORT)\s+T1\b/.test(plain(l)));
+
+function parseGroupedBranches(body, level){
+  const out = [];
+  let group = [], parent = null;
+  const fieldOf = t => (/^(Trigger|Entry|Target|Stop Loss|R:R)\b[^:]*:/i.exec(t) || [])[1];
+
+  const flush = () => {
+    if (!group.length) return;
+    const get = name => (group.find(g => g.field.toLowerCase() === name) || {}).text || "";
+    const trigT = get("trigger"), entryT = get("entry"), targetT = get("target"), stopT = get("stop loss"), rrT = get("r:r");
+    group = [];
+    if (!entryT || !targetT) return;
+    const seen = new Set();
+    const targets = [...targetT.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)]
+      .filter(m => !seen.has(m[1]) && seen.add(m[1]))
+      .map(m => ({ k: "T" + m[1], p: Number(m[2]) }))
+      .sort((a, b) => a.k.localeCompare(b.k));
+    if (!targets.length) return;
+    const entry = firstPrice(entryT.replace(/^Entry[^:]*:/i, ""));
+    const runner = /\brunner\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(targetT);
+    const tactical = /tactical\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopT);
+    const stop = tactical ? Number(tactical[1]) : firstPrice(stopT.replace(/^Stop Loss[^:]*:/i, ""));
+    const rr = /T1\s*(\d+(?:\.\d+)?)/.exec(rrT.replace(/^R:R[^:]*:/i, ""));
+    // The direction is the word in the Entry line ("short ≈ 7654"); fall back to where T1 sits.
+    const word = /\b(long|short)\b/i.exec(entryT);
+    const at = entry != null ? entry : level;
+    const dir = word ? word[1].toUpperCase() : at != null && targets[0].p < at ? "SHORT" : "LONG";
+    const q = /^Trigger\s*\(([^)]*)\)/i.exec(trigT);
+    let label = trigT.replace(/^Trigger[^:]*:\s*/i, "");
+    if (q) label = q[1].charAt(0).toUpperCase() + q[1].slice(1) + " — " + label;
+    if (label.length > 120) label = label.slice(0, 117) + "…";
+    out.push({ label: label || "On the trigger", dir, entry: at, targets,
+      runner: runner ? Number(runner[1]) : null, stop, rr: rr ? Number(rr[1]) : null });
+  };
+
+  for (const raw of body.split("\n")){
+    const top = /^- /.test(raw), nested = /^\s+- /.test(raw);
+    if (!top && !nested){ if (!raw.trim()) flush(); continue; }
+    const t = plain(raw.replace(/^\s*- /, ""));
+    const field = top ? fieldOf(t) : null;
+    if (field){ group.push({ field, text: t }); continue; }
+    flush();
+    const alertLine = /\b(?:LONG|SHORT)\s+T1\b/.test(t);
+    if (top){
+      // A level bullet heads the indented alert-style lines beneath it.
+      const head = /^(\d{3,}(?:\.\d+)?)(?:\s*\/\s*[\d.]+)*\s*—\s*[^(.]*/.exec(t);
+      parent = head && !alertLine ? { price: Number(head[1]), head: head[0].trim() } : null;
+    }
+    if (!alertLine) continue;
+    const ctx = nested ? parent : null;
+    for (const b of parseLevelBranches("- " + t, ctx ? ctx.price : level)){
+      if (ctx) b.label = ctx.head + " · " + b.label;
+      out.push(b);
+    }
+  }
+  flush();
   return out;
 }
 
@@ -369,9 +437,12 @@ function parseScenarios(sections){
       rank, slot, name, star: c.title.includes("★"),
       trigger: triggerText, why: whyText,
       favoured: fav ? fav[1].toUpperCase() : null,
-      branches: /\b(?:LONG|SHORT)\s+T1\b/.test(plain(c.body))
-        ? parseLevelBranches(c.body, lvl ? Number(lvl[1]) : headingLevel != null ? headingLevel : triggerText ? firstPrice(triggerText) : null)
-        : parseBranches(c.body, triggerText ? firstPrice(triggerText) : null, triggerText.length > 70 ? "" : triggerText),
+      branches: (() => {
+        const at = lvl ? Number(lvl[1]) : headingLevel != null ? headingLevel : triggerText ? firstPrice(triggerText) : null;
+        if (groupedStyle(c.body)) return parseGroupedBranches(c.body, at);
+        if (/\b(?:LONG|SHORT)\s+T1\b/.test(plain(c.body))) return parseLevelBranches(c.body, at);
+        return parseBranches(c.body, triggerText ? firstPrice(triggerText) : null, triggerText.length > 70 ? "" : triggerText);
+      })(),
     });
   }
   return out.sort((a, b) => a.rank - b.rank);
@@ -450,8 +521,9 @@ function parseReport(text){
 
   // "**Current bias:** …", "**Bias:** …" or "**Bias: … .**"
   const biasLine = (bodyMd.split("\n").find(l => /^\s*[-*>]?\s*\*{0,2}(current bias|bias)\*{0,2}\s*:/i.test(l)) || "");
-  const biasFull = plain(biasLine).replace(/^(current bias|bias)\s*:\s*/i, "").replace(/\s*$/, "");
-  let biasShort = (/^([A-Z]+(?:-to-[A-Z]+)?)(,\s*leaning\s+\w+)?/.exec(biasFull) || [])[0] || "";
+  // Drop the list/quote marker first ("- **Current bias:** …"), then the label.
+  const biasFull = plain(biasLine).replace(/^[-*>\s]+/, "").replace(/^(current bias|bias)\s*:\s*/i, "").replace(/\s*$/, "");
+  let biasShort = (/^([A-Z]+(?:-to-[A-Z]+)?)(?:\s+(?:short|long)-term)?(,\s*leaning\s+\w+)?/.exec(biasFull) || [])[0] || "";
   if (!biasShort && biasFull){
     biasShort = biasFull.split(/(?<=\.)\s|\.\s/)[0].replace(/\.$/, "");
     if (biasShort.length > 46) biasShort = biasShort.slice(0, 44) + "…";
