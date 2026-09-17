@@ -428,7 +428,11 @@ function parseScenarios(sections){
     const fav = /Favou?red(?: branch)?[^:]*:\s*(LONG|SHORT)/i.exec(plain(c.body));
     const triggerText = trig ? plain(trig[1]) : lvl ? plain("Level " + lvl[1] + " " + lvl[2]) : "";
     // From 09-15 the level is in the heading and the lead paragraph replaces "Why".
-    const headingLevel = emoji < 0 ? firstPrice(title.replace(/RANK\s*\d+/i, "")) : null;
+    // The level can live in the heading: "RANK 1 — [S1] Thursday's VAH ★ 7711.50 …"
+    // (from 09-17) or "★ RANK 1 — 7656.25 · …" (09-15).
+    const headingStar = (/★\s*([\d,]+(?:\.\d+)?)/.exec(title) || [])[1];
+    const headingLevel = headingStar ? Number(headingStar.replace(/,/g, ""))
+                       : emoji < 0 ? firstPrice(title.replace(/RANK\s*\d+/i, "")) : null;
     let whyText = why ? plain(why[1]) : "";
     if (!whyText && !trig && !lvl){
       const lead = c.body.split(/\n\s*\n/).find(b => b.trim() && !/^[-|>]/.test(b.trim())) || "";
