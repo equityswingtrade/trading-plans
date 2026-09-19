@@ -5,8 +5,9 @@ tabs:
 
 - **Equities Breakout** and **Wheel Strategy** — weekly, picked by plan date.
 - **Futures** — daily price maps, picked by report date, with a sub-tab per
-  product: **ES**, **NQ**, **GC**. Each sub-tab shows ▲/▼ for that day's
-  favoured branch.
+  product: **ES**, **NQ**, **GC**, plus **Summary** on the days that have a
+  watchlist summary. Each product sub-tab shows ▲/▼ for that day's favoured
+  branch; Summary is greyed out on days without one.
 
 The two halves link to each other. A futures day links to that week's
 equities and wheel plans (the newest plan dated on or before it). A weekly
@@ -39,6 +40,14 @@ tools/vendor/marked.mjs         markdown parser, vendored (MIT) - no npm install
 The reports come from `C:\Users\VINHSANH\.claude\tradingview\reports`, named
 `ES1-structured-<date>.md`, `NQ1-structured-<date>.md`,
 `GC1-structured-<date>.md`.
+
+**Watchlist summary (optional, weekend runs).** If
+`watchlist-summary-<date>.md` sits beside them, it is built as
+`futures/<date>/SUM.html` and appears as the **Summary** sub-tab, after the
+three products. It is one page of text — the cross-symbol scorecard, the
+comparison table, the ranked "easy to happen" list and the full alert table —
+with no price map of its own; its header cards show each product's ★ level,
+favoured branch and bias.
 
 **Pictures (optional).** Save them in `...\tradingview\reports\img\` with the
 symbol and the date at the front of the name. Anything after the date becomes
@@ -115,6 +124,16 @@ The interactive parts read three more pieces, all in the skill's fixed format:
     states `entry ~<p>`.
   - **to 2026-09-13** — a `**Trigger:**` line and prose bullets carrying
     `entry ~<p>`, `T1 <p>`, `runner <p>`, `stop ~<p>`, `R:R <n>`.
+  - **from 2026-09-15** — a bullet each for `Trigger:`, `Entry:`, `Target:`,
+    `Stop Loss:` and `R:R:`, plus `If it … instead → SHORT T1 … tactical SL …`
+    one-liners for the other side. From 09-19 the entry bullet may state only a
+    `Max-chase:` limit, in which case the entry is the scenario's own level (the
+    price in the heading); `R:R:` may be written as arithmetic
+    (`to T1 = 8.50 ÷ 11.25 = 0.76`); and a fork scenario writes one
+    `Target (a — … → LONG)` / `Target (b — … → SHORT)` bullet per side, with the
+    `(a)` / `(b)` halves of the entry, stop and R:R bullets going with them.
+    The header block ends at the `---` rule or, when there is none, at the first
+    `## ` heading.
 
 The build prints each product's branch count split into long / short, and
 warns when a ★ level or ATR is missing, a branch has no entry or stop, or every

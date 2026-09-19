@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ES price map — 2026-09-19</title>
+<script>if (window.self !== window.top) document.documentElement.classList.add("framed");</script>
+<link rel="stylesheet" href="../assets/report.css?v=73f04902">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="crumbs">
+    <a href="../../index.html#futures/2026-09-19/ES">Trading Plans</a><span>/</span><span>Futures · Sat, Sep 19, 2026</span>
+    <nav class="sib" aria-label="Products"><a href="ES.html" aria-current="page">ES</a><a href="NQ.html">NQ</a><a href="GC.html">GC</a><a href="SUM.html">Summary</a></nav>
+  </div>
+  <h1>ES1!<span class="desc">E-mini S&amp;P 500 · CME</span></h1>
+  <p class="snap">2026-09-19 (built Saturday) · <strong>Plans the Sunday 09-20 17:00 CT Globex open → Monday 09-21 RTH close</strong>
+Last <strong>7725.00</strong> (final Globex print, Fri 15:55 CT) · Friday settlement 7712.50 · Session H/L (ETH) <strong>7739.25 / 7675.00</strong> · RTH H/L 7718.25 / 7675.00 · ATH ≈ 7906.25 (2026-08-13)</p>
+  <div class="kpis"><div class="kpi"><span>Last</span><b>7725.00</b><small>30m ATR 21.21</small></div><div class="kpi star"><span>★ Level</span><b>7712.50</b><small>−12.50 from last · 0.59× 30m ATR</small></div><div class="kpi"><span>Favoured branch</span><b class="d-LONG">▲ LONG</b></div><div class="kpi"><span>Bias</span><b class="txt" title="Bullish inside a balance, with a hard ceiling at 7752.50. Three higher lows, a reclaimed breakdown, a growing node beneath price, and a close above value — against a five-week chain of lower highs and a cap that has not absorbed a contract in four sessions.">Bullish inside a balance</b></div></div>
+</header>
+<nav class="toc" aria-label="Sections"><a href="#primary">Setup</a><a href="#read-first">⛔ Read first</a><a href="#desk">Map & planner</a><a href="#ranked">Scenarios</a><a href="#takeaway">Takeaway</a><a href="#scorecard">Scorecard</a><a href="#long-term">Long-term</a><a href="#trend-vol">Trend &amp; vol</a><a href="#price-map">Price map</a><a href="#5-min-tape">5-min tape</a><a href="#profile">Profile</a><a href="#auction">Auction</a><a href="#structure">Structure</a><a href="#full-scenarios">Full scenarios</a><a href="#alerts">Alerts</a><a href="#skill-changes">Skill changes</a></nav>
+<section class="primary" id="primary">
+  <div class="lbl">★ Primary setup</div>
+  <p>★ <strong>7712.50</strong> twin <abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr> — <strong>favoured <span class="d-LONG">LONG</span></strong>: hold it from above (or break-and-backtest from below) on a 30-min close → T1 7721.00 · T2 7733.00 · T3 7741.50 · runner 7752.50; tactical SL 7701.25. R:R to T1 0.76 ⚠ — T2 restores it at 1.82R, the runner pays 3.56R.</p>
+  
+</section>
+<details class="sec urgent" id="read-first" open><summary><h2>⛔ The Fed, the roll, and the calendar — read this first</h2></summary><div class="sec-body"><ul>
+<li><strong>The roll is done and settled.</strong> ES1! has been the <strong>December</strong> contract since the 17:00 CT Globex open on Mon 09-14. <strong>B-ADJ is ON</strong>, so every level, EMA and node below is already in December terms (the 09-14 adjustment was <strong>+67.75</strong>). September expired Fri 09-18 — it is gone and must never be analysed again.</li>
+<li><strong>FOMC is behind us</strong> (09-16). The next decision is late October, so there is <strong>no watch-only Fed window in this session</strong>.</li>
+<li><strong>Calendar caveat — I could not verify the week&#39;s 2026 dates.</strong> The search returned a 2025 calendar (it put PCE on a Saturday, which is impossible for 2026). What is reliable: <strong>Monday 09-21 has no confirmed tier-1 US release</strong>, and the late-September slate — flash PMIs, durable goods, final Q2 GDP, PCE — falls somewhere in Tue–Fri. <strong>Re-check the calendar Monday morning before the open</strong> and apply the standing 30-minute watch-only window around any 07:30 / 08:30 / 09:00 CT release.</li>
+<li><strong>A low-catalyst Monday favours the balance case (RANK 5).</strong> Do not force a breakout trade into an empty tape.</li>
+</ul>
+</div></details>
+
+<section class="desk" id="desk">
+  <div class="desk-grid">
+    <div class="card map-card" id="map-card">
+      <div class="card-head">
+        <h2>Price map</h2>
+        <div class="seg" id="zoomSeg" role="group" aria-label="Map range">
+          <button type="button" data-zoom="plan" aria-pressed="true">This plan</button>
+          <button type="button" data-zoom="levels" aria-pressed="false">All levels</button>
+          <button type="button" data-zoom="wide" aria-pressed="false">±2 daily ATR</button>
+        </div>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="k-line k-price"></i>Last price</span>
+        <span><i class="k-star">★</i>Decision level</span>
+        <span><i class="k-line"></i>Alert level</span>
+        <span><i class="k-dot k-long"></i>Long targets</span>
+        <span><i class="k-dot k-short"></i>Short targets</span>
+        <span><i class="k-zone"></i>Thin zone / risk</span>
+      </div>
+      <div class="map-wrap"><svg id="map" role="img" aria-label="Price map"></svg><div class="tip" id="tip" hidden></div></div>
+      <p class="map-note">Hover a line for its source; click an alert level to plan it. Every level is also in the <a href="#price-map">Price map</a> tables.</p>
+    </div>
+    <div class="card plan-card">
+      <div class="card-head"><h2>Trade planner</h2><span class="sub">6 alert levels</span></div>
+      <div class="lvls" id="lvls" role="listbox" aria-label="Alert levels"></div>
+      <div class="plan-ctl">
+        <div class="seg" id="dirSeg" role="group" aria-label="Direction">
+          <button type="button" data-dir="long">▲ Long</button>
+          <button type="button" data-dir="short">▼ Short</button>
+          <button type="button" data-dir="both">Both</button>
+        </div>
+        <span class="note">R measured from the level — your fill is the confirming 30-min close.</span>
+      </div>
+      <div id="planOut"></div>
+      <div class="popup" id="popupBox">
+        <div class="popup-head"><span>Alert text</span><button type="button" class="btn" id="copyBtn">Copy</button></div>
+        <pre id="popupText"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="scen" id="ranked">
+  <div class="card">
+    <div class="card-head"><h2>Ranked scenarios</h2><span class="sub">best first · ★ = today's A+ level</span></div>
+    <div class="rank-tabs" id="rankTabs" role="tablist" aria-label="Scenarios"></div>
+    <div id="rankOut"></div>
+  </div>
+</section>
+<details class="sec" id="takeaway" open><summary><h2>7. Final Takeaway</h2></summary><div class="sec-body"><ul>
+<li><strong>Current bias:</strong> <strong>Bullish inside a balance, with a hard ceiling at 7752.50.</strong> Three higher lows, a reclaimed breakdown, a growing node beneath price, and a close above value — against a five-week chain of lower highs and a cap that has not absorbed a contract in four sessions.</li>
+<li><strong>Auction verdict:</strong> the market <strong>tried to auction lower out of Thursday&#39;s value and FAILED</strong> — it found a finished <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">buying tail</abbr> at 7681.00 and closed above its own value area. It did a <strong>poor</strong> job of selling, and the failure is the signal.</li>
+<li><strong>Best levels to monitor:</strong> <strong>7712.50</strong> (★ — the growing node, and the line the long lives or dies on) · <strong>7721.00</strong> (the <abbr title="Unfinished low — a repair magnet likely to be revisited.">Weak Low</abbr>, 4.00 away — first thing price will touch) · <strong>7739.25 / 7749.75 / 7752.50</strong> (the cap complex — where the up-case gets settled) · <strong>7691.50</strong> (the <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> — lose it and RANK 1 is void) · <strong>7683.00 / 7681.00</strong> (the shelf that has now held twice) · <strong>7656.25</strong> (three-timeframe floor).</li>
+<li><strong>Primary risk:</strong> <strong>the whole bullish tell is built on thin tape.</strong> The move above 7720.75 happened <em>after</em> the <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> close, on 1.8K–10.7K bars, in a market that had just printed a 118K closing auction <strong>at</strong> value rather than away from it. Size positioned at the shelf, not above it. If Monday opens and immediately loses 7712.50, the post-close drift was noise and RANK 4 is the session. <strong>Second risk:</strong> the 7716.25 <abbr title="Unfinished high with no excess — a repair magnet likely to be revisited.">Poor High</abbr> repair — the strongest single argument in Friday&#39;s plan — has been spent. The bull case is one magnet poorer than it was.</li>
+<li><strong>Highest-probability setup:</strong> <strong>RANK 1 — ★ 7712.50 holds from above → <span class="d-LONG">LONG</span></strong>, T1 7721.00 · T2 7733.00 · T3 7741.50 · runner 7752.50, tactical SL 7701.25, R:R 1.82 at T2 and 3.56 at the runner. <strong>Do not plan to exit at T1</strong> — R:R there is 0.76.</li>
+<li><strong>Rule 4 (anti-correlation cap):</strong> <strong>ES and NQ are ONE index position, not two.</strong> Both favour <span class="d-LONG">LONG</span> today. <strong>Take one.</strong> See the watchlist summary for which one carries the bet.</li>
+</ul>
+</div></details><details class="sec" id="scorecard"><summary><h2>0. Yesterday&#39;s plan vs what actually happened — SCORECARD</h2><span class="hint">how yesterday's plan did</span></summary><div class="sec-body"><p>Scored from <code>last_fired</code> timestamps plus the 30-min and 5-min tape (repeating alerts keep only the LAST fire, so the sequence was reconstructed from bars).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Level</th>
+<th>Direction</th>
+<th>Fired?</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>★</strong></td>
+<td><strong>7711.50 <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> + <abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr></strong></td>
+<td><strong><span class="d-LONG">LONG</span> (favoured)</strong></td>
+<td>✅ 22:30 CT Thu (<abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr>)</td>
+<td><strong>WIN.</strong> Confirming 30-min close <strong>7713.50</strong> — 2.00 past the trigger = 0.09× <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr>, well inside the max-chase band. <strong>T1 7721.00 ✅ · T2 7733.00 ✅ · T3 7741.50 ✗ by 2.25</strong> (ETH high 7739.25). SL 7701.25 never approached (worst post-entry low 7708.50). <strong>≈ +1.59R at T2.</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>7693.50 Thu <abbr title="Value Area Low — bottom of the value area.">VAL</abbr></td>
+<td>two-sided</td>
+<td>✅ 08:30 CT (<abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> open)</td>
+<td><strong>SCRATCH.</strong> 30-min close 7693.00 = NO HOLD → backtest 7695.25 at 09:00 CT → <span class="d-SHORT">SHORT</span>. <strong>T1 7683.50 ✅</strong> (low 7683.25). T2 7656.25 ✗ — session low was 7675.00. Runner stopped at 7703.75 on the 13:30 CT recovery. Net ≈ flat.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>7656.25 Twin HVN</td>
+<td>—</td>
+<td>❌</td>
+<td>No trade — session low 7675.00 missed it by <strong>18.75</strong>.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>7752.50 Dead Cap</td>
+<td>—</td>
+<td>❌</td>
+<td>No trade — session high 7739.25 missed it by <strong>13.25</strong>.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>7624.00 Wed VAL</td>
+<td>—</td>
+<td>❌</td>
+<td>No trade.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>7590.00 Buy Tail + Spike</td>
+<td>—</td>
+<td>❌</td>
+<td>No trade.</td>
+</tr>
+</tbody></table></div>
+<p><strong>What went to plan:</strong> the ★ was the right level <em>and</em> the right direction, and it paid two targets. Two things earned that:</p>
+<ol>
+<li><strong>Rule 7 worked as arithmetic.</strong> The ★ measured <strong>0.58×</strong> the 30-min ATR from last price. It was reached <strong>five hours</strong> after the report was written. Three sessions of distance-failures ended here.</li>
+<li><strong>Rule 13 called it in advance.</strong> The 09-17 report wrote: <em>&quot;the accumulation is at 7712.50 (+7.2%) … and the thing immediately above it is an unfinished <abbr title="Unfinished high with no excess — a repair magnet likely to be revisited.">Poor High</abbr>.&quot;</em> Overnight the market took out that 7716.25 Poor High and ran to 7739.25. The node forecast the direction and the unfinished extreme supplied the destination.</li>
+</ol>
+<p><strong>What did NOT:</strong> <strong>the session&#39;s second-best trade had no alert on it.</strong> The 11:00 CT low at 7675.00 and the 7681.00 <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">buying tail</abbr> that formed off it produced a 50-point recovery into the close — and the 09-17 set had <strong>nothing between 7693.50 and 7656.25</strong>, a <strong>37.25-point gap = 1.76× the 30-min ATR</strong>. The turn landed squarely in the middle of it. No existing rule was violated; the ladder was honest and the levels were real. This is a <em>coverage</em> gap, not a ranking error.</p>
+<blockquote>
+<p><strong>⚠ PROPOSED REFINEMENT — awaiting your approval, not applied.</strong> <em>&quot;Inside the Rule-7 band (±1× the 30-min ATR of last price, extended to ±2×), no two adjacent alert levels may sit more than ~1.5× the 30-min ATR apart. If the 0.15% skip rule forces a wider gap, add the intervening magnet instead of leaving the hole.&quot;</em> <strong>Cost if it had been live on 09-18:</strong> an alert at 7683.50 would have fired the day&#39;s cleanest bounce. <strong>Cost of adopting it:</strong> the set grows from 6 to ~7 alerts on wide days.
+<strong>Today&#39;s set still carries one such gap</strong> — 7656.25 ↔ 7691.50 is 35.25 = <strong>1.66×</strong> — because I did not apply an unapproved change. Say the word and I will add 7675.00 (Friday&#39;s low) to close it.</p>
+</blockquote>
+<p><strong>Applied today:</strong> the ★ stays on the node the profile is actually building (7712.50, now <strong>+11.1%</strong> and growing a second session), and the six levels are spaced 13.25–35.25 with the tightest cluster where price is.</p>
+</div></details><details class="sec" id="long-term"><summary><h2>1. Long-Term Context</h2></summary><div class="sec-body"><ul>
+<li><strong>Major HVNs (daily AVP, anchored 2020-03-02 COVID low):</strong> 7656.25 (1.864M) · 7132.25 (3.194M) · 6364.50 (3.457M) · 5804.50 (3.037M) · 5280.50 (7.697M) · 5024.50 (7.648M) · 4200.75 (2.784M) · 3868.75 (1.945M) · 3608.75 (1.554M) · 3304.75 (816.6K)</li>
+<li><strong>Major LVNs (daily AVP):</strong> <strong>7344.25 (74.1K — near-empty)</strong> · 6652.50 (586.8K) · 6200.50 (1.284M) · 5948.50 (1.246M) · 5720.50 (922.1K) · 5132.50 (2.825M) · 4424.50 (352.7K)</li>
+<li><strong>Price vs HVNs:</strong> <strong>ABOVE the shelf.</strong> 7725.00 sits 68.75 above the nearest daily <abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr> (7656.25) with nothing but air between. That 7656.25 node is the six-year floor of this advance, and <strong>below it the 7344.25 valley holds 74K contracts</strong> — if 7656.25ever gives way, the next real support is 212 points lower.</li>
+<li><strong>Long-term bias: BULLISH.</strong> Price is above every EMA in the stack and above the heaviest recent HVN; the structure is a correction inside an advance, not a distribution.</li>
+</ul>
+</div></details><details class="sec" id="trend-vol"><summary><h2>2. Daily Trend &amp; Volatility</h2></summary><div class="sec-body"><ul>
+<li><strong>Trend:</strong> <strong>Bullish</strong> (Moving Average Explorer label).</li>
+<li><strong>MA slope:</strong> stack fully ordered <strong>20 &gt; 50 &gt; 100 &gt; 200 &gt; 300</strong> — 7720.75 / 7695.50 / 7588.25 / 7377.50 / 7194.00 — and rising. Price 7725.00 sits <strong>4.25 above the 20-EMA</strong> and <strong>29.50 above the 50-EMA</strong>. The 20-EMA is the line the whole up-case rests on.</li>
+<li><strong><abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr> condition:</strong> <strong>75.75 = 0.98% of price — LOW</strong> (&lt;2% band), and contracting. Friday&#39;s <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> range was 64.25 = <strong>0.85× ATR</strong>; Wednesday&#39;s FOMC range was ~124. Volatility is draining out of the market.</li>
+<li><strong>Environment:</strong> orderly uptrend, low and falling volatility, three sessions into a recovery off the FOMC low.</li>
+<li><strong>Unfilled gaps:</strong> <strong>None material</strong> — ES trades near-continuously on Globex. No gap logic applies.</li>
+</ul>
+</div></details><details class="sec" id="price-map"><summary><h2>3. Key Price Map</h2><span class="hint">full ladders, profile tables, naked levels</span></summary><div class="sec-body"><div class="tw"><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Levels</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Long-term <abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr> (daily AVP)</td>
+<td>7656.25 (1.864M) · 7132.25 (3.194M) · 6364.50 · 5804.50 · 5280.50 · 5024.50</td>
+</tr>
+<tr>
+<td>Intraday HVN (30-min AVP, 2022 anchor)</td>
+<td><strong>7712.50 (696.8K ↑)</strong> · 7752.50 (664.0K) · 7656.25 (934.2K) · 7620.00 (684.1K) · 7541.75 (846.4K) · 7840.00 (479.8K) · 7412.50 (207.0K) · 7292.50 (527.3K)</td>
+</tr>
+<tr>
+<td>Intraday <abbr title="Low-volume node — thin trade: rejection, price moves fast through it (Law 9).">LVN</abbr> (30-min AVP)</td>
+<td><strong>7698.00 (424.5K)</strong> · 7641.75 (461.6K) · 7778.00 (204.2K) · 7814.50 (263.6K) · 7450.75 (121.7K) · <strong>7343.50 (36.4K)</strong> · 7218.00 (30.0K)</td>
+</tr>
+<tr>
+<td>5-min HVN</td>
+<td><strong>7711.75 (252.4K)</strong> · 7754.75 (324.0K) · 7656.75 (372.7K) · 7612.75 (350.4K) · 7789.75 (264.0K) · 7842.75 (273.7K) · 7562.75 (264.7K) · 7542.75 (270.4K) · 7511.75 (320.6K)</td>
+</tr>
+<tr>
+<td>5-min LVN</td>
+<td><strong>7720.75 (102.9K)</strong> · 7696.75 (177.7K) · 7638.75 (192.5K) · 7776.75 (118.6K) · 7815.75 (148.8K) · 7570.75 (185.6K) · 7529.75 (207.5K) · <strong>7899.75 (4.1K)</strong></td>
+</tr>
+<tr>
+<td>Daily levels</td>
+<td>20-EMA 7720.75 · 50-EMA 7695.50 · 100-EMA 7588.25 · 200-EMA 7377.50 · 300-EMA 7194.00 · Friday H/L 7739.25 / 7675.00 · ATH 7906.25</td>
+</tr>
+<tr>
+<td>Gap levels</td>
+<td>None (continuous session)</td>
+</tr>
+<tr>
+<td>Confluence zones</td>
+<td><strong>7711.50–7712.50</strong> (30m HVN + 5m twin + Thu <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> + Friday&#39;s closing-auction print) · <strong>7720.75–7721.00</strong> (5m LVN + 20-EMA + naked <abbr title="Unfinished low — a repair magnet likely to be revisited.">Weak Low</abbr> ⚠) · <strong>7752.50–7754.75</strong> (30m + 5m twin HVN + naked <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> 7753.00) · <strong>7656.25–7656.75</strong> (daily AVP + 30m + 5m, three timeframes agree)</td>
+</tr>
+</tbody></table></div>
+<div class="sub"><h3 id="price-map-hvn-focus-the-twin-table-30-min-5-min-confluence">HVN FOCUS — the twin table (30-min × 5-min confluence)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>30-min node</th>
+<th>5-min node</th>
+<th>Gap</th>
+<th>Verdict</th>
+<th>Volume (30m / 5m)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>P 7712.50</strong></td>
+<td><strong>P 7711.75</strong></td>
+<td>0.75</td>
+<td><strong>TWIN HVN — real, and GROWING</strong></td>
+<td><strong>696.8K ↑ / 252.4K</strong></td>
+</tr>
+<tr>
+<td>P 7752.50</td>
+<td>P 7754.75</td>
+<td>2.25</td>
+<td>TWIN HVN — the cap</td>
+<td>664.0K / 324.0K</td>
+</tr>
+<tr>
+<td>P 7656.25</td>
+<td>P 7656.75</td>
+<td>0.50</td>
+<td><strong>TWIN HVN — and the daily AVP agrees (1.864M). Three timeframes.</strong></td>
+<td>934.2K / 372.7K</td>
+</tr>
+<tr>
+<td>V 7698.00</td>
+<td>V 7696.75</td>
+<td>1.25</td>
+<td><strong>TWIN LVN — speed zone</strong></td>
+<td>424.5K / 177.7K</td>
+</tr>
+<tr>
+<td>V 7641.75</td>
+<td>V 7638.75</td>
+<td>3.00</td>
+<td>TWIN LVN — speed zone</td>
+<td>461.6K / 192.5K</td>
+</tr>
+<tr>
+<td>V 7778.00</td>
+<td>V 7776.75</td>
+<td>1.25</td>
+<td>TWIN LVN — speed zone</td>
+<td>204.2K / 118.6K</td>
+</tr>
+<tr>
+<td>P 7840.00</td>
+<td>P 7842.75</td>
+<td>2.75</td>
+<td>TWIN HVN</td>
+<td>479.8K / 273.7K</td>
+</tr>
+<tr>
+<td>P 7620.00</td>
+<td>P 7612.75</td>
+<td>7.25</td>
+<td>soft — only loosely aligned</td>
+<td>684.1K / 350.4K</td>
+</tr>
+<tr>
+<td>—</td>
+<td><strong>V 7720.75</strong></td>
+<td>—</td>
+<td><strong>5-min ONLY — the thinnest pocket near price (102.9K). Price closed ABOVE it.</strong></td>
+<td>— / 102.9K</td>
+</tr>
+</tbody></table></div>
+<p><strong>The single most important line in this table is the last one.</strong> Price went out at 7725.00, <em>above</em> a 102.9K pocket, and <strong>there is no node of any kind between 7725.00 and 7754.75.</strong> Law 9: thin = fast.</p>
+</div><div class="sub"><h3 id="price-map-node-migration-rule-13-december-terms">Node migration (Rule 13) — December terms</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>Session</th>
+<th>7752.50 cap</th>
+<th><strong>7712.50 top</strong></th>
+<th>7656.25 node</th>
+<th>7620.00 floor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2026-09-15</td>
+<td>664.0K</td>
+<td>584.8K</td>
+<td>920.0K</td>
+<td>654.6K</td>
+</tr>
+<tr>
+<td>2026-09-16</td>
+<td>664.0K (0.0%)</td>
+<td>584.8K (0.0%)</td>
+<td>928.2K (+0.9%)</td>
+<td><strong>684.1K (+4.5%)</strong></td>
+</tr>
+<tr>
+<td>2026-09-17</td>
+<td>664.0K (0.0%)</td>
+<td><strong>626.9K (+7.2%)</strong></td>
+<td>934.2K (+0.6%)</td>
+<td>684.1K (0.0%)</td>
+</tr>
+<tr>
+<td><strong>2026-09-18</strong></td>
+<td><strong>664.0K (0.0%)</strong></td>
+<td><strong>696.8K (+11.1%)</strong></td>
+<td><strong>934.2K (0.0%)</strong></td>
+<td><strong>684.1K (0.0%)</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>Everything froze except 7712.50, which grew for a second straight session — and faster.</strong> +7.2%, then +11.1%. The cap at 7752.50 has not added a single contract in four sessions: <strong>that is a dead cap, and dead caps are where initiative goes to die, not where it is born.</strong></p>
+<p>Rule 13 in its own words: <em>&quot;an HVN that migrates toward one edge of a range while gaining volume is accumulation into that edge and forecasts the break through it.&quot;</em> Price closed <strong>above</strong> the growing node. <strong>A growing HVN below price is support being built — it forecasts the move away from it, upward.</strong> Rule 16(a)&#39;s own caution applies in reverse and is worth stating: 7712.50 is the <strong>direction</strong> evidence, it is <strong>not</strong> a target of a long.</p>
+</div><div class="sub"><h3 id="price-map-market-profile-friday-thursday-2-day">Market Profile — Friday, Thursday, 2-day</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>Session</th>
+<th>VAH</th>
+<th>POC</th>
+<th>VAL</th>
+<th>VA width</th>
+<th>Extremes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Friday (09-18)</strong></td>
+<td><strong>7707.00</strong></td>
+<td><strong>7691.50</strong></td>
+<td><strong>7683.00</strong></td>
+<td><strong>24.00</strong></td>
+<td><abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> <strong>7681.00</strong> ✅ · <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> <strong>7719.00</strong> ✅ · <abbr title="Where the prior session's closing spike began. Open above = support; below = rejected.">Spike Base</abbr> 7716.00</td>
+</tr>
+<tr>
+<td>Thursday (09-17)</td>
+<td>7711.50</td>
+<td>7706.00</td>
+<td>7693.50</td>
+<td>18.00</td>
+<td><abbr title="Unfinished high with no excess — a repair magnet likely to be revisited.">Poor High</abbr> 7716.25 ⚠ → <strong>consumed Friday</strong></td>
+</tr>
+<tr>
+<td>2-day</td>
+<td>—</td>
+<td>—</td>
+<td>7624.00</td>
+<td>—</td>
+<td>Buying Tail 7590.00 ✅ · <abbr title="One-timeframe zone left by a fast move; revisits travel fast.">Single Print</abbr> 7668.00 · Spike Base 7590.00</td>
+</tr>
+</tbody></table></div>
+<p><strong>Raw study read (<code>My Market Profile</code>, <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr>)</strong> — transcribed verbatim:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Yesterday (Thu 09-17)</th>
+<th>Today (Fri 09-18)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Open / High / Low / Close</td>
+<td>7713.50 / 7716.25 / 7680.50 / 7707.25</td>
+<td>7710.00 / 7718.25 / 7675.00 / 7712.25</td>
+</tr>
+<tr>
+<td>VAH / VAL / <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr></td>
+<td>7711.50 / 7693.50 / 7706.00</td>
+<td>7707.00 / 7683.00 / 7691.50</td>
+</tr>
+<tr>
+<td><strong>Close Loc</strong></td>
+<td>Inside VA &gt; POC</td>
+<td><strong>Above VA</strong></td>
+</tr>
+<tr>
+<td><strong>VA Shift</strong></td>
+<td>Overlap Higher</td>
+<td><strong>Overlap Lower</strong></td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>VA Shift: Overlap LOWER — and it is a weak one.</strong> Friday&#39;s VAH (7707.00) sits <em>inside</em> Thursday&#39;s value area (7693.50–7711.50). The overlap runs 7693.50–7707.00 = <strong>13.50 points of a 24.00-point value area, 56% shared.</strong> This is not a value migration; it is value sagging slightly while staying in the same place.</li>
+<li><strong>Close Loc: ABOVE VA — and this is the session&#39;s headline.</strong> Value shifted DOWN, and the close finished <strong>5.25 above the VAH</strong>. <strong>Rule 2(a) FAILS: the shift and the close do not agree.</strong> Per Rule 2(a) that is initiative selling that <strong>lost its grip</strong> — rank the go-with high, but do not make it a directional ★.</li>
+<li><strong>VA width vs the 30-min <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr>:</strong> 24.00 versus <strong>21.21</strong>. Value is 1.13× one ATR bar wide — a tight balance, and the second consecutive heavily-overlapping session. <strong>This is the most important structural fact in the report: the market is balancing, not trending.</strong></li>
+</ul>
+</div><div class="sub"><h3 id="price-map-naked-historical-levels-untested">Naked historical levels (untested)</h3><p><strong>Above:</strong> 7721.00 Weak Low ⚠ · 7733.00 VAL · 7741.50 POC · 7748.00 VAH · <strong>7749.75 Poor High ⚠</strong> · 7753.00 VAL · 7762.50 POC · 7768.00 VAH · 7786.00 Selling Tail · 7788.00 POC · 7800.50 VAH · 7807.50 Single Print · 7819.50 Selling Tail · 7824.25 POC · <strong>7834.25 <abbr title="Unfinished high — a repair magnet likely to be revisited.">Weak High</abbr> ⚠</strong> · 7834.75 VAH · <strong>7850.25 Weak High ⚠</strong> · 7861.50 POC · 7878.00 VAH + Selling Tail · 7882.25 VAH · <strong>7898.50 Weak High ⚠</strong> · <strong>7906.25 Weak High ⚠ (ATH)</strong></p>
+<p><strong>Below:</strong> 7683.00 VAL · 7681.00 Buying Tail ✅ · 7668.00 Single Print · 7624.00 2D VAL · 7590.00 Buying Tail + Spike Base ✅ · 7535.25 VAL · 7516.25 Buying Tail · 7489.25 POC · 7469.75 VAL · <strong>7466.75 <abbr title="Unfinished low with no excess — a repair magnet likely to be revisited.">Poor Low</abbr> ⚠</strong> · 7456.50 VAL · 7439.50 Buying Tail + Spike Base · 7400.00 VAL + Buying Tail · 7371.50 Single Print · 7355.00 POC · 7342.50 VAL + Buying Tail · 7324.75 POC · 7290.25 VAL + Buying Tail · 7284.50 POC · <strong>7267.00 Poor Low ⚠</strong> · 7259.25 VAL · 7200.00 POC · <strong>7176.50 Weak Low ⚠</strong></p>
+<p><em>What the session CONSUMED: <strong>Thursday&#39;s Poor High at 7716.25 was repaired</strong> — the <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> leg ran to 7739.25, 23.00 clear of it. That repair magnet is now spent, which removes the single strongest bull argument the 09-17 report carried. What remains untouched immediately above: 7721.00 (Weak Low, price came within <strong>4.00</strong>), 7733.00, 7741.50 (Friday&#39;s high missed it by <strong>2.25</strong>), and the 7749.75 Poor High (missed by <strong>10.50</strong>).</em></p>
+</div><div class="sub"><h3 id="price-map-upside-ladder-from-7725-00">🔼 UPSIDE LADDER (from 7725.00)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Level</th>
+<th>Source</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>7733.00</strong></td>
+<td>naked prior-RTH VAL</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>2</td>
+<td>7739.25</td>
+<td>Friday ETH high (stop cluster, not a magnet)</td>
+<td>STOP</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>7741.50</strong></td>
+<td>naked prior-RTH POC</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4</td>
+<td>7748.00</td>
+<td>naked prior-RTH VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>7749.75</strong></td>
+<td>naked <strong>Poor High ⚠</strong> — repair magnet</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>7752.50 / 7753.00 / 7754.75</strong></td>
+<td>30m HVN 664.0K (dead, 0.0% ×4) + naked VAL + 5m HVN 324.0K</td>
+<td class="k-tgt"><strong>TARGET — the cap</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>7762.50</td>
+<td>naked POC</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>8</td>
+<td>7768.00</td>
+<td>naked VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>9</td>
+<td>7776.75 / 7778.00</td>
+<td>twin LVN 118.6K / 204.2K</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>10</td>
+<td>7786.00 / 7788.00 / 7789.75</td>
+<td>naked Selling Tail + POC + 5m HVN 264.0K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>11</td>
+<td>7800.50</td>
+<td>naked VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>12</td>
+<td>7807.50</td>
+<td>naked Single Print</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>13</td>
+<td>7814.50 / 7815.75</td>
+<td>twin LVN 263.6K / 148.8K</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>14</td>
+<td>7819.50 / 7824.25</td>
+<td>naked Selling Tail + POC</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>15</td>
+<td><strong>7834.25 / 7834.75</strong></td>
+<td>naked <strong>Weak High ⚠</strong> + VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>16</td>
+<td>7840.00 / 7842.75</td>
+<td>twin HVN 479.8K / 273.7K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>17</td>
+<td><strong>7850.25</strong></td>
+<td>naked <strong>Weak High ⚠</strong></td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>18</td>
+<td>7861.50 / 7871.75</td>
+<td>naked POC + 5m HVN 115.6K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>19</td>
+<td>7878.00 / 7882.25</td>
+<td>naked VAH + Selling Tail + VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>20</td>
+<td><strong>7898.50</strong></td>
+<td>naked <strong>Weak High ⚠</strong></td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>21</td>
+<td><strong>7899.75</strong></td>
+<td>5m LVN <strong>4.1K — effectively empty</strong></td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>22</td>
+<td><strong>7906.25</strong></td>
+<td><strong>ATH / Weak High ⚠ (2026-08-13)</strong></td>
+<td class="k-tgt"><strong>TARGET — runner, discovery edge</strong></td>
+</tr>
+</tbody></table></div>
+</div><div class="sub"><h3 id="price-map-downside-ladder-from-7725-00">🔽 DOWNSIDE LADDER (from 7725.00)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Level</th>
+<th>Source</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>7720.75 / 7721.00</strong></td>
+<td>5m LVN <strong>102.9K</strong> + 20-EMA 7720.75 + naked <strong>Weak Low ⚠</strong></td>
+<td class="k-tgt">TARGET <em>(thin — expect a fast touch, do not rest a stop here)</em></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>7719.00</strong></td>
+<td>Friday RTH <strong>Selling Tail ✅</strong> (finished excess)</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>3</td>
+<td>7716.00</td>
+<td>Friday RTH Spike Base</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>7711.75 / 7712.50</strong></td>
+<td><strong>twin HVN 252.4K / 696.8K ↑</strong> + Thu VAH + Friday <abbr title="Market-on-close — the closing auction.">MOC</abbr> print</td>
+<td><strong>★ TARGET / STOP-class</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>7706.00 / 7707.00</td>
+<td>Thu POC + Friday VAH</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>7696.75 / 7698.00</strong></td>
+<td>twin LVN 177.7K / 424.5K</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>7695.50</td>
+<td>50-EMA</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>7691.50 / 7693.50</strong></td>
+<td><strong>Friday POC</strong> + Thu VAL</td>
+<td class="k-tgt"><strong>TARGET / invalidation STOP</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>7683.00</strong></td>
+<td>Friday VAL</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>7681.00</strong></td>
+<td>Friday <strong>Buying Tail ✅</strong> (finished excess)</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>11</td>
+<td>7675.00</td>
+<td>Friday session low</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>12</td>
+<td>7668.00</td>
+<td>2D Single Print</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>7656.25 / 7656.75</strong></td>
+<td>30m 934.2K + 5m 372.7K + <strong>daily AVP 1.864M — three timeframes</strong></td>
+<td class="k-tgt"><strong>TARGET — the shelf</strong></td>
+</tr>
+<tr>
+<td>14</td>
+<td>7638.75 / 7641.75</td>
+<td>twin LVN 192.5K / 461.6K</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>15</td>
+<td><strong>7620.00 / 7624.00</strong></td>
+<td>30m HVN 684.1K + 2D VAL</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>16</td>
+<td>7612.75</td>
+<td>5m HVN 350.4K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>17</td>
+<td><strong>7590.00</strong></td>
+<td>2D <strong>Buying Tail ✅</strong> + Spike Base</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>18</td>
+<td>7588.25</td>
+<td>100-EMA</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>19</td>
+<td>7575.00</td>
+<td>2026-09-16 session low (FOMC)</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>20</td>
+<td>7570.75</td>
+<td>5m LVN 185.6K</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>21</td>
+<td>7562.75</td>
+<td>5m HVN 264.7K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>22</td>
+<td><strong>7541.75 / 7542.75</strong></td>
+<td>twin HVN 846.4K / 270.4K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>23</td>
+<td>7535.25</td>
+<td>naked VAL</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>24</td>
+<td>7529.75</td>
+<td>5m LVN 207.5K</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>25</td>
+<td>7516.25 / 7511.75</td>
+<td>naked Buying Tail + 5m HVN 320.6K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>26</td>
+<td>7489.25</td>
+<td>naked POC</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>27</td>
+<td>7469.75 / <strong>7466.75</strong></td>
+<td>naked VAL + <strong>Poor Low ⚠</strong></td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>28</td>
+<td>7456.50</td>
+<td>naked VAL</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>29</td>
+<td>7450.75</td>
+<td>30m LVN 121.7K</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>30</td>
+<td>7439.50 / 7437.75</td>
+<td>naked Buying Tail + Spike Base + 5m HVN</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>31</td>
+<td><strong>7412.50</strong></td>
+<td>30m HVN 207.0K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>32</td>
+<td>7400.00</td>
+<td>naked VAL + Buying Tail</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>33</td>
+<td>7377.50</td>
+<td>200-EMA</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>34</td>
+<td><strong>7343.50 / 7344.25</strong></td>
+<td>daily LVN <strong>74.1K</strong> + 30m LVN <strong>36.4K</strong></td>
+<td class="k-pass"><strong>PASS-THROUGH — the big air pocket</strong></td>
+</tr>
+<tr>
+<td>35</td>
+<td><strong>7292.50</strong></td>
+<td>30m HVN 527.3K</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>36</td>
+<td>7218.00</td>
+<td>30m LVN 30.0K</td>
+<td class="k-pass"><strong>PASS-THROUGH — accelerant</strong></td>
+</tr>
+<tr>
+<td>37</td>
+<td><strong>7132.25 / 7132.50</strong></td>
+<td><strong>daily AVP 3.194M + 30m 1.445M</strong></td>
+<td class="k-tgt"><strong>TARGET — runner, six-year shelf</strong></td>
+</tr>
+</tbody></table></div>
+</div></div></details><details class="sec" id="5-min-tape"><summary><h2>3b. 5-Minute Price Action — the closing auction and the post-close drift</h2></summary><div class="sec-body"><ul>
+<li><strong>The low was a genuine rejection, not a breakdown.</strong> 7675.00 printed at <strong>11:05 CT</strong> on a 24,913-contract 5-min bar that <strong>closed back up at 7683.25</strong> — and that bar is what built the 7681.00 <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">buying tail</abbr>. Sellers got their price and could not keep it.</li>
+<li><strong>The closing auction printed AT value, not away from it.</strong> The 14:55 CT bar carried <strong>118,483 contracts</strong> against a 5–15K <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> norm, and closed <strong>7712.25</strong> — 0.25 from the 7712.50 volume shelf. Per the playbook read, <strong>size positioning at the shelf is stabilising, not directional.</strong> Nobody sold the close and nobody chased it.</li>
+<li><strong>Then ES went out on its high.</strong> After the RTH close: 7722.25 → 7725.50 → high <strong>7729.25</strong>, and the last 25 minutes held 7724–7728. It finished <strong>above the 7720.75 thin pocket</strong>. ⚠ <strong>Weigh this as a tell, not as proof</strong> — those bars carried 1.8K–10.7K contracts. Thin tape does not establish value.</li>
+<li><strong>Overnight participation was light.</strong> Thu→Fri <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> 30-min bars ran 1.7K–8.8K against an RTH norm of 40K–186K. Low overnight volume means <strong>no inventory to correct at Monday&#39;s open</strong> — which removes the open-drive catalyst and tilts Monday toward rotation.</li>
+<li><strong>Node asymmetry (Rule 14 — this sizes the move, it does NOT pick the direction):</strong> above price the profile is the thinnest on the board — V 7720.75 holds 102.9K and <strong>there is no node at all between 7725.00 and 7754.75</strong>. Below, price must grind through 7711.75 (252.4K), 7696.75 (177.7K) and 7656.75 (372.7K). <strong>If it goes up it goes fast; if it goes down it grinds.</strong> That is a statement about distance and speed only.</li>
+</ul>
+</div></details><details class="sec" id="profile"><summary><h2>4. Market Profile Context</h2></summary><div class="sec-body"><ul>
+<li><p><strong>Value Area Relationship:</strong> Overlap <strong>Lower</strong> (56% shared with Thursday) · Close Loc <strong>Above VA</strong>. The two disagree — Rule 2(a) fails.</p>
+</li>
+<li><p><strong>Balance or Imbalance:</strong> <strong>BALANCED.</strong> Evidence: two consecutive heavily-overlapping value areas, a 24.00-point VA against a 21.21 30-min <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr>, both session extremes left as <strong>finished tails</strong>, and a daily range of 0.85× ATR. Law 2 — this is the balancing state, so <strong>all six scenarios are live and the fades are NOT traps.</strong></p>
+</li>
+<li><p><strong>If balanced — the range:</strong> <strong>core 7683.00–7707.00</strong> (Friday&#39;s value area); <strong>full working range 7675.00–7739.25</strong> (Friday&#39;s <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> extremes); <strong>the structural range that matters is 7656.25–7752.50</strong> — twin <abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr> floor to dead-cap HVN, 96.25 points wide.</p>
+</li>
+<li><p><strong>Acceptance / Rejection notes:</strong> accepted 7683.00–7712.50 all session (the <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> and the two visits to 7690 area); <strong>rejected below 7681.00</strong> (<abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">buying tail</abbr>) and <strong>rejected above 7719.00</strong> (<abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">selling tail</abbr>) within <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr>; then <strong>accepted above 7720.75 after the close</strong> on thin volume.</p>
+</li>
+<li><p><strong>Structural anomalies:</strong> Thursday&#39;s <strong><abbr title="Unfinished high with no excess — a repair magnet likely to be revisited.">Poor High</abbr> 7716.25 was repaired and is gone.</strong> Friday left <strong>no unfinished extremes of its own</strong> — both tails are finished. The nearest unfinished business is the <strong>7721.00 <abbr title="Unfinished low — a repair magnet likely to be revisited.">Weak Low</abbr></strong> (4.00 above price) and the <strong>7749.75 Poor High</strong> (24.75 above).</p>
+</li>
+<li><p><strong>Opening read — n/a, pre-session (Rule 15 ⛔).</strong> This report is built Saturday. There is no inventory reading yet. <strong>The numeric decision rule for Monday 09-21 08:30 CT:</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Monday RTH open</th>
+<th>Inventory</th>
+<th>What it does to the ranking</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>above 7733.50</strong></td>
+<td>extended <strong><span class="d-LONG">LONG</span></strong> ≥ 1× the 30-min ATR</td>
+<td><strong>Demote RANK 1 and RANK 6</strong> below the fades. Expect the correction DOWN into 7712.50 first, then re-assess. Widen the ★ stop to 7698.00.</td>
+</tr>
+<tr>
+<td>7691.00 – 7733.50</td>
+<td>not extended</td>
+<td>No demotion. State the sign only: above 7712.25 tilts the first offer to the short side, below it to the long side.</td>
+</tr>
+<tr>
+<td><strong>below 7691.00</strong></td>
+<td>extended <strong><span class="d-SHORT">SHORT</span></strong> ≥ 1× the 30-min ATR</td>
+<td><strong>Demote RANK 4&#39;s break-short.</strong> Expect the short-covering correction UP first. <strong>Promote RANK 3</strong> (the 7683.00 hold-long).</td>
+</tr>
+</tbody></table></div>
+<p><em>Computed against Friday&#39;s RTH close of <strong>7712.25</strong> and a 30-min ATR of <strong>21.21</strong>. <strong>Valid for Monday&#39;s RTH open only — recompute against that session&#39;s close (Rule 17).</strong></em></p>
+</li>
+</ul>
+</div></details><details class="sec" id="auction"><summary><h2>4.5 Auction Intent &amp; Outcome</h2></summary><div class="sec-body"><ul>
+<li><p><strong>Attempted:</strong> after the overnight leg to 7739.25, the <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> session attempted to <strong>auction LOWER out of the overnight range and establish value beneath Thursday&#39;s</strong>. It probed to 7675.00 — 18.50 below Thursday&#39;s low — looking for sellers.</p>
+</li>
+<li><p><strong>Outcome: FAILED.</strong> Evidence: (1) value did migrate lower, but the <strong>close finished ABOVE the value area</strong> (7712.25 vs <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> 7707.00) — Rule 2(a) fails, the initiative lost its grip; (2) the probe extreme is a <strong>finished <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> at 7681.00</strong>, meaning the down-attempt was decisively turned away, not merely paused; (3) price then closed the week <strong>37.25 above its own low and above the whole value area</strong>. This is a textbook <strong>look-below-and-fail</strong>, and the failure is the signal.</p>
+</li>
+<li><p><strong>Counterweight, stated honestly:</strong> the session also left a <strong>finished <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> at 7719.00</strong> — the <em>up</em>-attempt inside RTH was rejected too. <strong>Both extremes are finished, which is why this is balance and not a trend.</strong> Rule 1 applies in its permissive form: symmetric excess ranks the fade first, and this range is genuinely horizontal (two overlapping VAs, flat highs at 7716–7719), not converging.</p>
+</li>
+<li><p><strong>Unfinished business:</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What it is</th>
+<th>Rule 8 distance</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>7721.00</strong></td>
+<td>naked <abbr title="Unfinished low — a repair magnet likely to be revisited.">Weak Low</abbr> (prior RTH)</td>
+<td>4.00 = <strong>0.05 daily <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr></strong></td>
+<td>⚠ <strong>inside</strong> the 0.3 window — but value migrated AWAY from it Friday, so Rule 8 says keep the alert, <strong>do not rank the repair first</strong></td>
+</tr>
+<tr>
+<td><strong>7749.75</strong></td>
+<td>naked <abbr title="Unfinished high with no excess — a repair magnet likely to be revisited.">Poor High</abbr></td>
+<td>24.75 = <strong>0.33 daily ATR</strong></td>
+<td>⚠ <strong>just outside</strong> the 0.3 window — alert yes, ★ no</td>
+</tr>
+<tr>
+<td>7834.25 / 7850.25</td>
+<td>naked Weak Highs</td>
+<td>109.25 / 125.25 = 1.44 / 1.65 ATR</td>
+<td>⚠ outside — multi-week objectives</td>
+</tr>
+<tr>
+<td>7898.50 / 7906.25</td>
+<td>naked Weak Highs (ATH zone)</td>
+<td>173.50 / 181.25 = 2.29 / 2.39 ATR</td>
+<td>⚠ outside</td>
+</tr>
+<tr>
+<td>7466.75</td>
+<td>naked <abbr title="Unfinished low with no excess — a repair magnet likely to be revisited.">Poor Low</abbr></td>
+<td>258.25 = 3.41 ATR</td>
+<td>⚠ outside</td>
+</tr>
+<tr>
+<td><strong>7681.00</strong></td>
+<td>Friday Buying Tail</td>
+<td>—</td>
+<td>✅ <strong>FINISHED excess</strong></td>
+</tr>
+<tr>
+<td><strong>7719.00</strong></td>
+<td>Friday Selling Tail</td>
+<td>—</td>
+<td>✅ <strong>FINISHED excess</strong></td>
+</tr>
+<tr>
+<td>7716.25</td>
+<td>Thursday Poor High</td>
+<td>—</td>
+<td>✅ <strong>REPAIRED Friday</strong> — consumed, no longer a magnet</td>
+</tr>
+<tr>
+<td>7590.00</td>
+<td>2D Buying Tail</td>
+<td>—</td>
+<td>✅ FINISHED excess</td>
+</tr>
+</tbody></table></div>
+</li>
+</ul>
+<p><strong>Rule 5 audit — (1) non-overlapping shift ❌ (Overlap Lower, 56% shared) · (2) Close Loc agrees ❌ (shift lower, close ABOVE VA) · (3) finished excess at the origin ✅ (Buying Tail 7681.00). 1 of three; tests 1 and 2 fail, so the ★ is a two-sided level alert.</strong></p>
+<p><strong>Rule 16(a) — nodes vs the auction read: NO CONFLICT, both point UP.</strong> The nodes say up (7712.50 grew +11.1% for a second session and price closed above it — support being built). The auction says up (the down-attempt FAILED, the close took the high ground). 16(a) has nothing to adjudicate here, and I am not manufacturing a conflict to have something to resolve.</p>
+<p><strong>Rule 16(b) — the ★ stays two-sided, and the favoured branch is <span class="d-LONG">LONG</span>.</strong> Cited: Rule 13 (node growth, two sessions), §4.5 (FAILED down-attempt + finished buying tail), and the reclaimed break of structure in §5.</p>
+</div></details><details class="sec" id="structure"><summary><h2>5. Market Structure Summary</h2></summary><div class="sec-body"><div class="tw"><table>
+<thead>
+<tr>
+<th>Pivot</th>
+<th>Level</th>
+<th>Date</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Swing high</strong></td>
+<td><strong>7906.25</strong></td>
+<td><strong>2026-08-13</strong></td>
+<td><strong>ATH</strong></td>
+</tr>
+<tr>
+<td>Swing high</td>
+<td>7850.25</td>
+<td>2026-08-28</td>
+<td>LH</td>
+</tr>
+<tr>
+<td>Swing high</td>
+<td>7834.25</td>
+<td>2026-09-03</td>
+<td>LH</td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>7653.25</td>
+<td>2026-09-10</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Swing high</td>
+<td>7751.25</td>
+<td>2026-09-11</td>
+<td>LH</td>
+</tr>
+<tr>
+<td><strong>Swing low</strong></td>
+<td><strong>7575.00</strong></td>
+<td><strong>2026-09-16 (FOMC)</strong></td>
+<td><strong>LL</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>7617.50</td>
+<td>2026-09-17</td>
+<td><strong>HL</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td><strong>7675.00</strong></td>
+<td><strong>2026-09-18</strong></td>
+<td><strong>HL</strong></td>
+</tr>
+<tr>
+<td>Swing high</td>
+<td>7739.25</td>
+<td>2026-09-18</td>
+<td>LH (vs 7751.25)</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>Sequence: MIXED, and it changed direction this week.</strong> The five-week picture is <strong>lower highs</strong> — 7906.25 → 7850.25 → 7834.25 → 7751.25 → 7739.25. But since the FOMC low on 09-16 there have been <strong>three consecutive higher lows</strong> (7575.00 → 7617.50 → 7675.00) and <strong>three consecutive higher highs</strong> (7699.00 → 7722.25 → 7739.25). A recovery leg is running inside a lower-high downtrend. <strong>Versus the 09-17 report this is unchanged in character but one session stronger</strong> — the third higher low is now in.</li>
+<li><strong>Break of structure — and this is the key line.</strong> The 09-16 close of 7623.00 broke <strong>below</strong> the 09-10 higher-low at 7653.25: uptrend damage, one close. <strong>It was then RECLAIMED</strong> — 09-17 closed 7707.25 and 09-18 closed 7712.50, both far back above 7653.25. <strong>A confirmed breakdown that gets reclaimed is a FAILED breakdown, and a failed breakdown flips the read bullish.</strong> That is the structural backbone of today&#39;s <span class="d-LONG">LONG</span> bias.</li>
+<li><strong>EMA-cluster break:</strong> none. The stack is intact and ordered.</li>
+<li><strong>Range behavior:</strong> <strong>contracting.</strong> 09-16 (FOMC) ~124 pts → 09-17 104.75 → 09-18 64.25 = <strong>0.85× the daily <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr></strong>. Three sessions of compression into a flat top. Compression resolves.</li>
+<li><strong>Current structural position:</strong> 4.25 above the 20-EMA · 29.50 above the 50-EMA · 12.50 above the ★ node 7712.50 · 68.75 above the six-year <abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr> 7656.25 · 27.50 below the 7752.50 dead cap · 181.25 below the ATH.</li>
+<li><strong>Timeframe read (Rule 11 — REQUIRED, the two disagree):</strong> the <strong>swing sequence says lower highs</strong>; the <strong>EMA structure says intact uptrend</strong> (full stack ordered and rising, price above the 50-EMA). Rule 11 forbids averaging them and forbids the trend-day label: <em>&quot;One non-overlapping value shift with an agreeing close, inside an intact higher-timeframe uptrend, is a CORRECTION day, not a trend day.&quot;</em> Friday did not even produce that — it produced an <strong>overlapping</strong> shift with a <strong>disagreeing</strong> close. <strong>Verdict: correction inside an intact uptrend. Fades stay LIVE, S5 stays live, no trend-day label.</strong></li>
+<li><strong>Structural bias:</strong> <strong>Bullish, with a hard ceiling.</strong> The failed breakdown and three higher lows argue up; the five-week lower-high chain and the dead 7752.50 cap argue that the up-case has a short leash. <strong>Above 7752.50 the read changes materially; below 7656.25 it breaks.</strong></li>
+</ul>
+</div></details><details class="sec" id="full-scenarios"><summary><h2>6. Forward Scenarios (Sunday 17:00 CT open → Monday 09-21) — RANKED</h2><span class="hint">all six in full</span></summary><div class="sec-body"><p><strong>GOVERNING STATE (Law 2): BALANCING.</strong> Two consecutive overlapping value areas, a 24.00-point VA against a 21.21 <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr>, both extremes finished, range contracting three sessions. <strong>All six scenarios are live. The fades are not traps.</strong></p>
+<p><strong>SCENARIO WEIGHTING (from §4.5): the attempt FAILED</strong>, which makes the <strong>fade-and-repair the base case</strong> — the down-probe failed, so the go-with is UP and the repair objectives sit above (7721.00 <abbr title="Unfinished low — a repair magnet likely to be revisited.">Weak Low</abbr>, 7749.75 <abbr title="Unfinished high with no excess — a repair magnet likely to be revisited.">Poor High</abbr>). S1 carries the base case; S4 is the genuine counter at the cap.</p>
+<p><strong>Sizing note (Rule 6a / Rule 18):</strong> 30-min ATR ≈ <strong>21.21</strong> (0.28 × daily ATR 75.75). Tactical stops are <strong>~10.50</strong> from the level. <strong>Max-chase band: if the confirming 30-min close is more than ~16.00 past the trigger, the entry is STALE — wait for the retest or stand aside.</strong> Each scenario states its band as a price.</p>
+<article class="rank star" data-rank="1"><h3 id="full-scenarios-rank-1-s1-7712-50-twin-hvn-holds-long">🥇 RANK 1 — [S1] ★ 7712.50 twin HVN HOLDS → <span class="d-LONG">LONG</span></h3><p><em>Why it ranks here:</em> the nodes and the auction agree for once — the node grew <strong>+11.1%</strong> for a second session with price above it (Rule 13), the down-attempt <strong>FAILED</strong> with finished excess at 7681.00 (§4.5), and the 09-16 breakdown was <strong>reclaimed</strong> (§5). Rule 7: <strong>0.59×</strong> — comfortably inside the gate. Rule 5 = 1/3 so the popup stays two-sided; <strong>Rule 16(b) names <span class="d-LONG">LONG</span> as the favoured branch.</strong></p>
+<ul>
+<li><strong>Trigger:</strong> a test of 7712.50 from above that <strong>HOLDS on a 30-min close</strong> — or, from below, a break and backtest.</li>
+<li><strong>Entry:</strong> the confirming 30-min close. <strong>Max-chase: do not enter above 7728.50</strong> — above that, wait for the retest of 7712.50.</li>
+<li><strong>Target:</strong> T1 <strong>7721.00</strong> (naked Weak Low ⚠ + 20-EMA — the 5-min pocket at 7720.75 is thin, expect a fast touch) → T2 <strong>7733.00</strong> (naked <abbr title="Value Area Low — bottom of the value area.">VAL</abbr>) → T3 <strong>7741.50</strong> (naked <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr>) → T4 <strong>7749.75</strong> (Poor High ⚠ — repair) → <strong>runner 7752.50 / 7754.75</strong> (twin <abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr> cap). <em>7739.25 is skipped as a scale — it is Friday&#39;s high and a stop cluster, not a magnet.</em></li>
+<li><strong>Stop Loss:</strong> tactical <strong>7701.25</strong> (10.50 below the level, just under Friday&#39;s <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> 7707.00 and above the 7698.00 twin <abbr title="Low-volume node — thin trade: rejection, price moves fast through it (Law 9).">LVN</abbr>). Invalidation <strong>7691.50</strong> (Friday POC) = <strong>21.00 points of risk</strong>.</li>
+<li><strong>R:R:</strong> to T1 off the tactical stop = 8.50 ÷ 11.25 = <strong>0.76</strong> ⚠ — <strong>below 1. The target that restores R:R ≥ 1 is T2 7733.00 (1.82R); the runner 7752.50 pays 3.56R.</strong> Do not take this trade planning to exit at T1.</li>
+<li><strong>If it does NOT HOLD instead</strong> (30-min close below 7712.50 → wait the backtest) → <strong><span class="d-SHORT">SHORT</span></strong> T1 <strong>7707.00</strong> · T2 <strong>7691.50</strong> · T3 <strong>7683.00</strong> · tactical SL <strong>7723.00</strong>.</li>
+</ul>
+</article><article class="rank" data-rank="2"><h3 id="full-scenarios-rank-2-s4-7749-75-poor-high-7752-50-cap-rejects-short">🥈 RANK 2 — [S4] 7749.75 Poor High / 7752.50 cap REJECTS → <span class="d-SHORT">SHORT</span></h3><p><em>Why it ranks here:</em> this is where the up-case dies. The 7752.50 node has added <strong>zero contracts in four sessions</strong> — a dead cap — and 7749.75 is an unfinished Poor High sitting right under it, which is exactly the kind of level price visits to repair and then leaves. Rule 8 distance <strong>0.33 daily ATR</strong>, just outside the 0.3 window, so it gets the alert and the rank but <strong>not the ★</strong>.</p>
+<ul>
+<li><strong>Trigger:</strong> price trades into 7749.75–7752.50 and a 30-min bar <strong>closes back below 7748.00</strong> leaving a rejection tail.</li>
+<li><strong>Entry:</strong> the backtest of 7748.00 from below. <strong>Max-chase: do not enter below 7736.50.</strong></li>
+<li><strong>Target:</strong> T1 <strong>7741.50</strong> (naked POC) → T2 <strong>7733.00</strong> (naked VAL) → T3 <strong>7721.00</strong> (Weak Low ⚠) → <strong>runner 7712.50</strong> (the ★ node — POC first, then the opposite edge of balance).</li>
+<li><strong>Stop Loss:</strong> tactical <strong>7763.25</strong> (just beyond the 7762.50 naked POC, 10.75 above the cap). Invalidation <strong>7768.00</strong> (naked VAH) = <strong>18.25 points</strong>.</li>
+<li><strong>R:R:</strong> to T1 = 6.50 ÷ 10.75 = <strong>0.60</strong> ⚠ — <strong>the runner 7712.50 restores it at 3.35R.</strong> A scale-at-T1 plan loses money here; this is a hold-for-the-rotation trade.</li>
+<li><strong>If it BREAKS instead</strong> (30-min close above 7752.50 → wait the backtest) → <strong><span class="d-LONG">LONG</span></strong> T1 <strong>7762.50</strong> · T2 <strong>7768.00</strong> · T3 <strong>7788.00</strong> · tactical SL <strong>7742.25</strong>. <em>(This is RANK 6&#39;s continuation — one trade, not two.)</em></li>
+</ul>
+</article><article class="rank" data-rank="3"><h3 id="full-scenarios-rank-3-s2-7683-00-friday-val-holds-long">🥉 RANK 3 — [S2] 7683.00 Friday VAL HOLDS → <span class="d-LONG">LONG</span></h3><p><em>Why it ranks here:</em> this is a straight repeat of what Friday already did — probe the shelf, leave a finished <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">buying tail</abbr> at 7681.00, close above value. A second visit with the same outcome is the highest-quality bounce on the board. It ranks third only on <strong>distance</strong>: Rule 7 measures <strong>1.98×</strong>, so it needs a 42-point trip before it arms. <strong>Alert yes, ★ no.</strong></p>
+<ul>
+<li><strong>Trigger:</strong> a test of 7683.00–7681.00 from above that holds on a 30-min close.</li>
+<li><strong>Entry:</strong> the reclaim close back above 7683.00. <strong>Max-chase: do not enter above 7699.00.</strong></li>
+<li><strong>Target:</strong> T1 <strong>7691.50</strong> (Friday POC) → T2 <strong>7707.00</strong> (Friday VAH) → T3 <strong>7712.50</strong> (the ★ node) → <strong>runner 7721.00</strong> (Weak Low ⚠). The 7696.75/7698.00 twin LVN is the accelerant between T1 and T2, not a scale.</li>
+<li><strong>Stop Loss:</strong> tactical <strong>7672.50</strong> (10.50 below, just under Friday&#39;s 7675.00 low). Invalidation <strong>7668.00</strong> (2D <abbr title="One-timeframe zone left by a fast move; revisits travel fast.">Single Print</abbr>) = <strong>15.00 points</strong>.</li>
+<li><strong>R:R:</strong> to T1 = 8.50 ÷ 10.50 = <strong>0.81</strong> ⚠ — <strong>T2 7707.00 restores it at 2.29R.</strong></li>
+<li><strong>If it does NOT HOLD instead</strong> (30-min close below 7683.00 → wait the backtest) → <strong><span class="d-SHORT">SHORT</span></strong> T1 <strong>7675.00</strong> · T2 <strong>7668.00</strong> · T3 <strong>7656.25</strong> · tactical SL <strong>7693.50</strong>.</li>
+</ul>
+</article><article class="rank" data-rank="4"><h3 id="full-scenarios-4-rank-4-s3-7691-50-friday-poc-breaks-short">4️⃣ RANK 4 — [S3] 7691.50 Friday POC BREAKS → <span class="d-SHORT">SHORT</span></h3><p><em>Why it ranks here:</em> this is the bear&#39;s real trigger — losing the developing POC is precisely RANK 1&#39;s invalidation, so it cannot be ranked above the long it invalidates until it actually happens. It also has to travel <strong>33.50 points against the node evidence</strong> before it arms. Rule 7: <strong>1.58×</strong>, outside the gate.</p>
+<ul>
+<li><strong>Trigger:</strong> a 30-min close below <strong>7691.50</strong> after a failure at 7707.00.</li>
+<li><strong>Entry:</strong> the backtest of 7691.50 from below. The <strong>7696.75 / 7698.00 twin LVN is the accelerant into it</strong> — expect the approach to be fast and the backtest to be shallow.</li>
+<li><strong>Target:</strong> T1 <strong>7683.00</strong> (Friday VAL) → T2 <strong>7675.00</strong> (Friday low) → T3 <strong>7656.25 / 7656.75</strong> (the three-timeframe shelf — 934.2K + 372.7K + daily 1.864M) → <strong>runner 7624.00</strong> (2D VAL). <em>7668.00 is a single print — pass-through, not a scale.</em></li>
+<li><strong>Stop Loss:</strong> tactical <strong>7702.00</strong> (10.50 above). Invalidation <strong>7712.50</strong> (the ★ node) = <strong>21.00 points</strong>.</li>
+<li><strong>R:R:</strong> to T1 = 8.50 ÷ 10.50 = <strong>0.81</strong> ⚠ — <strong>T3 7656.25 restores it at 3.36R.</strong></li>
+<li><strong>If it HOLDS instead</strong> (30-min close back above 7691.50 from below) → <strong><span class="d-LONG">LONG</span></strong> T1 <strong>7707.00</strong> · T2 <strong>7712.50</strong> · T3 <strong>7721.00</strong> · tactical SL <strong>7681.00</strong>. <em>(This is RANK 3&#39;s trade arriving one level higher.)</em></li>
+</ul>
+</article><article class="rank" data-rank="5"><h3 id="full-scenarios-5-rank-5-s5-balance-rotation-7683-00-7707-00-fade-both-edges-to-poc">5️⃣ RANK 5 — [S5] Balance rotation 7683.00 ↔ 7707.00, fade both edges to POC</h3><p><em>Why it ranks here:</em> Law 2 says this is the governing state, and on a <strong>Monday with no confirmed tier-1 catalyst and no overnight inventory to correct</strong>, rotation is the honest base case. It ranks fifth only because price is currently <strong>outside</strong> the value area (7725.00 &gt; VAH 7707.00) — the rotation has to get price back inside before it can work.</p>
+<ul>
+<li><strong>Trigger:</strong> price re-enters 7683.00–7707.00 and holds there on 30-min closes without accepting beyond either edge.</li>
+<li><strong>Entry:</strong> short the 7707.00 rejection · long the 7683.00 rejection.</li>
+<li><strong>Target:</strong> both → <strong>7691.50 (POC)</strong>. Extended target on the short: 7683.00; on the long: 7707.00.</li>
+<li><strong>Stop Loss:</strong> tactical <strong>7717.50</strong> on the short (10.50 above the faded edge, above the 7716.00 <abbr title="Where the prior session's closing spike began. Open above = support; below = rejected.">spike base</abbr>) · <strong>7672.50</strong> on the long. Invalidation on either side = a 30-min <strong>close</strong> beyond that edge.</li>
+<li><strong>R:R:</strong> short 15.50 ÷ 10.50 = <strong>1.48</strong> ✅ · long 8.50 ÷ 10.50 = <strong>0.81</strong> ⚠ — <strong>the long side only works held for 7707.00 (2.29R).</strong> The short side of this rotation is the better half.</li>
+<li><strong>If it does NOT balance instead</strong> — a 30-min close accepting outside either edge kills S5 and hands the session to <strong>RANK 1</strong> (above 7712.50) or <strong>RANK 4</strong> (below 7691.50). Do not keep fading an edge that has been closed through.</li>
+</ul>
+</article><article class="rank" data-rank="6"><h3 id="full-scenarios-6-rank-6-s6-7739-25-acceptance-the-empty-pocket-run">6️⃣ RANK 6 — [S6] 7739.25 acceptance → the empty-pocket run</h3><p><em>Why it ranks here:</em> Friday&#39;s <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> high is the one decision level neither S1 nor S3 uses, and it opens the emptiest air on the chart — <strong>there is no volume node of any kind between 7725.00 and 7754.75</strong>, and the 102.9K pocket at 7720.75 is already behind price. Law 9: thin = fast. It ranks last because it needs RANK 1 to work first, and because its own R:R to T1 is poor.</p>
+<ul>
+<li><strong>Trigger:</strong> a 30-min close above <strong>7739.25</strong>.</li>
+<li><strong>Entry:</strong> on that close, or the backtest of 7739.25. <strong>Max-chase: do not enter above 7755.25.</strong></li>
+<li><strong>Target:</strong> T1 <strong>7741.50</strong> (naked POC) → T2 <strong>7748.00</strong> (naked VAH) → T3 <strong>7749.75</strong> (Poor High ⚠ — repair) → <strong>runner 7752.50 / 7754.75</strong> (twin HVN cap) → if the cap goes, <strong>7762.50 → 7768.00 → 7788.00</strong>.</li>
+<li><strong>Stop Loss:</strong> tactical <strong>7728.75</strong> (10.50 below). Invalidation <strong>7721.00</strong> (the Weak Low — losing it means the pocket was a fake-out) = <strong>18.25 points</strong>.</li>
+<li><strong>R:R:</strong> to T1 = 2.25 ÷ 10.50 = <strong>0.21</strong> ⚠ — <strong>only the runner 7752.50 makes this work, at 1.26R.</strong> ⚠ <strong>Honest warning: this is a thin-margin trade. Take it as an ADD to RANK 1, not as a standalone entry.</strong></li>
+<li><strong>If it REJECTS instead</strong> (fails at 7739.25 and closes back below) → <strong><span class="d-SHORT">SHORT</span></strong> T1 <strong>7733.00</strong> · T2 <strong>7721.00</strong> · T3 <strong>7712.50</strong> · tactical SL <strong>7749.75</strong>.</li>
+</ul>
+</article></div></details><details class="sec" id="alerts"><summary><h2>Alerts — ES1! (6 repeating level alerts, created 2026-09-19)</h2><span class="hint">repeating level alerts</span></summary><div class="sec-body"><p>All are <code>crossing</code> + <code>on_bar_close</code> on the 1-minute resolution with <code>auto_deactivate: false</code> — they fire on the <strong>test</strong>, on the <strong>break</strong>, and on the <strong>backtest</strong>.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>★</th>
+<th>Level</th>
+<th>Name</th>
+<th><span class="d-LONG">LONG</span> (hold from above / backtest after break up)</th>
+<th><span class="d-SHORT">SHORT</span> (reject from below / backtest after break down)</th>
+<th>ID</th>
+</tr>
+</thead>
+<tbody><tr class="star">
+<td>★</td>
+<td><strong>7712.50</strong></td>
+<td>Twin <abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr></td>
+<td>T1 7721.00 T2 7733.00 T3 7741.50 SL 7701.25</td>
+<td>T1 7707.00 T2 7691.50 T3 7683.00 SL 7723.00</td>
+<td>5651189832</td>
+</tr>
+<tr>
+<td></td>
+<td>7739.25</td>
+<td>Friday High</td>
+<td>T1 7741.50 T2 7748.00 T3 7752.50 SL 7728.75</td>
+<td>T1 7733.00 T2 7721.00 T3 7712.50 SL 7749.75</td>
+<td>5651191464</td>
+</tr>
+<tr>
+<td></td>
+<td>7752.50</td>
+<td>Dead Cap</td>
+<td>T1 7762.50 T2 7768.00 T3 7788.00 SL 7742.25</td>
+<td>T1 7741.50 T2 7733.00 T3 7721.00 SL 7763.25</td>
+<td>5651193387</td>
+</tr>
+<tr>
+<td></td>
+<td>7691.50</td>
+<td>Friday <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr></td>
+<td>T1 7707.00 T2 7712.50 T3 7721.00 SL 7681.00</td>
+<td>T1 7683.00 T2 7675.00 T3 7656.25 SL 7702.00</td>
+<td>5651194286</td>
+</tr>
+<tr>
+<td></td>
+<td>7656.25</td>
+<td>Twin HVN</td>
+<td>T1 7675.00 T2 7683.00 T3 7691.50 SL 7645.75</td>
+<td>T1 7624.00 T2 7612.75 T3 7590.00 SL 7666.75</td>
+<td>5651194369</td>
+</tr>
+<tr>
+<td></td>
+<td>7624.00</td>
+<td>2D <abbr title="Value Area Low — bottom of the value area.">VAL</abbr></td>
+<td>T1 7656.25 T2 7675.00 T3 7683.00 SL 7613.50</td>
+<td>T1 7612.75 T2 7590.00 T3 7575.00 SL 7634.50</td>
+<td>5651195606</td>
+</tr>
+</tbody></table></div>
+<p><strong>Rule 17 — expiry:</strong> this alert set and the Rule-15 inventory thresholds above are <strong>one-session instruments</strong>. They are valid for the Sunday open through Monday 09-21&#39;s <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> close. After that close, recompute the inventory threshold against <strong>Monday&#39;s</strong> close and re-read every &quot;Friday <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> / Friday POC&quot; label — those names will no longer be true.</p>
+<p><strong>Rule 12 check:</strong> no alert level is the T1 or T2 of another alert <em>in a directional one-way form</em>. Every alert here is a two-sided level alert — when 7733.00 or 7691.50 is reached as a target, the popup reads &quot;the move has arrived, now decide,&quot; which is exactly what Rule 12 asks for.</p>
+</div></details><details class="sec" id="skill-changes"><summary><h2>Skill changes this run</h2></summary><div class="sec-body"><ol>
+<li><strong>PROPOSED, NOT APPLIED — alert-spacing floor.</strong> <em>&quot;Inside the Rule-7 band (extended to ±2× the 30-min <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr>), no two adjacent alert levels may sit more than ~1.5× the 30-min ATR apart; if the 0.15% skip rule forces a wider gap, add the intervening magnet.&quot;</em> Evidence: 09-18&#39;s 37.25-point hole between 7693.50 and 7656.25 (1.76× ATR) contained the session&#39;s turning point and had no alert. <strong>Awaiting your approval — today&#39;s set still carries one 1.66× gap because I did not apply it.</strong></li>
+<li><strong>OBSERVATION, NOT A RULE CHANGE — Rule 6(b) and <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> entries.</strong> Rule 6(b) says an ETH fire is a WATCH, not an entry. Friday&#39;s ★ <strong>entered in ETH at 22:30 CT Thursday and paid T1 and T2 before the <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> open.</strong> That is now the second ETH entry in a week that would have been skipped under a strict reading. I am <strong>not</strong> changing the rule. Flagging it so it can be scored deliberately: if you want, I can start recording ETH-vs-RTH entry outcomes separately and we can revisit Rule 6(b) with data rather than anecdote.</li>
+<li><strong>No other changes.</strong> Rule 7&#39;s hard gate, Rule 13/16(a) node precedence, and the fixed report format are unchanged.</li>
+</ol>
+</div></details>
+<footer>Built from ES1-structured-2026-09-19.md · 2026-09-19 23:41 UTC</footer>
+</div>
+<script type="application/json" id="report-data">{"key":"ES","ticker":"ES1!","decimals":2,"last":7725,"star":7712.5,"favoured":"LONG","atr30":21.21,"atrD":75.75,"ladder":[{"side":"up","p":[7733],"src":"naked prior-RTH VAL","cls":"target","dec":true},{"side":"up","p":[7739.25],"src":"Friday ETH high (stop cluster, not a magnet)","cls":"stop","dec":false},{"side":"up","p":[7741.5],"src":"naked prior-RTH POC","cls":"target","dec":true},{"side":"up","p":[7748],"src":"naked prior-RTH VAH","cls":"target","dec":false},{"side":"up","p":[7749.75],"src":"naked Poor High ⚠ — repair magnet","cls":"target","dec":true},{"side":"up","p":[7752.5,7753,7754.75],"src":"30m HVN 664.0K (dead, 0.0% ×4) + naked VAL + 5m HVN 324.0K","cls":"target","dec":true},{"side":"up","p":[7762.5],"src":"naked POC","cls":"target","dec":false},{"side":"up","p":[7768],"src":"naked VAH","cls":"target","dec":false},{"side":"up","p":[7776.75,7778],"src":"twin LVN 118.6K / 204.2K","cls":"pass","dec":false},{"side":"up","p":[7786,7788,7789.75],"src":"naked Selling Tail + POC + 5m HVN 264.0K","cls":"target","dec":false},{"side":"up","p":[7800.5],"src":"naked VAH","cls":"target","dec":false},{"side":"up","p":[7807.5],"src":"naked Single Print","cls":"pass","dec":false},{"side":"up","p":[7814.5,7815.75],"src":"twin LVN 263.6K / 148.8K","cls":"pass","dec":false},{"side":"up","p":[7819.5,7824.25],"src":"naked Selling Tail + POC","cls":"target","dec":false},{"side":"up","p":[7834.25,7834.75],"src":"naked Weak High ⚠ + VAH","cls":"target","dec":true},{"side":"up","p":[7840,7842.75],"src":"twin HVN 479.8K / 273.7K","cls":"target","dec":false},{"side":"up","p":[7850.25],"src":"naked Weak High ⚠","cls":"target","dec":true},{"side":"up","p":[7861.5,7871.75],"src":"naked POC + 5m HVN 115.6K","cls":"target","dec":false},{"side":"up","p":[7878,7882.25],"src":"naked VAH + Selling Tail + VAH","cls":"target","dec":false},{"side":"up","p":[7898.5],"src":"naked Weak High ⚠","cls":"target","dec":true},{"side":"up","p":[7899.75],"src":"5m LVN 4.1K — effectively empty","cls":"pass","dec":true},{"side":"up","p":[7906.25],"src":"ATH / Weak High ⚠ (2026-08-13)","cls":"target","dec":true},{"side":"down","p":[7720.75,7721],"src":"5m LVN 102.9K + 20-EMA 7720.75 + naked Weak Low ⚠","cls":"target","dec":true},{"side":"down","p":[7719],"src":"Friday RTH Selling Tail ✅ (finished excess)","cls":"target","dec":true},{"side":"down","p":[7716],"src":"Friday RTH Spike Base","cls":"target","dec":false},{"side":"down","p":[7711.75,7712.5],"src":"twin HVN 252.4K / 696.8K ↑ + Thu VAH + Friday MOC print","cls":"target","dec":true},{"side":"down","p":[7706,7707],"src":"Thu POC + Friday VAH","cls":"target","dec":false},{"side":"down","p":[7696.75,7698],"src":"twin LVN 177.7K / 424.5K","cls":"pass","dec":true},{"side":"down","p":[7695.5],"src":"50-EMA","cls":"target","dec":false},{"side":"down","p":[7691.5,7693.5],"src":"Friday POC + Thu VAL","cls":"target","dec":true},{"side":"down","p":[7683],"src":"Friday VAL","cls":"target","dec":true},{"side":"down","p":[7681],"src":"Friday Buying Tail ✅ (finished excess)","cls":"target","dec":true},{"side":"down","p":[7675],"src":"Friday session low","cls":"target","dec":false},{"side":"down","p":[7668],"src":"2D Single Print","cls":"pass","dec":false},{"side":"down","p":[7656.25,7656.75],"src":"30m 934.2K + 5m 372.7K + daily AVP 1.864M — three timeframes","cls":"target","dec":true},{"side":"down","p":[7638.75,7641.75],"src":"twin LVN 192.5K / 461.6K","cls":"pass","dec":false},{"side":"down","p":[7620,7624],"src":"30m HVN 684.1K + 2D VAL","cls":"target","dec":true},{"side":"down","p":[7612.75],"src":"5m HVN 350.4K","cls":"target","dec":false},{"side":"down","p":[7590],"src":"2D Buying Tail ✅ + Spike Base","cls":"target","dec":true},{"side":"down","p":[7588.25],"src":"100-EMA","cls":"target","dec":false},{"side":"down","p":[7575],"src":"2026-09-16 session low (FOMC)","cls":"target","dec":false},{"side":"down","p":[7570.75],"src":"5m LVN 185.6K","cls":"pass","dec":false},{"side":"down","p":[7562.75],"src":"5m HVN 264.7K","cls":"target","dec":false},{"side":"down","p":[7541.75,7542.75],"src":"twin HVN 846.4K / 270.4K","cls":"target","dec":true},{"side":"down","p":[7535.25],"src":"naked VAL","cls":"target","dec":false},{"side":"down","p":[7529.75],"src":"5m LVN 207.5K","cls":"pass","dec":false},{"side":"down","p":[7516.25,7511.75],"src":"naked Buying Tail + 5m HVN 320.6K","cls":"target","dec":false},{"side":"down","p":[7489.25],"src":"naked POC","cls":"target","dec":false},{"side":"down","p":[7469.75,7466.75],"src":"naked VAL + Poor Low ⚠","cls":"target","dec":true},{"side":"down","p":[7456.5],"src":"naked VAL","cls":"target","dec":false},{"side":"down","p":[7450.75],"src":"30m LVN 121.7K","cls":"pass","dec":false},{"side":"down","p":[7439.5,7437.75],"src":"naked Buying Tail + Spike Base + 5m HVN","cls":"target","dec":false},{"side":"down","p":[7412.5],"src":"30m HVN 207.0K","cls":"target","dec":true},{"side":"down","p":[7400],"src":"naked VAL + Buying Tail","cls":"target","dec":false},{"side":"down","p":[7377.5],"src":"200-EMA","cls":"target","dec":false},{"side":"down","p":[7343.5,7344.25],"src":"daily LVN 74.1K + 30m LVN 36.4K","cls":"pass","dec":true},{"side":"down","p":[7292.5],"src":"30m HVN 527.3K","cls":"target","dec":true},{"side":"down","p":[7218],"src":"30m LVN 30.0K","cls":"pass","dec":false},{"side":"down","p":[7132.25,7132.5],"src":"daily AVP 3.194M + 30m 1.445M","cls":"target","dec":true}],"alerts":[{"star":true,"level":7712.5,"name":"Twin HVN","long":{"t":[7721,7733,7741.5],"sl":7701.25},"short":{"t":[7707,7691.5,7683],"sl":7723}},{"star":false,"level":7739.25,"name":"Friday High","long":{"t":[7741.5,7748,7752.5],"sl":7728.75},"short":{"t":[7733,7721,7712.5],"sl":7749.75}},{"star":false,"level":7752.5,"name":"Dead Cap","long":{"t":[7762.5,7768,7788],"sl":7742.25},"short":{"t":[7741.5,7733,7721],"sl":7763.25}},{"star":false,"level":7691.5,"name":"Friday POC","long":{"t":[7707,7712.5,7721],"sl":7681},"short":{"t":[7683,7675,7656.25],"sl":7702}},{"star":false,"level":7656.25,"name":"Twin HVN","long":{"t":[7675,7683,7691.5],"sl":7645.75},"short":{"t":[7624,7612.75,7590],"sl":7666.75}},{"star":false,"level":7624,"name":"2D VAL","long":{"t":[7656.25,7675,7683],"sl":7613.5},"short":{"t":[7612.75,7590,7575],"sl":7634.5}}],"scenarios":[{"rank":1,"slot":"S1","name":"7712.50 twin HVN HOLDS → LONG","star":true,"trigger":"","why":"Why it ranks here: the nodes and the auction agree for once — the node grew +11.1% for a second session with price above it (Rule 13), the down-attempt FAILED with finished excess at 7681.00 (§4.5), and the 09-16 breakdown was reclaimed (§5). Rule 7: 0.59× — comfortably inside the gate. Rule 5 = 1/3 so the popup stays two-sided; Rule 16(b) names LONG as the favoured branch.","favoured":"LONG","branches":[{"label":"a test of 7712.50 from above that HOLDS on a 30-min close — or, from below, a break and backtest.","dir":"LONG","entry":7712.5,"targets":[{"k":"T1","p":7721},{"k":"T2","p":7733},{"k":"T3","p":7741.5},{"k":"T4","p":7749.75}],"runner":7752.5,"stop":7701.25,"rr":0.76},{"label":"If it does NOT HOLD instead (30-min close below 7712.50 → wait the backtest)","dir":"SHORT","entry":7712.5,"targets":[{"k":"T1","p":7707},{"k":"T2","p":7691.5},{"k":"T3","p":7683}],"runner":null,"stop":7723,"rr":null}]},{"rank":2,"slot":"S4","name":"7749.75 Poor High / 7752.50 cap REJECTS → SHORT","star":false,"trigger":"","why":"Why it ranks here: this is where the up-case dies. The 7752.50 node has added zero contracts in four sessions — a dead cap — and 7749.75 is an unfinished Poor High sitting right under it, which is exactly the kind of level price visits to repair and then leaves. Rule 8 distance 0.33 daily ATR, just outside the 0.3 window, so it gets the alert and the rank but not the ★.","favoured":null,"branches":[{"label":"price trades into 7749.75–7752.50 and a 30-min bar closes back below 7748.00 leaving a rejection tail.","dir":"SHORT","entry":7748,"targets":[{"k":"T1","p":7741.5},{"k":"T2","p":7733},{"k":"T3","p":7721}],"runner":7712.5,"stop":7763.25,"rr":0.6},{"label":"If it BREAKS instead (30-min close above 7752.50 → wait the backtest)","dir":"LONG","entry":7749.75,"targets":[{"k":"T1","p":7762.5},{"k":"T2","p":7768},{"k":"T3","p":7788}],"runner":null,"stop":7742.25,"rr":null}]},{"rank":3,"slot":"S2","name":"7683.00 Friday VAL HOLDS → LONG","star":false,"trigger":"","why":"Why it ranks here: this is a straight repeat of what Friday already did — probe the shelf, leave a finished buying tail at 7681.00, close above value. A second visit with the same outcome is the highest-quality bounce on the board. It ranks third only on distance: Rule 7 measures 1.98×, so it needs a 42-point trip before it arms. Alert yes, ★ no.","favoured":null,"branches":[{"label":"a test of 7683.00–7681.00 from above that holds on a 30-min close.","dir":"LONG","entry":7683,"targets":[{"k":"T1","p":7691.5},{"k":"T2","p":7707},{"k":"T3","p":7712.5}],"runner":7721,"stop":7672.5,"rr":0.81},{"label":"If it does NOT HOLD instead (30-min close below 7683.00 → wait the backtest)","dir":"SHORT","entry":7683,"targets":[{"k":"T1","p":7675},{"k":"T2","p":7668},{"k":"T3","p":7656.25}],"runner":null,"stop":7693.5,"rr":null}]},{"rank":4,"slot":"S3","name":"7691.50 Friday POC BREAKS → SHORT","star":false,"trigger":"","why":"Why it ranks here: this is the bear's real trigger — losing the developing POC is precisely RANK 1's invalidation, so it cannot be ranked above the long it invalidates until it actually happens. It also has to travel 33.50 points against the node evidence before it arms. Rule 7: 1.58×, outside the gate.","favoured":null,"branches":[{"label":"a 30-min close below 7691.50 after a failure at 7707.00.","dir":"SHORT","entry":7691.5,"targets":[{"k":"T1","p":7683},{"k":"T2","p":7675},{"k":"T3","p":7656.25}],"runner":7624,"stop":7702,"rr":0.81},{"label":"If it HOLDS instead (30-min close back above 7691.50 from below)","dir":"LONG","entry":7691.5,"targets":[{"k":"T1","p":7707},{"k":"T2","p":7712.5},{"k":"T3","p":7721}],"runner":null,"stop":7681,"rr":null}]},{"rank":5,"slot":"S5","name":"Balance rotation 7683.00 ↔ 7707.00, fade both edges to POC","star":false,"trigger":"","why":"Why it ranks here: Law 2 says this is the governing state, and on a Monday with no confirmed tier-1 catalyst and no overnight inventory to correct, rotation is the honest base case. It ranks fifth only because price is currently outside the value area (7725.00 > VAH 7707.00) — the rotation has to get price back inside before it can work.","favoured":null,"branches":[]},{"rank":6,"slot":"S6","name":"7739.25 acceptance → the empty-pocket run","star":false,"trigger":"","why":"Why it ranks here: Friday's ETH high is the one decision level neither S1 nor S3 uses, and it opens the emptiest air on the chart — there is no volume node of any kind between 7725.00 and 7754.75, and the 102.9K pocket at 7720.75 is already behind price. Law 9: thin = fast. It ranks last because it needs RANK 1 to work first, and because its own R:R to T1 is poor.","favoured":null,"branches":[{"label":"a 30-min close above 7739.25.","dir":"LONG","entry":7739.25,"targets":[{"k":"T1","p":7741.5},{"k":"T2","p":7748},{"k":"T3","p":7749.75}],"runner":7752.5,"stop":7728.75,"rr":0.21},{"label":"If it REJECTS instead (fails at 7739.25 and closes back below)","dir":"SHORT","entry":7739.25,"targets":[{"k":"T1","p":7733},{"k":"T2","p":7721},{"k":"T3","p":7712.5}],"runner":null,"stop":7749.75,"rr":null}]}]}</script>
+<script src="../assets/report.js?v=73f04902"></script>
+</body>
+</html>

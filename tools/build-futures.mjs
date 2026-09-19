@@ -304,7 +304,7 @@ function parseLevelBranches(body, level){
   for (const line of body.split("\n")){
     if (!/^- /.test(line)) continue;
     const t = plain(line.slice(2));
-    const hits = [...t.matchAll(/\b(LONG|SHORT):?\s+(?=T1\b)/g)];
+    const hits = [...t.matchAll(/\b(LONG|SHORT)\b(?::|\s)[^·;]{0,40}?(?=\bT1\b)/g)];
     if (!hits.length) continue;
     const lead = /^(\d{3,}(?:\.\d+)?)\s*—\s*([^.]*)\.\s*/.exec(t);
     const head = lead ? lead[1] + " — " + lead[2].trim() : "";
@@ -350,35 +350,68 @@ function parseGroupedBranches(body, level){
   let group = [], parent = null;
   const fieldOf = t => (/^(Trigger|Entry|Target|Stop Loss|R:R)\b[^:]*:/i.exec(t) || [])[1];
 
+  // "Max-chase: do not enter above 7728.50" is a limit on chasing, not the entry price.
+  const noChase = s => s.replace(/\bmax[-\s]?chase\b.*$/i, "").trim();
+  // One leg of a fork: the text from "(a)" (or "(a —") up to the next such marker.
+  const leg = (text, tag) => {
+    if (!tag) return text;
+    const m = new RegExp("\\(\\s*" + tag + "\\s*[)—–-]", "i").exec(text);
+    if (!m) return text;
+    const rest = text.slice(m.index + m[0].length);
+    const next = /\(\s*[a-z]\s*[)—–-]/i.exec(rest);
+    return next ? rest.slice(0, next.index) : rest;
+  };
+
   const flush = () => {
     if (!group.length) return;
     const get = name => (group.find(g => g.field.toLowerCase() === name) || {}).text || "";
-    const trigT = get("trigger"), entryT = get("entry"), targetT = get("target"), stopT = get("stop loss"), rrT = get("r:r");
+    const trigT = get("trigger"), entryT = get("entry"), stopT = get("stop loss"), rrT = get("r:r");
+    const targetTs = group.filter(g => g.field.toLowerCase() === "target").map(g => g.text);
     group = [];
-    if (!entryT || !targetT) return;
+    if (!entryT || !targetTs.length) return;
     // A two-edge fade ("long ≈ 7626 / short ≈ 7696") describes a range, not one trade.
     if (/\blong\b/i.test(entryT) && /\bshort\b/i.test(entryT)) return;
-    const seen = new Set();
-    const targets = [...targetT.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)]
-      .filter(m => !seen.has(m[1]) && seen.add(m[1]))
-      .map(m => ({ k: "T" + m[1], p: Number(m[2]) }))
-      .sort((a, b) => a.k.localeCompare(b.k));
-    if (!targets.length) return;
-    const entry = firstPrice(entryT.replace(/^Entry[^:]*:/i, ""));
-    const runner = /\brunner\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(targetT);
-    const tactical = /tactical\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopT);
-    const stop = tactical ? Number(tactical[1]) : firstPrice(stopT.replace(/^Stop Loss[^:]*:/i, ""));
-    const rr = /T1\s*(\d+(?:\.\d+)?)/.exec(rrT.replace(/^R:R[^:]*:/i, ""));
-    // The direction is the word in the Entry line ("short ≈ 7654"); fall back to where T1 sits.
-    const word = /\b(long|short)\b/i.exec(entryT);
-    const at = entry != null ? entry : level;
-    const dir = word ? word[1].toUpperCase() : at != null && targets[0].p < at ? "SHORT" : "LONG";
-    const q = /^Trigger\s*\(([^)]*)\)/i.exec(trigT);
-    let label = trigT.replace(/^Trigger[^:]*:\s*/i, "");
-    if (q) label = q[1].charAt(0).toUpperCase() + q[1].slice(1) + " — " + label;
-    if (label.length > 120) label = label.slice(0, 117) + "…";
-    out.push({ label: label || "On the trigger", dir, entry: at, targets,
-      runner: runner ? Number(runner[1]) : null, stop, rr: rr ? Number(rr[1]) : null });
+
+    for (const targetT of targetTs){
+      // "Target (a — acceptance → LONG):" - the other bullets label their halves the same way.
+      const tag = targetTs.length > 1 ? (/^Target\s*\(\s*([a-z])\b/i.exec(targetT) || [])[1] : null;
+      const seen = new Set();
+      const targets = [...targetT.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)]
+        .filter(m => !seen.has(m[1]) && seen.add(m[1]))
+        .map(m => ({ k: "T" + m[1], p: Number(m[2]) }))
+        .sort((a, b) => a.k.localeCompare(b.k));
+      if (!targets.length) continue;
+      const entryLeg = noChase(leg(entryT, tag));
+      const entry = firstPrice(entryLeg.replace(/^Entry[^:]*:/i, ""));
+      const runner = /\brunner\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(targetT);
+      const stopLeg = leg(stopT, tag);
+      const tactical = /tactical\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopLeg);
+      const stop = tactical ? Number(tactical[1]) : firstPrice(stopLeg.replace(/^Stop Loss[^:]*:/i, ""));
+      const rrLeg = leg(rrT, tag).replace(/^R:R[^:]*:/i, "");
+      let rr = /T1\s*(\d+(?:\.\d+)?)/.exec(rrLeg);
+      // 09-19 shows the arithmetic instead: "to T1 off the stop = 62.25 ÷ 62.00 = 1.00 ✅
+      // — T2 = 1.94R …". The ratio is the last "= n" of the T1 clause, which ends at the
+      // verdict mark, the next target or the runner.
+      if (!rr){
+        const i = rrLeg.search(/\bT1\b/);
+        const clause = i < 0 ? "" : rrLeg.slice(i).split(/[⚠✅·]|\bT[2-9]\b|\brunner\b/i)[0];
+        const eqs = [...clause.matchAll(/=\s*(\d+(?:\.\d+)?)/g)];
+        if (eqs.length) rr = eqs[eqs.length - 1];
+      }
+      // The direction is the word on the Target leg ("→ LONG") or in the Entry line
+      // ("short ≈ 7654"); fall back to where T1 sits relative to the level.
+      const word = /(?:→|->)\s*\**\s*(LONG|SHORT)/i.exec(targetT) || /\b(long|short)\b/i.exec(entryLeg);
+      const at = entry != null ? entry : level;
+      const dir = word ? word[1].toUpperCase() : at != null && targets[0].p < at ? "SHORT" : "LONG";
+      const q = /^Trigger\s*\(([^)]*)\)/i.exec(trigT);
+      let label = trigT.replace(/^Trigger[^:]*:\s*/i, "");
+      if (q) label = q[1].charAt(0).toUpperCase() + q[1].slice(1) + " — " + label;
+      const half = tag && (/^Target\s*\(([^)]*)\)/i.exec(targetT) || [])[1];
+      if (half) label = half.replace(/^[a-z]\s*[—–-]\s*/i, "").trim() + " — " + label;
+      if (label.length > 120) label = label.slice(0, 117) + "…";
+      out.push({ label: label || "On the trigger", dir, entry: at, targets,
+        runner: runner ? Number(runner[1]) : null, stop, rr: rr ? Number(rr[1]) : null });
+    }
   };
 
   for (const raw of body.split("\n")){
@@ -388,7 +421,7 @@ function parseGroupedBranches(body, level){
     const field = top ? fieldOf(t) : null;
     if (field){ group.push({ field, text: t }); continue; }
     flush();
-    const alertLine = /\b(?:LONG|SHORT):?\s+T1\b/.test(t);
+    const alertLine = /\b(?:LONG|SHORT)\b(?::|\s)[^·;]{0,40}?\bT1\b/.test(t);
     if (top){
       // A level bullet heads the indented alert-style lines beneath it.
       const head = /^(\d{3,}(?:\.\d+)?)(?:\s*\/\s*[\d.]+)*\s*—\s*[^(.]*/.exec(t);
@@ -432,7 +465,7 @@ function parseScenarios(sections){
     // (from 09-17) or "★ RANK 1 — 7656.25 · …" (09-15).
     const headingStar = (/★\s*([\d,]+(?:\.\d+)?)/.exec(title) || [])[1];
     const headingLevel = headingStar ? Number(headingStar.replace(/,/g, ""))
-                       : emoji < 0 ? firstPrice(title.replace(/RANK\s*\d+/i, "")) : null;
+                       : firstPrice(title.replace(/RANK\s*\d+/i, "").replace(/\[[^\]]*\]/g, ""));
     let whyText = why ? plain(why[1]) : "";
     if (!whyText && !trig && !lvl){
       const lead = c.body.split(/\n\s*\n/).find(b => b.trim() && !/^[-|>]/.test(b.trim())) || "";
@@ -486,7 +519,11 @@ function parseReport(text){
   if (head || headNew) i++;
 
   const rest = lines.slice(i).join("\n");
-  const hr = rest.search(/^---\s*$/m);
+  // The header block runs to the "---" rule - but 09-19 dropped that rule and put one
+  // inside section 6 instead, so the first "## " heading ends the header just as well.
+  const rule = rest.search(/^---\s*$/m);
+  const firstSec = rest.search(/^## /m);
+  const hr = rule >= 0 && (firstSec < 0 || rule < firstSec) ? rule : firstSec;
   const headMd = hr >= 0 ? rest.slice(0, hr) : "";
   const bodyMd = hr >= 0 ? rest.slice(hr).replace(/^---\s*\n/, "") : rest;
 
@@ -529,9 +566,13 @@ function parseReport(text){
   const biasLine = (bodyMd.split("\n").find(l => /^\s*[-*>]?\s*\*{0,2}(current bias|bias)\*{0,2}\s*:/i.test(l)) || "");
   // Drop the list/quote marker first ("- **Current bias:** …"), then the label.
   const biasFull = plain(biasLine).replace(/^[-*>\s]+/, "").replace(/^(current bias|bias)\s*:\s*/i, "").replace(/\s*$/, "");
-  let biasShort = (/^([A-Z]+(?:-to-[A-Z]+)?)(?:\s+(?:short|long)-term)?(,\s*leaning\s+\w+)?/.exec(biasFull) || [])[0] || "";
-  if (!biasShort && biasFull){
-    biasShort = biasFull.split(/(?<=\.)\s|\.\s/)[0].replace(/\.$/, "");
+  // A shouted word is the whole bias ("UP short-term"); 09-19 writes a sentence instead
+  // ("Bullish inside a balance, with a hard ceiling at 7752.50."), so keep its first clause.
+  const biasHead = biasFull.replace(/^[^A-Za-z]+/, "");
+  let biasShort = (/^([A-Z]{2,}(?:-to-[A-Z]+)?)(?![a-z])(?:\s+(?:short|long)-term)?(,\s*leaning\s+\w+)?/.exec(biasHead) || [])[0] || "";
+  if (!biasShort && biasHead){
+    biasShort = biasHead.split(/\s+[—–-]\s+|(?<=\.)\s|\.\s/)[0].replace(/\.$/, "");
+    if (biasShort.length > 46) biasShort = biasShort.split(",")[0].trim();
     if (biasShort.length > 46) biasShort = biasShort.slice(0, 44) + "…";
   }
 
@@ -578,12 +619,13 @@ function chartsFor(key){
     .sort((a, b) => rank(a.tag) - rank(b.tag) || a.tag.localeCompare(b.tag, undefined, { numeric: true }));
 }
 
-function renderSection(body, prefix, seen){
+function renderSection(body, prefix, seen, plainRanks){
   let html = "";
   for (const c of chunks(body)){
     if (!c.title){ if (c.body.trim()) html += md(c.body); continue; }
     const h3 = `<h3 id="${uniq(prefix + "-" + slug(c.title), seen)}">${inline(c.title)}</h3>`;
     const inner = md(c.body);
+    if (plainRanks){ html += `<div class="sub">${h3}${inner}</div>`; continue; }
     const emoji = RANKS.findIndex(r => c.title.startsWith(r));
     const numbered = /^★?\s*RANK\s+(\d+)\b/i.exec(plain(c.title));
     const rank = emoji >= 0 ? emoji + 1 : numbered ? Number(numbered[1]) : 0;
@@ -600,6 +642,94 @@ const HINTS = [
   [/alerts/i, "repeating level alerts"],
   [/scorecard|scoring/i, "how yesterday's plan did"],
 ];
+
+// The weekend run adds a cross-symbol summary alongside the three product maps.
+const PROD_LABEL = { SUM: "Summary" };
+const sibNav = (siblings, key) => siblings.map(k =>
+  `<a href="${k}.html"${k === key ? ' aria-current="page"' : ""}>${esc(PROD_LABEL[k] || k)}</a>`).join("");
+
+// The TOC behaviour report.js adds; the summary page has no map, so it ships this alone.
+const TOC_JS = `
+(function(){
+  function open(el){ if (el && el.tagName === "DETAILS") el.open = true; }
+  Array.prototype.forEach.call(document.querySelectorAll(".toc a"), function(a){
+    a.addEventListener("click", function(){ open(document.getElementById(a.getAttribute("href").slice(1))); });
+  });
+  function fromHash(){ if (location.hash) open(document.getElementById(location.hash.slice(1))); }
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+})();`;
+
+// watchlist-summary-<date>.md: one page, no price map - it is about all three products.
+function summaryPage(text, siblings, mdName, products){
+  const seen = new Set(["primary"]);
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
+  let i = 0;
+  while (i < lines.length && !lines[i].trim()) i++;
+  const title = /^#\s+(.*)$/.exec(lines[i] || "");
+  if (title) i++;
+  const rest = lines.slice(i).join("\n");
+  const cut = rest.search(/^## /m);
+  const head = (cut >= 0 ? rest.slice(0, cut) : rest).replace(/^-{3,}\s*$/gm, "").trim();
+
+  const secs = [];
+  for (const part of (cut >= 0 ? rest.slice(cut) : "").split(/^(?=## )/m)){
+    if (!part.trim()) continue;
+    const m = /^## (.*)\n?/.exec(part);
+    if (!m) continue;
+    secs.push({ title: m[1].trim(), md: part.slice(m[0].length).replace(/^-{3,}\s*$/gm, "") });
+  }
+
+  const kpis = Object.keys(products).map(k => {
+    const p = products[k];
+    const fav = p.favoured === "LONG" ? "▲ LONG" : p.favoured === "SHORT" ? "▼ SHORT" : "—";
+    return `<div class="kpi${p.star ? " star" : ""}"><span>${esc(k)}${p.star ? " ★ " + esc(String(p.star)) : ""}</span>` +
+      `<b class="${p.favoured ? "d-" + p.favoured : "txt"}">${esc(fav)}</b>` +
+      `${p.bias ? `<small>${esc(p.bias)}</small>` : ""}</div>`;
+  }).join("");
+
+  // The ranking and the one observation behind it are the point of the page: open them.
+  const lead = t => /easy to happen|one observation|correlation cap|rule 4/i.test(t);
+  const urgent = t => /⛔|read this first/i.test(t);
+  const toc = [], body = [];
+  for (const s of secs){
+    const id = uniq(slug(tocLabel(s.title)), seen);
+    const open = lead(s.title) || urgent(s.title);
+    toc.push(`<a href="#${id}">${esc(tocLabel(s.title))}</a>`);
+    body.push(`<details class="sec${urgent(s.title) ? " urgent" : ""}" id="${id}"${open ? " open" : ""}>` +
+      `<summary><h2>${inline(s.title)}</h2></summary>` +
+      `<div class="sec-body">${gloss(renderSection(s.md, id, seen, true))}</div></details>`);
+  }
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watchlist summary — ${esc(date)}</title>
+<script>if (window.self !== window.top) document.documentElement.classList.add("framed");</script>
+<link rel="stylesheet" href="../assets/report.css?v=${ASSET_V}">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="crumbs">
+    <a href="../../index.html#futures/${date}/SUM">Trading Plans</a><span>/</span><span>Futures · ${esc(longLabel(date))}</span>
+    <nav class="sib" aria-label="Products">${sibNav(siblings, "SUM")}</nav>
+  </div>
+  <h1>${esc(title ? title[1].replace(/\s*—.*$/, "") : "Watchlist summary")}<span class="desc">${esc(Object.keys(products).filter(k => k !== "SUM").join(" · "))}</span></h1>
+  ${kpis ? `<div class="kpis">${kpis}</div>` : ""}
+</header>
+<nav class="toc" aria-label="Sections">${toc.join("")}</nav>
+${head ? `<section class="primary" id="primary"><div class="lbl">This run</div>${gloss(md(head))}</section>` : ""}
+${body.join("\n")}
+<footer>Built from ${esc(mdName)} · ${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC</footer>
+</div>
+<script>${TOC_JS}</script>
+</body>
+</html>
+`;
+}
 
 function page(r, key, siblings, mdName){
   const seen = new Set(["primary", "desk", "ranked", "charts"]);
@@ -650,8 +780,7 @@ function page(r, key, siblings, mdName){
   if (r.scenarios.length) toc.push(`<a href="#ranked">Scenarios</a>`);
   toc.push(...tocBody);
 
-  const sib = siblings.map(k =>
-    `<a href="${k}.html"${k === key ? ' aria-current="page"' : ""}>${k}</a>`).join("");
+  const sib = sibNav(siblings, key);
 
   const data = {
     key, ticker: r.ticker || key, decimals: r.decimals, last: r.last, star: starN,
@@ -770,7 +899,9 @@ for (const f of ["report.css", "report.js"]) copyFileSync(join(ROOT, "tools", "r
 const ASSET_V = createHash("sha1").update(readFileSync(join(assets, "report.css")))
   .update(readFileSync(join(assets, "report.js"))).digest("hex").slice(0, 8);
 
-const siblings = found.map(f => f.key).sort(sortProducts);
+const summaryMd = join(srcDir, `watchlist-summary-${date}.md`);
+const hasSummary = existsSync(summaryMd);
+const siblings = found.map(f => f.key).concat(hasSummary ? ["SUM"] : []).sort(sortProducts);
 
 const built = {};
 console.log(`Futures ${date} — ${longLabel(date)}`);
@@ -801,6 +932,16 @@ for (const f of found){
   const noStop = branches.filter(b => b.stop == null).length, noEntry = branches.filter(b => b.entry == null).length;
   if (branches.length && (noStop || noEntry)) console.warn(`    ! ${f.key}: ${noEntry} branch(es) without an entry, ${noStop} without a stop`);
   if (branches.length && (!nL || !nS)) console.warn(`    ! ${f.key}: every scenario branch parsed as ${nL ? "LONG" : "SHORT"} - check the scenario format`);
+}
+
+if (hasSummary){
+  const out = join(outDir, "SUM.html");
+  writeFileSync(out, summaryPage(readFileSync(summaryMd, "utf8"), siblings, basename(summaryMd), built), "utf8");
+  built.SUM = {
+    file: "SUM.html", symbol: "Watchlist summary", name: Object.keys(built).join(" · "),
+    snapshot: date, last: "", star: "", favoured: null, bias: null, charts: 0,
+  };
+  console.log(`  SUM.html  (${Math.round(statSync(out).size / 1024)} KB) — cross-symbol summary`);
 }
 
 // ---------- manifest ----------

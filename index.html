@@ -210,6 +210,7 @@ iframe[hidden]{display:none}
         <button class="sub" role="tab" id="sub-ES" data-p="ES" aria-selected="false">ES <small>S&amp;P 500</small><span class="dirb" id="d-ES"></span></button>
         <button class="sub" role="tab" id="sub-NQ" data-p="NQ" aria-selected="false">NQ <small>Nasdaq-100</small><span class="dirb" id="d-NQ"></span></button>
         <button class="sub" role="tab" id="sub-GC" data-p="GC" aria-selected="false">GC <small>Gold</small><span class="dirb" id="d-GC"></span></button>
+        <button class="sub" role="tab" id="sub-SUM" data-p="SUM" aria-selected="false">Summary <small>all three</small><span class="dirb" id="d-SUM"></span></button>
       </div>
       <div class="xlink" id="xlink"></div>
     </div>
@@ -254,8 +255,10 @@ iframe[hidden]{display:none}
 
   var WEEKLY   = ["equities", "wheel"];
   var TABS     = ["equities", "wheel", "futures"];
-  var PRODUCTS = ["ES", "NQ", "GC"];
+  var PRODUCTS = ["ES", "NQ", "GC", "SUM"];
   var LABEL    = { equities: "Equities Breakout", wheel: "Wheel Strategy", futures: "Futures" };
+  // SUM is the weekend cross-symbol summary, not a product.
+  var PLABEL   = { SUM: "Summary" };
 
   function $(id){ return document.getElementById(id); }
 
@@ -437,7 +440,7 @@ iframe[hidden]{display:none}
       var d = dayForPlan(state.planId);
       if (!d) return;
       addLead("Futures price maps · " + (d.label || d.id));
-      PRODUCTS.forEach(function(k){ if (productFor(d, k)) addLink("#futures/" + d.id + "/" + k, k); });
+      PRODUCTS.forEach(function(k){ if (productFor(d, k)) addLink("#futures/" + d.id + "/" + k, PLABEL[k] || k); });
     }
   }
 
@@ -478,7 +481,8 @@ iframe[hidden]{display:none}
       entry = productFor(day, state.product);
       if (!entry){
         elEmptyT.textContent = "No report for this product";
-        elEmpty.textContent = "The " + (day.label || day.id) + " futures run didn't include " + state.product + ".";
+        elEmpty.textContent = "The " + (day.label || day.id) + " futures run didn't include " +
+                              (PLABEL[state.product] || state.product) + ".";
       } else {
         src = "futures/" + day.id + "/" + entry.file;
         gen = "Futures · " + (entry.symbol || state.product) + " — " + fmtDate(day.id) +
