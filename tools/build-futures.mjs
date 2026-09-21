@@ -345,7 +345,7 @@ function parseLevelBranches(body, level){
 const groupedStyle = body => /^- \*\*Trigger\b/m.test(body) ||
   body.split("\n").some(l => /^\s+- /.test(l) && /\b(?:LONG|SHORT):?\s+T1\b/.test(plain(l)));
 
-function parseGroupedBranches(body, level){
+function parseGroupedBranches(body, level, headDir){
   const out = [];
   let group = [], parent = null;
   const fieldOf = t => (/^(Trigger|Entry|Target|Stop Loss|R:R)\b[^:]*:/i.exec(t) || [])[1];
@@ -388,7 +388,7 @@ function parseGroupedBranches(body, level){
       const tactical = /tactical\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopLeg);
       const stop = tactical ? Number(tactical[1]) : firstPrice(stopLeg.replace(/^Stop Loss[^:]*:/i, ""));
       const rrLeg = leg(rrT, tag).replace(/^R:R[^:]*:/i, "");
-      let rr = /T1\s*(\d+(?:\.\d+)?)/.exec(rrLeg);
+      let rr = /T1\s*(\d+(?:\.\d+)?)(?![\d.]|\s*÷)/.exec(rrLeg);
       // 09-19 shows the arithmetic instead: "to T1 off the stop = 62.25 ÷ 62.00 = 1.00 ✅
       // — T2 = 1.94R …". The ratio is the last "= n" of the T1 clause, which ends at the
       // verdict mark, the next target or the runner.
@@ -401,8 +401,11 @@ function parseGroupedBranches(body, level){
       // The direction is the word on the Target leg ("→ LONG") or in the Entry line
       // ("short ≈ 7654"); fall back to where T1 sits relative to the level.
       const word = /(?:→|->)\s*\**\s*(LONG|SHORT)/i.exec(targetT) || /\b(long|short)\b/i.exec(entryLeg);
-      const at = entry != null ? entry : level;
-      const dir = word ? word[1].toUpperCase() : at != null && targets[0].p < at ? "SHORT" : "LONG";
+      let at = entry != null ? entry : level;
+      const dir = word ? word[1].toUpperCase() : headDir ? headDir
+                : at != null && targets[0].p < at ? "SHORT" : "LONG";
+      if (headDir && !word && entry != null && level != null &&
+          (dir === "SHORT" ? targets[0].p >= entry : targets[0].p <= entry)) at = level;
       const q = /^Trigger\s*\(([^)]*)\)/i.exec(trigT);
       let label = trigT.replace(/^Trigger[^:]*:\s*/i, "");
       if (q) label = q[1].charAt(0).toUpperCase() + q[1].slice(1) + " — " + label;
@@ -478,7 +481,10 @@ function parseScenarios(sections){
       favoured: fav ? fav[1].toUpperCase() : null,
       branches: (() => {
         const at = lvl ? Number(lvl[1]) : headingLevel != null ? headingLevel : triggerText ? firstPrice(triggerText) : null;
-        if (groupedStyle(c.body)) return parseGroupedBranches(c.body, at);
+        // "30146.50 / 30155.75 BREAKS → SHORT" - only when the heading names one side.
+        const hd = [...title.matchAll(/→\s*(LONG|SHORT)\b/g)].map(m => m[1]);
+        const headDir = hd.length && hd.every(d => d === hd[0]) ? hd[0] : null;
+        if (groupedStyle(c.body)) return parseGroupedBranches(c.body, at, headDir);
         if (/\b(?:LONG|SHORT):?\s+T1\b/.test(plain(c.body))) return parseLevelBranches(c.body, at);
         return parseBranches(c.body, triggerText ? firstPrice(triggerText) : null, triggerText.length > 70 ? "" : triggerText);
       })(),
@@ -591,7 +597,7 @@ function parseReport(text){
     favoured: ((/favou?red(?:\s+branch)?\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
     // Newer reports name the session they scored; older ones lead the Snapshot line with it.
     snapDate: scored ? plain(scored).replace(/\s*\(.*$/, "")
-                     : (/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || "",
+                     : plain((/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || ""),
     biasFull, biasShort,
     // "30-min ATR ≈ 18.85" or "30-min ATR = 0.28 × 66.50 = **18.62**"
     atr30: num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
@@ -689,7 +695,7 @@ function summaryPage(text, siblings, mdName, products){
   }).join("");
 
   // The ranking and the one observation behind it are the point of the page: open them.
-  const lead = t => /easy to happen|one observation|correlation cap|rule 4/i.test(t);
+  const lead = t => /easy to happen|most likely|one paragraph|one observation|decisions for you|correlation cap|rule 4/i.test(t);
   const urgent = t => /⛔|read this first/i.test(t);
   const toc = [], body = [];
   for (const s of secs){
