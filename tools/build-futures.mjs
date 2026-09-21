@@ -594,7 +594,8 @@ function parseReport(text){
     // "★ two-sided `DECISION> 7665.25`" / "★ `7715.00`" / "### ★ RANK 1 — 7656.25 · …"
     star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] ||
           ((scenarios.find(s => s.star) || {}).branches || []).reduce((v, b) => v || (b.entry != null ? String(b.entry) : ""), "") || "",
-    favoured: ((/favou?red(?:\s+branch)?\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
+    // "favoured LONG", or on a Rule 5 = 3/3 day "directional LONG".
+    favoured: ((/(?:favou?red(?:\s+branch)?|directional)\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
     // Newer reports name the session they scored; older ones lead the Snapshot line with it.
     snapDate: scored ? plain(scored).replace(/\s*\(.*$/, "")
                      : plain((/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || ""),
