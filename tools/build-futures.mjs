@@ -545,7 +545,8 @@ function parseReport(text){
     const b = block.trim();
     if (!b) continue;
     if (/^Snapshot:/i.test(b)){ snapshot = b.replace(/^Snapshot:\s*/i, ""); continue; }
-    if (/^\*\*Primary setup:\*\*/i.test(b)){ primary = b.replace(/^\*\*Primary setup:\*\*\s*/i, ""); continue; }
+    // Also "**Primary setup (pre-open rerun):**".
+    if (/^\*\*Primary setup(?:\s*\([^)]*\))?:\*\*/i.test(b)){ primary = b.replace(/^\*\*Primary setup(?:\s*\([^)]*\))?:\*\*\s*/i, ""); continue; }
     // The newer metadata block: keep it as a note, minus the two lines shown in the header.
     const keep = b.split("\n").filter(l => !/^\*\*(Plan for|Last):\*\*/i.test(l)).join("\n").trim();
     if (keep) notes.push(keep);
@@ -592,7 +593,10 @@ function parseReport(text){
     last: lastStr ? Number(lastStr.replace(/,/g, "")) : null,
     decimals,
     // "★ two-sided `DECISION> 7665.25`" / "★ `7715.00`" / "### ★ RANK 1 — 7656.25 · …"
+    // Then the ★ row of the alert table, before the ★ scenario's entry - an entry written
+    // as a range ("the backtest of 4347.8–4348.8") is not the level itself.
     star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] ||
+          String((parseAlerts(sections).find(a => a.star) || {}).level || "") ||
           ((scenarios.find(s => s.star) || {}).branches || []).reduce((v, b) => v || (b.entry != null ? String(b.entry) : ""), "") || "",
     // "favoured LONG", or on a Rule 5 = 3/3 day "directional LONG".
     favoured: ((/(?:favou?red(?:\s+branch)?|directional)\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
