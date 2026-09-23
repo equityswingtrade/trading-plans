@@ -423,8 +423,10 @@ function parseGroupedBranches(body, level, headDir){
     const t = plain(raw.replace(/^\s*- /, ""));
     const field = top ? fieldOf(t) : null;
     if (field){ group.push({ field, text: t }); continue; }
-    flush();
     const alertLine = /\b(?:LONG|SHORT)\b(?::|\s)[^·;]{0,40}?\bT1\b/.test(t);
+    // A note between the bullets ("⚠ **Rule 20:** T1 is 18.6 …") is not the end of the
+    // block - only a branch of its own is, and so is the blank line above.
+    if (alertLine || nested) flush();
     if (top){
       // A level bullet heads the indented alert-style lines beneath it.
       const head = /^(\d{3,}(?:\.\d+)?)(?:\s*\/\s*[\d.]+)*\s*—\s*[^(.]*/.exec(t);
