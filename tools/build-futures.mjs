@@ -443,9 +443,74 @@ function parseGroupedBranches(body, level, headDir){
   return out;
 }
 
+// From 2026-09-24 the pre-open rerun re-ranks the evening scenarios inside section 6, as
+// "####" blocks: "🥇 RANK 1 *(06:00)* — ★ 7733.00 naked VAL rejects … → SHORT". One bullet
+// each for Trigger / Targets / Stop / R, and the other side is prose pointing at another
+// rank, so these blocks are one-sided by construction.
+function parseRerank(md){
+  const out = [];
+  for (const part of md.split(/^(?=#### )/m)){
+    const h = /^#### (.*)\n?/.exec(part);
+    if (!h) continue;
+    const title = plain(h[1]);
+    const num = /RANK\s+(\d+)/i.exec(title);
+    if (!num) continue;
+    // The last "####" block runs to the end of the section, so stop at the next heading -
+    // otherwise the evening ranks below it are read as part of it.
+    const body = part.slice(h[0].length).split(/^#{1,6}\s/m)[0];
+    const bullets = body.split("\n").filter(l => /^\s*- /.test(l)).map(l => plain(l).replace(/^-\s*/, ""));
+    const bullet = re => bullets.find(b => re.test(b)) || "";
+
+    const trigT = bullet(/^Trigger\b/).replace(/^Trigger[^:]*:\s*/i, "");
+    const tgtT = bullet(/^Targets?\b/);
+    const stopT = bullet(/\bStop\b\s*[\d~]/);
+    const rT = bullet(/^R:/) || stopT;
+    const whyT = bullet(/^Why\b/).replace(/^Why[^:]*:\s*/i, "");
+    const other = bullet(/^If it goes the other way/i);
+
+    const seen = new Set();
+    const targets = [...tgtT.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)]
+      .filter(m => !seen.has(m[1]) && seen.add(m[1]))
+      .map(m => ({ k: "T" + m[1], p: Number(m[2]) }))
+      .sort((a, b) => a.k.localeCompare(b.k));
+
+    // The level is the ★ price, else the first price in the heading.
+    const head = title.replace(/RANK\s*\d+/i, "").replace(/\(06:00\)/i, "");
+    const star = /★\s*([\d,]+(?:\.\d+)?)/.exec(head);
+    const entry = star ? Number(star[1].replace(/,/g, "")) : firstPrice(head);
+    const dirW = /(?:→|->)\s*(LONG|SHORT)/i.exec(title);
+    const dir = dirW ? dirW[1].toUpperCase()
+              : entry != null && targets.length && targets[0].p < entry ? "SHORT" : "LONG";
+    // "runner 4.24R" in the R bullet is a multiple, not a price - only the Targets bullet counts.
+    const runner = /\brunner\s*\**\s*(\d{3,}(?:\.\d+)?)(?!\s*R\b)/i.exec(tgtT);
+    const stop = /\bStop\b\s*\**\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopT);
+    const rr = /\bT1\s*([\d.]+)\s*R\b/i.exec(rT);
+
+    const branches = targets.length ? [{
+      label: trigT.length > 120 ? trigT.slice(0, 117) + "…" : trigT || "On the trigger",
+      dir, entry, targets,
+      runner: runner ? Number(runner[1]) : null,
+      stop: stop ? Number(stop[1]) : null,
+      rr: rr ? Number(rr[1]) : null,
+    }] : [];
+    // The other side occasionally carries its own ladder ("→ LONG T1 … SL …").
+    for (const b of parseLevelBranches("- " + other, entry)) branches.push(b);
+
+    out.push({
+      rank: Number(num[1]), slot: (/\[([^\]]+)\]/.exec(title) || [])[1] || "",
+      name: (title.split(/\s[—–]\s/).slice(1).join(" — ") || title).replace(/★/g, "").trim(),
+      star: title.includes("★"), trigger: trigT, why: whyT, favoured: null, branches,
+    });
+  }
+  return out.sort((a, b) => a.rank - b.rank);
+}
+
 function parseScenarios(sections){
   const sec = sections.find(s => s.title && /(forward|ranked) scenarios/i.test(s.title));
   if (!sec) return [];
+  // A pre-open rerun re-ranks the evening list in place; that ranking is the live one.
+  const rerank = parseRerank(sec.md);
+  if (rerank.length) return rerank;
   const out = [];
   for (const c of chunks(sec.md)){
     if (!c.title) continue;
