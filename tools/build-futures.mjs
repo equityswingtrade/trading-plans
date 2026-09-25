@@ -368,7 +368,9 @@ function parseGroupedBranches(body, level, headDir){
     const trigT = get("trigger"), entryT = get("entry"), stopT = get("stop loss"), rrT = get("r:r");
     const targetTs = group.filter(g => g.field.toLowerCase() === "target").map(g => g.text);
     group = [];
-    if (!entryT || !targetTs.length) return;
+    // A block may state only the trigger ("a 30-min close below 30590.25, then short the
+    // backtest") and no Entry line - the level is then the entry.
+    if (!targetTs.length) return;
     // A two-edge fade ("long ≈ 7626 / short ≈ 7696") describes a range, not one trade.
     if (/\blong\b/i.test(entryT) && /\bshort\b/i.test(entryT)) return;
 
