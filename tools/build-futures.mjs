@@ -465,7 +465,8 @@ function parseRerank(md){
 
     const trigT = bullet(/^Trigger\b/).replace(/^Trigger[^:]*:\s*/i, "");
     const tgtT = bullet(/^Targets?\b/);
-    const stopT = bullet(/\bStop\b\s*[\d~]/);
+    // "Stop 4306.0 — above the 20-EMA" (09-24) or "Stop Loss: tactical 7773.50 · …" (09-25).
+    const stopT = bullet(/^Stop\b/);
     const rT = bullet(/^R:/) || stopT;
     const whyT = bullet(/^Why\b/).replace(/^Why[^:]*:\s*/i, "");
     const other = bullet(/^If it goes the other way/i);
@@ -485,7 +486,8 @@ function parseRerank(md){
               : entry != null && targets.length && targets[0].p < entry ? "SHORT" : "LONG";
     // "runner 4.24R" in the R bullet is a multiple, not a price - only the Targets bullet counts.
     const runner = /\brunner\s*\**\s*(\d{3,}(?:\.\d+)?)(?!\s*R\b)/i.exec(tgtT);
-    const stop = /\bStop\b\s*\**\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopT);
+    const stop = /tactical\s*\**\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopT) ||
+                 /^Stop(?:\s+Loss)?\b[^\d]*?(\d{3,}(?:\.\d+)?)/i.exec(stopT);
     const rr = /\bT1\s*([\d.]+)\s*R\b/i.exec(rT);
 
     const branches = targets.length ? [{
@@ -608,18 +610,24 @@ function parseReport(text){
   const contract = metaLine(/^\*\*Contract:\*\*\s*(.+)$/m);
   const scored = metaLine(/^\*\*Session scored:\*\*\s*(.+)$/m);
 
-  let snapshot = "", primary = "";
+  // A rerun keeps the evening callout and adds its own; the qualified one is the live plan.
+  let snapshot = "", primary = "", primaryRerun = "";
   const notes = [];
   for (const block of headMd.split(/\n\s*\n/)){
     const b = block.trim();
     if (!b) continue;
     if (/^Snapshot:/i.test(b)){ snapshot = b.replace(/^Snapshot:\s*/i, ""); continue; }
-    // Also "**Primary setup (pre-open rerun):**".
-    if (/^\*\*Primary setup(?:\s*\([^)]*\))?:\*\*/i.test(b)){ primary = b.replace(/^\*\*Primary setup(?:\s*\([^)]*\))?:\*\*\s*/i, ""); continue; }
+    // Also "**Primary setup (pre-open rerun):**" / "(as re-ranked at 06:00):".
+    if (/^\*\*Primary setup(?:\s*\([^)]*\))?:\*\*/i.test(b)){
+      const text = b.replace(/^\*\*Primary setup(?:\s*\([^)]*\))?:\*\*\s*/i, "");
+      if (/^\*\*Primary setup\s*\(/i.test(b)) primaryRerun = text; else primary = text;
+      continue;
+    }
     // The newer metadata block: keep it as a note, minus the two lines shown in the header.
     const keep = b.split("\n").filter(l => !/^\*\*(Plan for|Last):\*\*/i.test(l)).join("\n").trim();
     if (keep) notes.push(keep);
   }
+  if (primaryRerun) primary = primaryRerun;
   if (!snapshot){
     snapshot = [planFor && "Plan for " + planFor, lastLine && "Last " + lastLine].filter(Boolean).join(" · ");
   }
@@ -667,8 +675,11 @@ function parseReport(text){
     star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] ||
           String((parseAlerts(sections).find(a => a.star) || {}).level || "") ||
           ((scenarios.find(s => s.star) || {}).branches || []).reduce((v, b) => v || (b.entry != null ? String(b.entry) : ""), "") || "",
-    // "favoured LONG", or on a Rule 5 = 3/3 day "directional LONG".
-    favoured: ((/(?:favou?red(?:\s+branch)?|directional)\s+\**\s*(LONG|SHORT)/i.exec(primary) || [])[1] || "").toUpperCase(),
+    // "favoured LONG", "directional LONG" on a Rule 5 = 3/3 day, or "SHORT-favoured".
+    // A rerun may also just open with the side: "**SHORT** — continuation, …".
+    favoured: ((/(?:favou?red(?:\s+branch)?|directional)\s+\**\s*(LONG|SHORT)/i.exec(primary) ||
+                /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
+                /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || "").toUpperCase(),
     // Newer reports name the session they scored; older ones lead the Snapshot line with it.
     snapDate: scored ? plain(scored).replace(/\s*\(.*$/, "")
                      : plain((/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || ""),
