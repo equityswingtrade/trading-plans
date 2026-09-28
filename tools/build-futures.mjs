@@ -384,11 +384,19 @@ function parseGroupedBranches(body, level, headDir){
         .sort((a, b) => a.k.localeCompare(b.k));
       if (!targets.length) continue;
       const entryLeg = noChase(leg(entryT, tag));
-      const entry = firstPrice(entryLeg.replace(/^Entry[^:]*:/i, ""));
+      let entry = firstPrice(entryLeg.replace(/^Entry[^:]*:/i, ""));
       const runner = /\brunner\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(targetT);
       const stopLeg = leg(stopT, tag);
       const tactical = /tactical\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopLeg);
       const stop = tactical ? Number(tactical[1]) : firstPrice(stopLeg.replace(/^Stop Loss[^:]*:/i, ""));
+      // "Entry: the confirming close" gives no price, but the stop states the distance -
+      // "tactical 30756.25 (61.50 risk from the 30694.75 entry)" - and that is the number the
+      // report's own R multiples are measured from.
+      const risk = /\(\s*(\d+(?:\.\d+)?)\s*(?:points?\s+)?risk/i.exec(stopLeg);
+      if (entry == null && stop != null && risk && targets.length){
+        const d = Number(risk[1]);
+        entry = Number((targets[0].p < stop ? stop - d : stop + d).toFixed(4));
+      }
       const rrLeg = leg(rrT, tag).replace(/^R:R[^:]*:/i, "");
       let rr = /T1\s*(\d+(?:\.\d+)?)(?![\d.]|\s*÷)/.exec(rrLeg);
       // 09-19 shows the arithmetic instead: "to T1 off the stop = 62.25 ÷ 62.00 = 1.00 ✅
