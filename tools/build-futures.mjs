@@ -676,8 +676,11 @@ function parseReport(text){
           String((parseAlerts(sections).find(a => a.star) || {}).level || "") ||
           ((scenarios.find(s => s.star) || {}).branches || []).reduce((v, b) => v || (b.entry != null ? String(b.entry) : ""), "") || "",
     // "favoured LONG", "directional LONG" on a Rule 5 = 3/3 day, or "SHORT-favoured".
+    // "favoured branch SHORT" wins: a callout may open by saying which side the PREVIOUS
+    // plan favoured ("the weekend plan's favoured LONG was wrong") before naming today's.
     // A rerun may also just open with the side: "**SHORT** — continuation, …".
-    favoured: ((/(?:favou?red(?:\s+branch)?|directional)\s+\**\s*(LONG|SHORT)/i.exec(primary) ||
+    favoured: ((/favou?red\s+branch\s+\**\s*(LONG|SHORT)/i.exec(primary) ||
+                /(?:favou?red(?:\s+branch)?|directional)\s+\**\s*(LONG|SHORT)/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || "").toUpperCase(),
     // Newer reports name the session they scored; older ones lead the Snapshot line with it.
@@ -686,9 +689,13 @@ function parseReport(text){
     biasFull, biasShort,
     // "30-min ATR ≈ 18.85" or "30-min ATR = 0.28 × 66.50 = **18.62**"
     atr30: num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
-           num(/30-min ATR\s*(?:≈|~|=)\s*([\d,]+(?:\.\d+)?)/),
-    // "ATR condition: 72.25 …", "ATR: 67.25 …" or "ATR 66.50."
-    atrD: num(/\bATR(?: condition)?:\s*([\d,]+(?:\.\d+)?)/) || num(/\bATR\s+([\d,]+(?:\.\d+)?)\b/),
+           num(/30-min ATR\s*(?:≈|~|=)\s*([\d,]+(?:\.\d+)?)/) ||
+           // "VA width 34.00 vs the 30-min ATR 20.86 = 1.63× ATR"
+           num(/30-min ATR\s+([\d,]+(?:\.\d+)?)\b/),
+    // "ATR condition: 72.25 …", "ATR condition: daily 74.50 …", "ATR: 67.25 …" or "ATR 66.50."
+    // The label can be followed by a warning mark or "daily": "ATR condition: ⛔ 101.4 …".
+    atrD: num(/\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*([\d,]+(?:\.\d+)?)/) ||
+          num(/\bATR\s+([\d,]+(?:\.\d+)?)\b/),
     ladder: parseLadders(bodyMd),
     alerts: parseAlerts(sections),
   };
