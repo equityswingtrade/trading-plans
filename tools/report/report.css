@@ -100,7 +100,8 @@ section,details.sec{scroll-margin-top:52px}
 .k-zone{width:16px;height:8px;background:var(--zone);border-radius:2px}
 .k-star{font-size:13px;line-height:1;color:var(--ink)}
 .map-wrap{position:relative;width:100%}
-#map{display:block;width:100%;height:auto;overflow:visible;font-family:var(--sans)}
+/* Clipped: a long gutter label must never paint over the trade planner beside the map. */
+#map{display:block;width:100%;height:auto;overflow:hidden;font-family:var(--sans)}
 #map text{font-size:11.5px;fill:var(--ink)}
 #map .axis text{fill:var(--ink3);font-variant-numeric:tabular-nums;font-size:11px}
 #map .axis line{stroke:var(--rule)}
@@ -116,7 +117,7 @@ section,details.sec{scroll-margin-top:52px}
 #map .price-pill{fill:var(--price)}
 #map .price-txt{fill:#fff;font-weight:650;font-variant-numeric:tabular-nums}
 #map .lbl-val{font-weight:650;font-variant-numeric:tabular-nums}
-#map .lbl-name{fill:var(--ink3)}
+#map .lbl-name{fill:var(--ink3);font-size:10.5px}
 #map .leader{stroke:var(--ink3);stroke-width:1}
 #map .rail{stroke-width:2;stroke-linecap:round}
 #map .rail.long{stroke:var(--long)} #map .rail.short{stroke:var(--short)}

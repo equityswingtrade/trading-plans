@@ -99,6 +99,20 @@
     return (f < 1.5 ? 1 : f < 2.25 ? 2 : f < 3.5 ? 2.5 : f < 7.5 ? 5 : 10) * mag;
   }
 
+  // Trim an SVG text run to maxPx, ending in an ellipsis. Needs to be in the document.
+  function ellipsize(node, maxPx){
+    var full = node.textContent;
+    if (maxPx <= 12 || !node.getComputedTextLength) return;
+    if (node.getComputedTextLength() <= maxPx) return;
+    var lo = 0, hi = full.length;
+    while (lo < hi){
+      var mid = (lo + hi + 1) >> 1;
+      node.textContent = full.slice(0, mid) + "…";
+      if (node.getComputedTextLength() <= maxPx) lo = mid; else hi = mid - 1;
+    }
+    node.textContent = full.slice(0, lo).replace(/[\s·+/(-]+$/, "") + "…";
+  }
+
   // Push labels apart vertically, keeping order; returns adjusted y per item.
   function spread(items, gap, top, bottom){
     items.sort(function(a, b){ return a.y - b.y; });
@@ -144,7 +158,9 @@
     var W = Math.max(300, wrap.clientWidth);
     var H = W < 560 ? 540 : 660;
     var narrow = W < 520;
-    var L = narrow ? 46 : 58, R = narrow ? 104 : 150, T = 12, B = 12;
+    // The right gutter holds "★ 7738.25  Mon VAL + daily 20-EMA (RANK 3 / RANK 4)", so give it
+    // a share of the width on a wide card; the names are fitted to it below.
+    var L = narrow ? 46 : 58, R = narrow ? 104 : Math.min(240, Math.max(150, Math.round(W * 0.3))), T = 12, B = 12;
     var x0 = L, x1 = W - R, pw = x1 - x0;
     var ov = overlay();
     var dom = domain(ov), lo = dom[0], hi = dom[1];
@@ -266,7 +282,7 @@
     }
 
     spread(labels, 18, T + 8, H - B - 6);
-    var gt = s("g", {});
+    var gt = s("g", {}), names = [];
     labels.forEach(function(it){
       var tx = x1 + 10;
       if (Math.abs(it.ly - it.y) > 1) gt.appendChild(s("path", { "class": "leader", d: "M" + x1 + " " + it.y + " L" + (x1 + 5) + " " + it.ly, fill: "none" }));
@@ -279,10 +295,21 @@
       }
       var t = s("text", { x: tx, y: it.ly + 4 });
       t.appendChild(s("tspan", { "class": "lbl-val" }, (it.a.star ? "★ " : "") + fmt(it.a.level)));
-      if (!narrow) t.appendChild(s("tspan", { "class": "lbl-name", dx: 6 }, it.a.name));
+      if (!narrow){
+        // Keep the level's own sources ("Mon VAL + daily 20-EMA"); the rank and any warning
+        // glyph are already on the planner card and in the hover text below.
+        var nm = s("tspan", { "class": "lbl-name", dx: 6 },
+          it.a.name.replace(/\s*\([^)]*\)\s*$/, "").replace(/^[^A-Za-z0-9★]+/, "").trim());
+        t.appendChild(nm);
+        names.push(nm);
+      }
+      // The untruncated name stays available on hover, here and on the level's hit area.
+      t.appendChild(s("title", {}, fmt(it.a.level) + " · " + it.a.name));
       gt.appendChild(t);
     });
     svg.appendChild(gt);
+    // Measuring needs the nodes in the document, so trim to the gutter after appending.
+    names.forEach(function(nm){ ellipsize(nm, W - 6 - (nm.getBBox ? nm.getBBox().x : x1 + 10)); });
 
     var dirTxt = ov ? ov.sides.map(function(sd){ return sd.dir; }).join(" and ") : "";
     svg.setAttribute("aria-label", D.ticker + " price map: last " + fmt(D.last) +
