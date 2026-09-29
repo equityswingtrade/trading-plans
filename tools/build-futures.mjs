@@ -689,7 +689,8 @@ function parseReport(text){
     // A rerun may also just open with the side: "**SHORT** — continuation, …".
     // Within the same sentence, so "the favoured branch HAS FLIPPED TO LONG since 06:10" counts.
     favoured: ((/favou?red\s+branch\b[^.]{0,40}?\**\b(LONG|SHORT)\b/i.exec(primary) ||
-                /(?:favou?red(?:\s+branch)?|directional)\s+\**\s*(LONG|SHORT)/i.exec(primary) ||
+                // The side may be marked up: "a DIRECTIONAL `LONG>`".
+                /(?:favou?red(?:\s+branch)?|directional)[\s*`]+(LONG|SHORT)/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || "").toUpperCase(),
     // Newer reports name the session they scored; older ones lead the Snapshot line with it.
@@ -698,9 +699,11 @@ function parseReport(text){
     biasFull, biasShort,
     // "30-min ATR ≈ 18.85" or "30-min ATR = 0.28 × 66.50 = **18.62**"
     atr30: num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
-           num(/30-min ATR\s*(?:≈|~|=)\s*([\d,]+(?:\.\d+)?)/) ||
-           // "VA width 34.00 vs the 30-min ATR 20.86 = 1.63× ATR"
-           num(/30-min ATR\s+([\d,]+(?:\.\d+)?)\b/),
+           num(/30-min ATR\s*(?:≈|~)\s*([\d,]+(?:\.\d+)?)/) ||
+           // "VA width 34.00 vs the 30-min ATR 20.86 = 1.63× ATR". This comes before the
+           // "= x" form, which also fits a derived figure ("0.5× the 30-min ATR = 13.55").
+           num(/30-min ATR\s+([\d,]+(?:\.\d+)?)\b/) ||
+           num(/30-min ATR\s*=\s*([\d,]+(?:\.\d+)?)/),
     // "ATR condition: 72.25 …", "ATR condition: daily 74.50 …", "ATR: 67.25 …" or "ATR 66.50."
     // The label can be followed by a warning mark or "daily": "ATR condition: ⛔ 101.4 …".
     atrD: num(/\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*([\d,]+(?:\.\d+)?)/) ||
