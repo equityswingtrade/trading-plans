@@ -687,7 +687,8 @@ function parseReport(text){
     // "favoured branch SHORT" wins: a callout may open by saying which side the PREVIOUS
     // plan favoured ("the weekend plan's favoured LONG was wrong") before naming today's.
     // A rerun may also just open with the side: "**SHORT** — continuation, …".
-    favoured: ((/favou?red\s+branch\s+\**\s*(LONG|SHORT)/i.exec(primary) ||
+    // Within the same sentence, so "the favoured branch HAS FLIPPED TO LONG since 06:10" counts.
+    favoured: ((/favou?red\s+branch\b[^.]{0,40}?\**\b(LONG|SHORT)\b/i.exec(primary) ||
                 /(?:favou?red(?:\s+branch)?|directional)\s+\**\s*(LONG|SHORT)/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || "").toUpperCase(),
