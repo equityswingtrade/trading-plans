@@ -24,8 +24,18 @@
     return e;
   }
   // A surface-coloured plate behind a label, so a line crossing its price stays behind the text.
-  function plate(g, t){
+  // With flip = {to, limit}, a label that would reach past `limit` - the plot's right edge,
+  // where the gutter labels start - is moved to `to` and right-aligned instead.
+  function plate(g, t, flip){
     g.appendChild(t);
+    if (flip){
+      var w = t.getBBox();
+      var over = flip.side === "left" ? w.x < flip.limit : w.x + w.width > flip.limit;
+      if (over){
+        t.setAttribute("x", flip.to);
+        t.setAttribute("text-anchor", flip.side === "left" ? "start" : "end");
+      }
+    }
     var bb = t.getBBox();
     g.insertBefore(s("rect", { "class": "lbl-bg", x: bb.x - 3, y: bb.y - 1, width: bb.width + 6, height: bb.height + 2, rx: 3 }), t);
     return t;
@@ -237,20 +247,32 @@
         var risk = sd.sl != null ? Math.abs(ov.level - sd.sl) : 0;
         var tl = ts.map(function(x){ return { y: y(x.p), ly: y(x.p), x: x }; });
         if (sd.sl != null) tl.push({ y: y(sd.sl), ly: y(sd.sl), sl: true });
+        // spread() keeps the order it is given, so the stop has to take its place among the
+        // targets by price first - otherwise it lands on whichever one shares its height.
+        tl.sort(function(a, b){ return a.y - b.y; });
         spread(tl, 14, T + 6, H - B - 2);
+        // With both sides shown, the left column labels to its left and the right column to
+        // its right, so the two ladders cannot meet in the middle.
+        var outward = n === 2 && idx === 0;
+        var tx = outward ? cx - half - 10 : cx + half + 10;
+        var anchor = outward ? "end" : "start";
+        // x0 + 20 keeps clear of the ★ marker that sits just inside the axis.
+        var flip = outward ? { to: cx + half + 10, limit: x0 + 20, side: "left" }
+                           : { to: cx - half - 10, limit: x1 - 6, side: "right" };
         tl.forEach(function(it){
-          var tx = cx + half + 10;
           if (it.sl){
-            plate(govL, s("text", { "class": "t-lbl", x: tx, y: it.ly + 4 }, "SL " + fmt(sd.sl)));
+            plate(govL, s("text", { "class": "t-lbl", x: tx, y: it.ly + 4, "text-anchor": anchor },
+              "SL " + fmt(sd.sl)), flip);
             return;
           }
           gov.appendChild(s("circle", { "class": "mk " + sd.dir, cx: cx, cy: it.y, r: 5 }));
-          var t = s("text", { "class": "t-lbl", x: tx, y: it.ly + 4 }, it.x.k + " " + fmt(it.x.p));
+          var t = s("text", { "class": "t-lbl", x: tx, y: it.ly + 4, "text-anchor": anchor },
+            it.x.k + " " + fmt(it.x.p));
           if (risk > 0){
             var rr = s("tspan", { "class": "t-r", dx: 5 }, (Math.abs(it.x.p - ov.level) / risk).toFixed(1) + "R");
             t.appendChild(rr);
           }
-          plate(govL, t);
+          plate(govL, t, flip);
         });
         var up = far > ov.level;
         plate(govL, s("text", { "class": "side-lbl", x: cx, y: (up ? Math.min(yl, yf) - 8 : Math.max(yl, yf) + 16), "text-anchor": "middle" },
@@ -281,6 +303,7 @@
       labels.push({ y: y(D.last), ly: y(D.last), kind: "price" });
     }
 
+    labels.sort(function(a, b){ return a.y - b.y; });
     spread(labels, 18, T + 8, H - B - 6);
     var gt = s("g", {}), names = [];
     labels.forEach(function(it){
