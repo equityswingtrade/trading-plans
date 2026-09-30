@@ -393,6 +393,10 @@ function parseGroupedBranches(body, level, headDir){
       // "tactical 30756.25 (61.50 risk from the 30694.75 entry)" - and that is the number the
       // report's own R multiples are measured from.
       const risk = /\(\s*(\d+(?:\.\d+)?)\s*(?:points?\s+)?risk/i.exec(stopLeg);
+      // Once a trade is live the Entry line states the fill ("Entry: 7734.75 (taken)") while
+      // the R multiples stay measured from the level, which the stop says plainly: "11.00 risk
+      // from the trigger". Keep the level, so the entry and the R on the card agree.
+      if (/risk\s+from\s+the\s+(?:★|star|trigger|level)/i.test(stopLeg)) entry = null;
       if (entry == null && stop != null && risk && targets.length){
         const d = Number(risk[1]);
         entry = Number((targets[0].p < stop ? stop - d : stop + d).toFixed(4));
@@ -625,10 +629,12 @@ function parseReport(text){
     const b = block.trim();
     if (!b) continue;
     if (/^Snapshot:/i.test(b)){ snapshot = b.replace(/^Snapshot:\s*/i, ""); continue; }
-    // Also "**Primary setup (pre-open rerun):**" / "(as re-ranked at 06:00):".
-    if (/^\*\*Primary setup(?:\s*\([^)]*\))?:\*\*/i.test(b)){
-      const text = b.replace(/^\*\*Primary setup(?:\s*\([^)]*\))?:\*\*\s*/i, "");
-      if (/^\*\*Primary setup\s*\(/i.test(b)) primaryRerun = text; else primary = text;
+    // Also "**Primary setup (pre-open rerun):**" / "(as re-ranked at 06:00):", and a rerun
+    // may put a warning mark in front of the label ("⛔ **Primary setup:**").
+    const PRIM = /^[^A-Za-z*]{0,4}\*\*Primary setup(\s*\([^)]*\))?:\*\*\s*/i;
+    if (PRIM.test(b)){
+      const text = b.replace(PRIM, "");
+      if (PRIM.exec(b)[1]) primaryRerun = text; else primary = text;
       continue;
     }
     // The newer metadata block: keep it as a note, minus the two lines shown in the header.
