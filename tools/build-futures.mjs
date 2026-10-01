@@ -402,7 +402,9 @@ function parseGroupedBranches(body, level, headDir){
         entry = Number((targets[0].p < stop ? stop - d : stop + d).toFixed(4));
       }
       const rrLeg = leg(rrT, tag).replace(/^R:R[^:]*:/i, "");
-      let rr = /T1\s*(\d+(?:\.\d+)?)(?![\d.]|\s*÷)/.exec(rrLeg);
+      // "R:R: T1 0.54 · …", or from 10-01 "1.29R at T1 off the tactical stop · 2.21R at T2".
+      let rr = /T1\s*(\d+(?:\.\d+)?)(?![\d.]|\s*÷)/.exec(rrLeg) ||
+               /(\d+(?:\.\d+)?)\s*R\s+(?:at|to)\s+T1\b/i.exec(rrLeg);
       // 09-19 shows the arithmetic instead: "to T1 off the stop = 62.25 ÷ 62.00 = 1.00 ✅
       // — T2 = 1.94R …". The ratio is the last "= n" of the T1 clause, which ends at the
       // verdict mark, the next target or the runner.
@@ -414,6 +416,19 @@ function parseGroupedBranches(body, level, headDir){
       }
       // The direction is the word on the Target leg ("→ LONG") or in the Entry line
       // ("short ≈ 7654"); fall back to where T1 sits relative to the level.
+      // Which price the R is measured from varies by rank - the level, the trigger, or the
+      // fill - so when the report states T1's R, take the candidate that reproduces it.
+      const rrVal = rr ? Number(rr[1]) : null;
+      if (rrVal != null && stop != null && targets.length){
+        const cand = [];
+        [entry, level].forEach(v => { if (v != null && cand.indexOf(v) < 0) cand.push(v); });
+        (leg(trigT, tag).match(/\d{3,}(?:\.\d+)?/g) || []).forEach(v => {
+          if (cand.indexOf(Number(v)) < 0) cand.push(Number(v));
+        });
+        const fit = cand.find(c => c !== stop &&
+          Math.abs(Math.abs(targets[0].p - c) / Math.abs(stop - c) - rrVal) <= 0.06);
+        if (fit != null) entry = fit;
+      }
       const word = /(?:→|->)\s*\**\s*(LONG|SHORT)/i.exec(targetT) || /\b(long|short)\b/i.exec(entryLeg);
       let at = entry != null ? entry : level;
       const dir = word ? word[1].toUpperCase() : headDir ? headDir
@@ -500,7 +515,7 @@ function parseRerank(md){
     const runner = /\brunner\s*\**\s*(\d{3,}(?:\.\d+)?)(?!\s*R\b)/i.exec(tgtT);
     const stop = /tactical\s*\**\s*~?\s*(\d{3,}(?:\.\d+)?)/i.exec(stopT) ||
                  /^Stop(?:\s+Loss)?\b[^\d]*?(\d{3,}(?:\.\d+)?)/i.exec(stopT);
-    const rr = /\bT1\s*([\d.]+)\s*R\b/i.exec(rT);
+    const rr = /\bT1\s*([\d.]+)\s*R\b/i.exec(rT) || /([\d.]+)\s*R\s+(?:at|to)\s+T1\b/i.exec(rT);
 
     const branches = targets.length ? [{
       label: trigT.length > 120 ? trigT.slice(0, 117) + "…" : trigT || "On the trigger",
