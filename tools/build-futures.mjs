@@ -429,6 +429,13 @@ function parseGroupedBranches(body, level, headDir){
           Math.abs(Math.abs(targets[0].p - c) / Math.abs(stop - c) - rrVal) <= 0.06);
         if (fit != null) entry = fit;
       }
+      // With no stated R to anchor to ("0.75R at the ATH"), the trigger's own confirmation
+      // price beats the heading level, which may name the objective rather than the entry.
+      if (entry == null){
+        const t = /\bclos(?:e|es|ing)\s+(?:back\s+)?(?:above|below|under|over)\s*\**\s*(\d{3,}(?:\.\d+)?)/i
+          .exec(leg(trigT, tag));
+        if (t) entry = Number(t[1]);
+      }
       const word = /(?:→|->)\s*\**\s*(LONG|SHORT)/i.exec(targetT) || /\b(long|short)\b/i.exec(entryLeg);
       let at = entry != null ? entry : level;
       const dir = word ? word[1].toUpperCase() : headDir ? headDir
