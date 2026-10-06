@@ -380,7 +380,8 @@ function parseGroupedBranches(body, level, headDir){
       const tag = targetTs.length > 1 ? (/^Target\s*\(\s*([a-z])\b/i.exec(targetT) || [])[1] : null;
       // A number may be given twice under one key when the first is disowned: "T1 4248.4
       // ⚠ PASS-THROUGH — not promoted; the first real magnet is T1 4263.3". Keep the kept one.
-      const hits = [...targetT.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)];
+      // A target may be qualified before its price: "T1 measured 7916.50", "T2 ≈ 7926.75".
+      const hits = [...targetT.matchAll(/\bT([1-9])\b[^\d\n]{0,10}?(\d{3,}(?:\.\d+)?)/g)];
       const byKey = new Map();
       hits.forEach((m, i) => {
         const seg = targetT.slice(m.index, i + 1 < hits.length ? hits[i + 1].index : targetT.length);
@@ -430,9 +431,16 @@ function parseGroupedBranches(body, level, headDir){
       const rrVal = rr ? Number(rr[1]) : null;
       if (rrVal != null && stop != null && targets.length){
         const cand = [];
-        // "R:R: from an assumed 31470.00 entry, risk 75.00 → 0.73R at T1"
-        const assumed = /from an assumed\s*\**\s*([\d,]+(?:\.\d+)?)\s*\**\s*entry/i.exec(rrLeg);
-        [entry, assumed && Number(assumed[1].replace(/,/g, "")), level]
+        // "from an assumed 31470.00 entry" - stated on the R:R line, or inside the target's
+        // own note: "T1 4205.0 (5.0 from an assumed 4200.0 entry = 0.21× ATR)".
+        const assumed = /from an assumed\s*\**\s*([\d,]+(?:\.\d+)?)\s*\**\s*entry/i.exec(rrLeg) ||
+                        /from an assumed\s*\**\s*([\d,]+(?:\.\d+)?)\s*\**\s*entry/i.exec(targetT);
+        // "R:R: risk 13.0 → 0.38R at T1" places the entry one risk away from the stop.
+        const rrRisk = /\brisk\s*\**\s*([\d,]+(?:\.\d+)?)/i.exec(rrLeg);
+        const fromRisk = rrRisk && stop != null
+          ? Number((targets[0].p < stop ? stop - Number(rrRisk[1]) : stop + Number(rrRisk[1])).toFixed(4))
+          : null;
+        [entry, assumed && Number(assumed[1].replace(/,/g, "")), fromRisk, level]
           .forEach(v => { if (v != null && cand.indexOf(v) < 0) cand.push(v); });
         (leg(trigT, tag).match(/\d{3,}(?:\.\d+)?/g) || []).forEach(v => {
           if (cand.indexOf(Number(v)) < 0) cand.push(Number(v));
