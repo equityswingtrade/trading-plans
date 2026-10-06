@@ -41,6 +41,11 @@ The reports come from `C:\Users\VINHSANH\.claude\tradingview\reports`, named
 `ES1-structured-<date>.md`, `NQ1-structured-<date>.md`,
 `GC1-structured-<date>.md`.
 
+**Reruns.** A rerun saved beside the original as `<name>-update.md` — e.g.
+`ES1-structured-2026-10-06-update.md` — is used in preference to it, for the
+product reports and the summary alike. Nothing else changes: build the same
+date again and the pages are rebuilt from the newer file.
+
 **Watchlist summary (optional, weekend runs).** If
 `watchlist-summary-<date>.md` sits beside them, it is built as
 `futures/<date>/SUM.html` and appears as the **Summary** sub-tab, after the

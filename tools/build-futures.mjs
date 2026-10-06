@@ -342,7 +342,8 @@ function parseLevelBranches(body, level){
 //   "Stop Loss: tactical 7666.00 …", "R:R: T1 0.54 …"
 // - separated by blank lines, plus alert-style one-liners ("If it BREAKS instead … → LONG T1 …
 // · tactical SL …"), some indented under a level bullet ("7540.25 / 7541.75 — the six-year shelf").
-const groupedStyle = body => /^- \*\*Trigger\b/m.test(body) ||
+// The 10-06 update writes the field labels unbolded ("- Trigger: …").
+const groupedStyle = body => /^- \*{0,2}Trigger\b/m.test(body) ||
   body.split("\n").some(l => /^\s+- /.test(l) && /\b(?:LONG|SHORT):?\s+T1\b/.test(plain(l)));
 
 function parseGroupedBranches(body, level, headDir){
@@ -377,10 +378,18 @@ function parseGroupedBranches(body, level, headDir){
     for (const targetT of targetTs){
       // "Target (a — acceptance → LONG):" - the other bullets label their halves the same way.
       const tag = targetTs.length > 1 ? (/^Target\s*\(\s*([a-z])\b/i.exec(targetT) || [])[1] : null;
-      const seen = new Set();
-      const targets = [...targetT.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)]
-        .filter(m => !seen.has(m[1]) && seen.add(m[1]))
-        .map(m => ({ k: "T" + m[1], p: Number(m[2]) }))
+      // A number may be given twice under one key when the first is disowned: "T1 4248.4
+      // ⚠ PASS-THROUGH — not promoted; the first real magnet is T1 4263.3". Keep the kept one.
+      const hits = [...targetT.matchAll(/\bT([1-9])\s*~?\s*(\d{3,}(?:\.\d+)?)/g)];
+      const byKey = new Map();
+      hits.forEach((m, i) => {
+        const seg = targetT.slice(m.index, i + 1 < hits.length ? hits[i + 1].index : targetT.length);
+        const disowned = /PASS-?THROUGH|not promoted/i.test(seg);
+        if (!byKey.has(m[1]) || (byKey.get(m[1]).disowned && !disowned)) {
+          byKey.set(m[1], { p: Number(m[2]), disowned });
+        }
+      });
+      const targets = [...byKey.entries()].map(([k, v]) => ({ k: "T" + k, p: v.p }))
         .sort((a, b) => a.k.localeCompare(b.k));
       if (!targets.length) continue;
       const entryLeg = noChase(leg(entryT, tag));
@@ -421,7 +430,10 @@ function parseGroupedBranches(body, level, headDir){
       const rrVal = rr ? Number(rr[1]) : null;
       if (rrVal != null && stop != null && targets.length){
         const cand = [];
-        [entry, level].forEach(v => { if (v != null && cand.indexOf(v) < 0) cand.push(v); });
+        // "R:R: from an assumed 31470.00 entry, risk 75.00 → 0.73R at T1"
+        const assumed = /from an assumed\s*\**\s*([\d,]+(?:\.\d+)?)\s*\**\s*entry/i.exec(rrLeg);
+        [entry, assumed && Number(assumed[1].replace(/,/g, "")), level]
+          .forEach(v => { if (v != null && cand.indexOf(v) < 0) cand.push(v); });
         (leg(trigT, tag).match(/\d{3,}(?:\.\d+)?/g) || []).forEach(v => {
           if (cand.indexOf(Number(v)) < 0) cand.push(Number(v));
         });
@@ -731,6 +743,8 @@ function parseReport(text){
            // "VA width 34.00 vs the 30-min ATR 20.86 = 1.63× ATR". This comes before the
            // "= x" form, which also fits a derived figure ("0.5× the 30-min ATR = 13.55").
            num(/30-min ATR\s+([\d,]+(?:\.\d+)?)\b/) ||
+           // "VA width vs the 30-min ATR: 39.00 against a 20.86 ATR = 1.87×"
+           num(/against\s+an?\s+([\d,]+(?:\.\d+)?)\s*ATR\b/i) ||
            num(/30-min ATR\s*=\s*([\d,]+(?:\.\d+)?)/),
     // "ATR condition: 72.25 …", "ATR condition: daily 74.50 …", "ATR: 67.25 …" or "ATR 66.50."
     // The label can be followed by a warning mark or "daily": "ATR condition: ⛔ 101.4 …".
@@ -1019,9 +1033,15 @@ ${body}
 
 // ---------- build ----------
 
+// A rerun may be saved beside the original as "<name>-update.md"; it supersedes it.
+const newest = stem => {
+  const upd = join(srcDir, stem + "-update.md"), base = join(srcDir, stem + ".md");
+  return existsSync(upd) ? upd : base;
+};
+
 const found = [];
 for (const sym of symbols){
-  const mdPath = join(srcDir, `${sym}-structured-${date}.md`);
+  const mdPath = newest(`${sym}-structured-${date}`);
   if (!existsSync(mdPath)){ console.warn(`  skip ${sym}: ${basename(mdPath)} not found`); continue; }
   found.push({ sym, key: sym.replace(/1$/, ""), mdPath });
 }
@@ -1037,7 +1057,7 @@ for (const f of ["report.css", "report.js"]) copyFileSync(join(ROOT, "tools", "r
 const ASSET_V = createHash("sha1").update(readFileSync(join(assets, "report.css")))
   .update(readFileSync(join(assets, "report.js"))).digest("hex").slice(0, 8);
 
-const summaryMd = join(srcDir, `watchlist-summary-${date}.md`);
+const summaryMd = newest(`watchlist-summary-${date}`);
 const hasSummary = existsSync(summaryMd);
 const siblings = found.map(f => f.key).concat(hasSummary ? ["SUM"] : []).sort(sortProducts);
 
