@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GC price map — 2026-10-08</title>
+<script>if (window.self !== window.top) document.documentElement.classList.add("framed");</script>
+<link rel="stylesheet" href="../assets/report.css?v=b22695ca">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="crumbs">
+    <a href="../../index.html#futures/2026-10-08/GC">Trading Plans</a><span>/</span><span>Futures · Thu, Oct 8, 2026</span>
+    <nav class="sib" aria-label="Products"><a href="ES.html">ES</a><a href="NQ.html">NQ</a><a href="GC.html" aria-current="page">GC</a><a href="SUM.html">Summary</a></nav>
+  </div>
+  <h1>GC1!<span class="desc"></span></h1>
+  <p class="snap">4129.90 at 17:25 CT, Wednesday 2026-10-07. One tape read, taken once. Every number below is priced against it.
+<strong>Delta vs 10-07 evening:</strong> ⛔ 4146.50 → 4129.90, −16.60.</p>
+  <div class="kpis"><div class="kpi"><span>Last</span><b>4129.90</b><small>30m ATR 24.56</small></div><div class="kpi star"><span>★ Level</span><b>4126.80</b><small>−3.10 from last · 0.13× 30m ATR</small></div><div class="kpi"><span>Favoured branch</span><b class="d-SHORT">▼ SHORT</b></div></div>
+</header>
+<nav class="toc" aria-label="Sections"><a href="#primary">Setup</a><a href="#read-first">⛔ Read first</a><a href="#desk">Map & planner</a><a href="#ranked">Scenarios</a><a href="#scorecard">Scorecard</a><a href="#trend-momentum">Trend &amp; Momentum</a><a href="#daily-structure-gaps">Daily Structure &amp; Gaps</a><a href="#the-price-map-every-l">The Price Map — every l…</a><a href="#5-min-tape">5-min tape</a><a href="#profile">Profile</a><a href="#5-auction-audit-what">5 Auction Audit — what …</a><a href="#volume-node-evidence">Volume Node Evidence</a><a href="#scenarios-ranked">Scenarios — ranked</a><a href="#the-and-why">The ★ and why</a><a href="#alerts">Alerts</a><a href="#rules-fired-and-what-i">Rules fired, and what I…</a></nav>
+<section class="primary" id="primary">
+  <div class="lbl">★ Primary setup — from RANK 1</div>
+  <p>★ <code>4126.80</code> — 4126.8 Wed <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> BREAKS → <span class="d-SHORT">SHORT</span>. a 30-min close below 4126. → <strong><span class="d-SHORT">SHORT</span></strong> T1 4118.80 · T2 4112.40 · T3 4098.00 · SL 4139.00.</p>
+  
+</section>
+<details class="sec urgent" id="read-first" open><summary><h2>The calendar — read this first</h2></summary><div class="sec-body"><p>No Trading Economics image was supplied for Thursday this run. What is fixed on the US calendar for <strong>Thursday 2026-10-08</strong>:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Time (CT)</th>
+<th>Event</th>
+<th>GC channel</th>
+<th>Expected outcome</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>07:30</td>
+<td>Initial Jobless Claims (weekly)</td>
+<td><strong>REAL rates</strong></td>
+<td>Gold trades the real rate, not the cut path. A HOT claims print is bullish gold via lower real yields — but gold is the <strong>only</strong> one of the three that can de-correlate: if the print is hot enough to read as a recession scare rather than a dovish input, gold bids while ES and NQ sell.</td>
+</tr>
+<tr>
+<td>07:30</td>
+<td>Continuing Claims</td>
+<td>Growth scare</td>
+<td>This is the row that decides whether gold moves <em>with</em> equities (dovish read) or <em>against</em> them (recession read). Watch the ES/GC correlation in the first fifteen minutes; it tells you which regime you are in.</td>
+</tr>
+</tbody></table></div>
+<p><strong>Watch-only window: 07:25–07:55 CT.</strong> ⚠ <strong>On gold this window matters more than on the equity boards — see §3b. Wednesday&#39;s entire low was made inside it, 35 minutes before the <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> open.</strong></p>
+<p><strong>If your Trading Economics list has more for Thursday, send the image and I will re-run this section with per-symbol outcome logic for each row.</strong></p>
+</div></details>
+
+<section class="desk" id="desk">
+  <div class="desk-grid">
+    <div class="card map-card" id="map-card">
+      <div class="card-head">
+        <h2>Price map</h2>
+        <div class="seg" id="zoomSeg" role="group" aria-label="Map range">
+          <button type="button" data-zoom="plan" aria-pressed="true">This plan</button>
+          <button type="button" data-zoom="levels" aria-pressed="false">All levels</button>
+          <button type="button" data-zoom="wide" aria-pressed="false">±2 daily ATR</button>
+        </div>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="k-line k-price"></i>Last price</span>
+        <span><i class="k-star">★</i>Decision level</span>
+        <span><i class="k-line"></i>Alert level</span>
+        <span><i class="k-dot k-long"></i>Long targets</span>
+        <span><i class="k-dot k-short"></i>Short targets</span>
+        <span><i class="k-zone"></i>Thin zone / risk</span>
+      </div>
+      <div class="map-wrap"><svg id="map" role="img" aria-label="Price map"></svg><div class="tip" id="tip" hidden></div></div>
+      <p class="map-note">Hover a line for its source; click an alert level to plan it. Every level is also in the <a href="#price-map">Price map</a> tables.</p>
+    </div>
+    <div class="card plan-card">
+      <div class="card-head"><h2>Trade planner</h2><span class="sub">7 alert levels</span></div>
+      <div class="lvls" id="lvls" role="listbox" aria-label="Alert levels"></div>
+      <div class="plan-ctl">
+        <div class="seg" id="dirSeg" role="group" aria-label="Direction">
+          <button type="button" data-dir="long">▲ Long</button>
+          <button type="button" data-dir="short">▼ Short</button>
+          <button type="button" data-dir="both">Both</button>
+        </div>
+        <span class="note">R measured from the level — your fill is the confirming 30-min close.</span>
+      </div>
+      <div id="planOut"></div>
+      <div class="popup" id="popupBox">
+        <div class="popup-head"><span>Alert text</span><button type="button" class="btn" id="copyBtn">Copy</button></div>
+        <pre id="popupText"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="scen" id="ranked">
+  <div class="card">
+    <div class="card-head"><h2>Ranked scenarios</h2><span class="sub">best first · ★ = today's A+ level</span></div>
+    <div class="rank-tabs" id="rankTabs" role="tablist" aria-label="Scenarios"></div>
+    <div id="rankOut"></div>
+  </div>
+</section>
+<details class="sec" id="scorecard"><summary><h2>0. Scorecard — the 10-07 plan against the tape</h2><span class="hint">how yesterday's plan did</span></summary><div class="sec-body"><p><strong>The ★ was 4147.5. The favoured branch was <span class="d-SHORT">SHORT</span>. RANK 1 was a <span class="d-LONG">LONG</span> on a 30-min close above it.</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Branch</th>
+<th>Trigger</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Favoured <span class="d-SHORT">SHORT</span></td>
+<td>Rally into 4147.5 from below, then reject</td>
+<td><strong>RIGHT.</strong> T1 4141.6 ✅ PAID · T2 4133.0 ✅ PAID · T3 4112.4 not reached (low after the high was 4126.9). Stop 4160.0 never threatened — the high stopped 6.8 short.</td>
+</tr>
+<tr>
+<td>RANK 1 <span class="d-LONG">LONG</span></td>
+<td><strong>30-min close above 4147.5</strong></td>
+<td>⛔ <strong>NEVER TRIGGERED — a correctly specified trigger that was simply not met.</strong> Price touched 4153.2 but the 13:00 30-min bar closed 4140.2 and the 13:30 bar closed 4136.4. There was no 30-min close above 4147.5 at any point in the session.</td>
+</tr>
+</tbody></table></div>
+<p><strong>This is the cleanest result on any board this week, and the reason is the trigger wording.</strong> The long was gated on a 30-minute <em>close</em>, not a touch. Price poked 5.7 through the level on an intraday high and the gate correctly refused to open. Had it been specified on the touch, it would have entered into a −13.3 rejection.</p>
+<p><strong>Verdict: the favoured branch was RIGHT (T1 and T2 both paid). RANK 1 was a disciplined no-entry.</strong></p>
+<p><strong>Running tally — favoured-branch direction: 32 right · 28 wrong · 12 no-entry = 53.3%.</strong>
+<strong>Content accuracy (levels read correctly): 226 of 239 = 94.6%.</strong>
+<strong>Node direction calls: 27 right · 8 wrong · 5 push.</strong></p>
+</div></details><details class="sec" id="trend-momentum"><summary><h2>1. Trend &amp; Momentum</h2></summary><div class="sec-body"><div class="tw"><table>
+<thead>
+<tr>
+<th>Read</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Daily <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr></td>
+<td>87.7</td>
+</tr>
+<tr>
+<td>30-min ATR</td>
+<td>24.56</td>
+</tr>
+<tr>
+<td>Alert band (0.75× 30-min ATR)</td>
+<td>±18.42 → 4111.48–4148.32</td>
+</tr>
+<tr>
+<td>Tactical stop (0.5× 30-min ATR)</td>
+<td>12.28</td>
+</tr>
+<tr>
+<td>Wednesday <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> range</td>
+<td>45.2</td>
+</tr>
+<tr>
+<td>Range vs 30-min ATR</td>
+<td><strong>0.52× — NORMAL</strong> (Rule 20: full ladder permitted)</td>
+</tr>
+</tbody></table></div>
+<p>⛔ <strong>Rule 11 — lower-low sequence: 3 of 3, and this is the sixth consecutive session of it.</strong> Consecutive daily lows: <strong>4150.4 → 4130.7 → 4091.2.</strong> Three lower lows in a row, each one decisively below the last. This is the only board of the three with a confirming trend sequence.</p>
+<p>Momentum is down and it is not ambiguous. Price closed below its own <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> for the first time in this series.</p>
+</div></details><details class="sec" id="daily-structure-gaps"><summary><h2>2. Daily Structure &amp; Gaps</h2></summary><div class="sec-body"><p>No material gaps. Continuous trade; the maintenance break produced none (<abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> close 4136.7 → reopen 4139.9, a 3.2 difference inside the noise).</p>
+<p><strong>Structural extremes:</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Type</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4153.2</td>
+<td><abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> ✅</td>
+<td><strong>FINISHED.</strong> Printed and completed at the high.</td>
+</tr>
+<tr>
+<td>4118.8</td>
+<td><abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> ✅</td>
+<td><strong>FINISHED.</strong> Printed and completed at the <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> low.</td>
+</tr>
+<tr>
+<td>4110.4</td>
+<td><abbr title="Where the prior session's closing spike began. Open above = support; below = rejected.">Spike Base</abbr></td>
+<td>Origin of the pre-RTH collapse.</td>
+</tr>
+<tr>
+<td>4107.6 / 4099.2</td>
+<td>Single Prints ⚠</td>
+<td>Unfilled. PASS-THROUGH class.</td>
+</tr>
+<tr>
+<td>4091.2</td>
+<td>Daily low</td>
+<td><strong>Made at 07:55 CT — 35 minutes BEFORE the RTH open.</strong></td>
+</tr>
+</tbody></table></div>
+<p>⛔ <strong>The pre-RTH session&#39;s range was 59.2 (4150.4 high → 4091.2 low). The entire RTH range was 45.2.</strong> The day&#39;s directional work was finished before the cash market opened, and the RTH session spent six and a half hours recovering inside what the overnight had already carved out. That is why the RTH low reads 4108.0 while the daily low reads 4091.2 — they are different lows, 16.8 apart, and the MP only sees the later one.</p>
+<p><strong>Logging this for the open-drive / trend-day evidence file:</strong> this is a case where the extension happened pre-open and the RTH session was corrective. It is the inverse of the pattern we have been cataloguing, and it is the second gold instance.</p>
+</div></details><details class="sec" id="the-price-map-every-l"><summary><h2>3. The Price Map — every level, by source</h2></summary><div class="sec-body"><p><strong>UPSIDE ladder from 4129.90:</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Price</th>
+<th>Source</th>
+<th>Class</th>
+<th>Distance</th>
+<th>Tag</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4133.8</td>
+<td>Wed <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr></td>
+<td>A</td>
+<td>+3.9</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4143.2</td>
+<td>Wed <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr></td>
+<td>A</td>
+<td>+13.3</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4153.2</td>
+<td>Wed <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> ✅</td>
+<td>X</td>
+<td>+23.3</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4157.2</td>
+<td>2-day <abbr title="Value Area Low — bottom of the value area.">VAL</abbr></td>
+<td>A</td>
+<td>+27.3</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4163.0</td>
+<td>2-day POC</td>
+<td>A</td>
+<td>+33.1</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4170.6</td>
+<td><abbr title="Unfinished high — a repair magnet likely to be revisited.">Weak High</abbr> ⚠</td>
+<td>X</td>
+<td>+40.7</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4179.0</td>
+<td>Prior swing</td>
+<td>X</td>
+<td>+49.1</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4189.2</td>
+<td>Prior swing</td>
+<td>X</td>
+<td>+59.3</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4196.4</td>
+<td>AVP node (flat)</td>
+<td>V</td>
+<td>+66.5</td>
+<td class="k-pass">PASS-THROUGH</td>
+</tr>
+</tbody></table></div>
+<p><strong>DOWNSIDE ladder from 4129.90:</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Price</th>
+<th>Source</th>
+<th>Class</th>
+<th>Distance</th>
+<th>Tag</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4126.8</td>
+<td>Wed VAL</td>
+<td>A</td>
+<td>−3.1</td>
+<td class="k-tgt">TARGET ★</td>
+</tr>
+<tr>
+<td>4125.8</td>
+<td>AVP node, +5.56%</td>
+<td>V</td>
+<td>−4.1</td>
+<td class="k-pass">PASS-THROUGH</td>
+</tr>
+<tr>
+<td>4118.8</td>
+<td>Wed <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> ✅</td>
+<td>X</td>
+<td>−11.1</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4112.4</td>
+<td>Naked Selling Tail ✅</td>
+<td>X</td>
+<td>−17.5</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4110.4</td>
+<td><abbr title="Where the prior session's closing spike began. Open above = support; below = rejected.">Spike Base</abbr></td>
+<td>X</td>
+<td>−19.5</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4107.6</td>
+<td><abbr title="One-timeframe zone left by a fast move; revisits travel fast.">Single Print</abbr> ⚠</td>
+<td>X</td>
+<td>−22.3</td>
+<td class="k-pass">PASS-THROUGH</td>
+</tr>
+<tr>
+<td>4099.2</td>
+<td>Single Print ⚠</td>
+<td>X</td>
+<td>−30.7</td>
+<td class="k-pass">PASS-THROUGH</td>
+</tr>
+<tr>
+<td>4098.0</td>
+<td>AVP node, +1.83%</td>
+<td>V</td>
+<td>−31.9</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4096.4</td>
+<td>2-day VAH</td>
+<td>A</td>
+<td>−33.5</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4091.2</td>
+<td>Daily low</td>
+<td>X</td>
+<td>−38.7</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4091.0</td>
+<td>Naked POC</td>
+<td>A</td>
+<td>−38.9</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4083.6</td>
+<td>2-day VAL</td>
+<td>A</td>
+<td>−46.3</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4081.2</td>
+<td>Buying Tail ✅ (older)</td>
+<td>X</td>
+<td>−48.7</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4066.5</td>
+<td>Prior swing</td>
+<td>X</td>
+<td>−63.4</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>4056.3</td>
+<td>Prior swing</td>
+<td>X</td>
+<td>−73.6</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+</tbody></table></div>
+<p><strong>EMAs (daily):</strong> 20 EMA 4148 · 50 EMA 4092 · 200 EMA 3836. ⚠ <strong>Price is BELOW the 20 EMA (4148) for the first time in this series</strong> and above the 50 and 200. The stack is no longer cleanly bullish on the short end.</p>
+</div></details><details class="sec" id="5-min-tape"><summary><h2>3b. 5-Minute Price Action — how price reacted at each level</h2></summary><div class="sec-body"><p><strong><abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> average 5-min volume: 636.</strong> All multiples below are against that figure. ⚠ <strong>Gold&#39;s RTH volume is two orders of magnitude thinner than the equity boards — a 2× bar here is 1,272 contracts. Read the multiples, not the absolute counts.</strong></p>
+<div class="sub"><h3 id="5-min-tape-table-a-level-reaction-log">TABLE A — LEVEL REACTION LOG</h3><p>Every level from the 10-07 plan the 5-minute bars actually touched, high → low. Reaction = furthest price travelled AWAY from the level within three 5-minute bars, signed.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Name</th>
+<th>Touches</th>
+<th>Times (CT)</th>
+<th>What price did</th>
+<th>Reaction</th>
+<th>Vol at touch</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4179.0</td>
+<td>Prior swing</td>
+<td>0</td>
+<td>—</td>
+<td>Never approached. High 4153.2, 25.8 short.</td>
+<td>—</td>
+<td>—</td>
+<td>NOT TOUCHED</td>
+</tr>
+<tr>
+<td>4170.6</td>
+<td><abbr title="Unfinished high — a repair magnet likely to be revisited.">Weak High</abbr> ⚠</td>
+<td>0</td>
+<td>—</td>
+<td>Never approached. 17.4 short.</td>
+<td>—</td>
+<td>—</td>
+<td>NOT TOUCHED</td>
+</tr>
+<tr>
+<td>4163.0</td>
+<td>2-day <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr></td>
+<td>0</td>
+<td>—</td>
+<td>Never approached. 9.8 short.</td>
+<td>—</td>
+<td>—</td>
+<td>NOT TOUCHED</td>
+</tr>
+<tr>
+<td>4152.8</td>
+<td>Prior plan level</td>
+<td>1</td>
+<td>13:10</td>
+<td>Touched by 0.4 on the day&#39;s heaviest RTH volume, then dropped three straight bars. Never closed above.</td>
+<td><strong>−13.3</strong></td>
+<td><strong>2,011 = 3.16×</strong></td>
+<td><strong>HELD</strong> (as resistance)</td>
+</tr>
+<tr>
+<td><strong>4147.5</strong></td>
+<td><strong>★ prior plan</strong></td>
+<td><strong>4</strong></td>
+<td><strong>07:20, 13:10, 13:15, 13:25</strong></td>
+<td><strong>Poked four times, closed above ZERO times. The 13:00 30-min bar closed 4140.2; the 13:30 bar closed 4136.4.</strong> The long gate never opened.</td>
+<td><strong>−13.3</strong></td>
+<td><strong>2,011 = 3.16×</strong></td>
+<td><strong>HELD</strong> (as resistance)</td>
+</tr>
+<tr>
+<td>4133.0</td>
+<td>Prior plan T2</td>
+<td>2</td>
+<td>14:05, then 14:35</td>
+<td>First break closed below at 14:05 (4131.2) but closed back above one bar later at 14:10 (4133.4). Broke again properly at 14:35 and ran to 4126.9.</td>
+<td><strong>−6.1</strong></td>
+<td><strong>614 = 0.97×</strong></td>
+<td><strong>REJECTED</strong> at 14:05 → <strong>BROKE</strong> at 14:35</td>
+</tr>
+</tbody></table></div>
+<p>⛔ <strong>4147.5 is the level of the week on this board: touched four separate times across six hours and never once closed through on 30 minutes.</strong> The 3.16× volume at 13:10 was the serious attempt, and it produced a −13.3 rejection — the largest single reaction in the table. Finished excess printed there as a result.</p>
+</div><div class="sub"><h3 id="5-min-tape-table-b-the-tape-in-sequence">TABLE B — THE TAPE, IN SEQUENCE</h3><p>Continuous. No gaps.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Time (CT)</th>
+<th>From → To</th>
+<th>Move</th>
+<th>Level in play</th>
+<th>Vol</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>06:55–07:15</td>
+<td>4144.0 → 4145.5</td>
+<td>+1.5</td>
+<td>around 4147.5</td>
+<td>0.65×</td>
+<td>Quiet. Probing the ★ from below.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>07:20</td>
+<td>4144.2 → <strong>4149.3</strong> → 4138.6</td>
+<td><strong>+5.1 then −10.7</strong></td>
+<td><strong>★ 4147.5 first touch</strong></td>
+<td><strong>1,738 = 2.73×</strong></td>
+<td>First rejection, and the volume was already elevated.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>07:25</strong></td>
+<td>4138.5 → <strong>4105.4</strong></td>
+<td><strong>−33.3</strong></td>
+<td><strong><abbr title="Where the prior session's closing spike began. Open above = support; below = rejected.">Spike Base</abbr> 4110.4 blown through</strong></td>
+<td><strong>7,144 = 11.23×</strong></td>
+<td><strong>The event of the day. One 5-minute bar, −33.3, on ELEVEN times average volume.</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>07:30–07:45</td>
+<td>4105.9 → 4096.8</td>
+<td>−9.1</td>
+<td>4099.2 <abbr title="One-timeframe zone left by a fast move; revisits travel fast.">Single Print</abbr> ⚠</td>
+<td>5.0×</td>
+<td>Continuation. Volume stays extreme.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>07:50–07:55</strong></td>
+<td>4096.7 → <strong>4091.2</strong></td>
+<td><strong>−5.5</strong></td>
+<td><strong>DAILY LOW</strong></td>
+<td><strong>3,563 = 5.60×</strong></td>
+<td><strong>The day&#39;s low, printed at 07:55 CT — 35 minutes before the RTH open.</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>08:00–08:25</td>
+<td>4106.1 → 4116.1</td>
+<td><strong>+24.9</strong></td>
+<td>4112.4 reclaimed</td>
+<td>1.9×</td>
+<td>Sharp V recovery off the low, still pre-open.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>08:30</strong></td>
+<td>4116.0 → 4112.7</td>
+<td>−3.3</td>
+<td>RTH OPEN</td>
+<td><strong>1,529 = 2.40×</strong></td>
+<td>Opens 24.8 above the daily low. The RTH never sees 4091.2.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>08:35–08:40</td>
+<td>4112.7 → <strong>4108.0</strong></td>
+<td>−4.7</td>
+<td>—</td>
+<td>1.6×</td>
+<td><strong>RTH LOW 4108.0</strong> — 16.8 above the daily low.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>08:45–09:10</td>
+<td>4108.1 → 4124.0</td>
+<td>+15.9</td>
+<td>4118.8</td>
+<td>1.5×</td>
+<td>Grind up through the forming <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr>.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>09:15–10:25</td>
+<td>4124.0 → 4128.6</td>
+<td>+4.6</td>
+<td>4126.8 / 4133.0</td>
+<td>1.1×</td>
+<td>Fourteen bars of balance inside 4119–4135.</td>
+</tr>
+<tr>
+<td>11</td>
+<td>10:30–10:45</td>
+<td>4128.7 → <strong>4139.1</strong></td>
+<td><strong>+10.4</strong></td>
+<td>4133.8 broken up</td>
+<td>1.4×</td>
+<td>First real push.</td>
+</tr>
+<tr>
+<td>12</td>
+<td>10:50–11:15</td>
+<td>4134.4 → 4135.4</td>
+<td>+1.0</td>
+<td>4133.8 holding</td>
+<td>0.8×</td>
+<td>Holds the break.</td>
+</tr>
+<tr>
+<td>13</td>
+<td>11:20–12:25</td>
+<td>4135.2 → 4135.1</td>
+<td>0.0</td>
+<td>—</td>
+<td>0.75×</td>
+<td>Dead flat. Fourteen bars, no net move.</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>12:35–13:05</strong></td>
+<td>4135.0 → <strong>4145.6</strong></td>
+<td><strong>+10.6</strong></td>
+<td>approaching 4147.5</td>
+<td>1.6×</td>
+<td>The rally that sets up the rejection.</td>
+</tr>
+<tr>
+<td>15</td>
+<td><strong>13:10</strong></td>
+<td>4145.7 → <strong>4153.2</strong> → 4146.1</td>
+<td><strong>+7.5 then −7.1</strong></td>
+<td><strong>★ 4147.5 · <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> ✅</strong></td>
+<td><strong>2,011 = 3.16×</strong></td>
+<td><strong>SESSION HIGH 4153.2. Heaviest RTH bar. Rejected inside its own bar.</strong></td>
+</tr>
+<tr>
+<td>16</td>
+<td>13:15–13:25</td>
+<td>4146.2 → 4145.0</td>
+<td>−1.2</td>
+<td>4147.5</td>
+<td>1.2×</td>
+<td>Two more pokes (4147.8, 4149.4). Neither closes above.</td>
+</tr>
+<tr>
+<td>17</td>
+<td><strong>13:30</strong></td>
+<td>4144.9 → <strong>4139.9</strong></td>
+<td><strong>−5.0</strong></td>
+<td>below 4143.2</td>
+<td><strong>1,572 = 2.47×</strong></td>
+<td>The rejection confirms. 30-min bar closes 4136.4.</td>
+</tr>
+<tr>
+<td>18</td>
+<td>13:35–13:55</td>
+<td>4140.3 → 4136.4</td>
+<td>−3.9</td>
+<td>4133.8</td>
+<td>0.7×</td>
+<td>Steady leak.</td>
+</tr>
+<tr>
+<td>19</td>
+<td><strong>14:00–14:05</strong></td>
+<td>4135.6 → <strong>4129.1</strong></td>
+<td><strong>−6.5</strong></td>
+<td><strong>4133.0 broken</strong></td>
+<td>0.8× / 0.97×</td>
+<td>First break of 4133.0.</td>
+</tr>
+<tr>
+<td>20</td>
+<td>14:10–14:30</td>
+<td>4131.6 → 4132.8</td>
+<td>+1.2</td>
+<td>4133.0 <strong>reclaimed briefly</strong></td>
+<td>0.26×</td>
+<td>⚠ The break is rejected on 0.26× volume — a thin-tape fake.</td>
+</tr>
+<tr>
+<td>21</td>
+<td><strong>14:35–14:50</strong></td>
+<td>4132.1 → <strong>4127.0</strong></td>
+<td><strong>−5.1</strong></td>
+<td><strong>4133.0 BROKEN properly</strong></td>
+<td>0.5×</td>
+<td>The second break, and this one sticks.</td>
+</tr>
+<tr>
+<td>22</td>
+<td><strong>14:55</strong></td>
+<td>4127.8 → <strong>4127.6</strong></td>
+<td>−0.2</td>
+<td><strong>Wed <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> 4126.8</strong></td>
+<td><strong>659 = 1.04×</strong></td>
+<td>⚠ <strong>The close auction prints only 1.04× — there is no <abbr title="Market-on-close — the closing auction.">MOC</abbr> on gold.</strong> Settles 0.8 above the VAL.</td>
+</tr>
+<tr>
+<td>23</td>
+<td>15:00–16:15</td>
+<td>4127.7 → 4139.8</td>
+<td><strong>+12.2</strong></td>
+<td>back above 4133.8</td>
+<td>0.3×</td>
+<td><abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> bounce. Thin.</td>
+</tr>
+<tr>
+<td>24</td>
+<td>16:20–17:00</td>
+<td>4136.0 → 4137.2</td>
+<td>+1.2</td>
+<td>—</td>
+<td>0.3×</td>
+<td>Drifts into the break.</td>
+</tr>
+<tr>
+<td>25</td>
+<td>17:05–17:25</td>
+<td>4137.1 → <strong>4128.1</strong></td>
+<td><strong>−9.0</strong></td>
+<td><strong>4133.8 lost again · at 4126.8</strong></td>
+<td>0.3×</td>
+<td><strong>Globex reopen sells. Price is back on the VAL at the snapshot.</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>Levels that HELD: 4152.8 and 4147.5</strong> — both as RESISTANCE, both on the same 3.16× volume bar, both with a −13.3 reaction.
+<strong>Levels that BROKE or were REJECTED: 4133.0</strong> — rejected at 14:05 on a 0.26× fake, then broken properly at 14:35.
+<strong>Levels that PASSED THROUGH: 4110.4, 4107.6 and 4099.2</strong> — the pre-RTH collapse went through all three in a single 11.23× bar without pausing at any of them. ⚠ <strong>The Spike Base 4110.4 was a TARGET-class level and it passed through, so it is DOWNGRADED in §3 — it is a reference, not a destination.</strong></p>
+<p><strong>Closing auction:</strong> 659 contracts, <strong>1.04× the RTH average.</strong> Gold has no meaningful close auction — compare ES at 5.64× and NQ at 3.19×. The RTH close at 4127.6 carries no special weight; the Globex reopen at 0.3× volume is just as informative, and it sold 9.0 points.</p>
+<p>⛔ <strong>Gold did not trade the FOMC Minutes either.</strong> The 13:00 CT bar printed 343 contracts = 0.54× average. All three boards agree: the Minutes were a non-event. The gold move came at 07:25 CT on 11.23× volume, nearly six hours earlier, and nothing on the calendar explains it.</p>
+</div></div></details><details class="sec" id="profile"><summary><h2>4. Market Profile Context</h2></summary><div class="sec-body"><p>Built on the 30-minute chart (Market Profile does not build on Daily).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Wednesday 10-07</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr></td>
+<td>4143.2</td>
+</tr>
+<tr>
+<td><abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr></td>
+<td>4133.8</td>
+</tr>
+<tr>
+<td><abbr title="Value Area Low — bottom of the value area.">VAL</abbr></td>
+<td>4126.8</td>
+</tr>
+<tr>
+<td><abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> High</td>
+<td>4153.2 (<abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> ✅)</td>
+</tr>
+<tr>
+<td>RTH Low</td>
+<td>4108.0 (<abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> ✅ 4118.8)</td>
+</tr>
+<tr>
+<td>Daily Low</td>
+<td><strong>4091.2 — pre-RTH, not in the profile</strong></td>
+</tr>
+<tr>
+<td>Close</td>
+<td>4127.6</td>
+</tr>
+<tr>
+<td>Close Location</td>
+<td>⛔ <strong>Inside VA, BELOW POC</strong></td>
+</tr>
+<tr>
+<td>VA Shift vs Tuesday</td>
+<td><strong>LOWER, non-overlapping by 35.8</strong></td>
+</tr>
+</tbody></table></div>
+<p>⚠ <strong>Re-read this section at 08:25 CT.</strong> If the overnight has moved price outside 4111.48–4148.32, the ★ offset is stale and the ranking must be re-derived before you trade it.</p>
+</div></details><details class="sec" id="5-auction-audit-what"><summary><h2>4.5 Auction Audit — what was attempted, and did it work</h2></summary><div class="sec-body"><p><strong>Attempted:</strong> an auction lower, continuing a six-session downtrend.</p>
+<p><strong>Evidence for:</strong> value shifted lower and did not overlap. The close finished BELOW the <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr>. The pre-open collapse ran 33.3 points in five minutes on 11.23× volume. Four separate attempts at 4147.5 all failed on 30-minute closes. Three consecutive lower daily lows. The Globex reopen sold another 9.0 and put price back on the <abbr title="Value Area Low — bottom of the value area.">VAL</abbr>.</p>
+<p><strong>Evidence against:</strong> the <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> session itself was corrective — it opened 24.8 above the daily low and spent the day recovering. The RTH low printed a finished <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> ✅. Price closed inside value, not below it.</p>
+<p>⛔ <strong>Verdict: the down-attempt SUCCEEDED — and it is the only board of the three where it did.</strong> Value migrated lower <strong>and stuck</strong>: the close below the POC is the corroboration that ES and NQ both lacked. Under Rule 2(b) this sequence is <strong>ALIVE and continuing</strong>, now in its sixth session.</p>
+<p>⛔ <strong>Rule 2(a) PASSES — the only board this session.</strong> VA shifted lower AND the close location corroborates it.</p>
+</div></details><details class="sec" id="volume-node-evidence"><summary><h2>5. Volume Node Evidence</h2></summary><div class="sec-body"><p><strong>Node-overlap test applied: a node&#39;s change is evidence only if the session&#39;s range (4091.2–4153.2) overlapped the node.</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Change</th>
+<th>In range?</th>
+<th>Reads</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4125.8</td>
+<td><strong>+5.56%</strong></td>
+<td>YES</td>
+<td>Grew. Wednesday&#39;s <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> printed at 4126.8, 1.0 above it.</td>
+</tr>
+<tr>
+<td>4098.0</td>
+<td><strong>+1.83%</strong></td>
+<td>YES</td>
+<td><strong>Grew, but THICKENED IN PLACE — the node&#39;s price did not move.</strong></td>
+</tr>
+<tr>
+<td>4196.4</td>
+<td><strong>0.00%</strong></td>
+<td>NO (43.2 above the high)</td>
+<td>Flat — control</td>
+</tr>
+<tr>
+<td>4263.3</td>
+<td><strong>0.00%</strong></td>
+<td>NO</td>
+<td>Flat — control</td>
+</tr>
+<tr>
+<td>4326.5</td>
+<td><strong>0.00%</strong></td>
+<td>NO</td>
+<td>Flat — control</td>
+</tr>
+<tr>
+<td>4402.7</td>
+<td><strong>0.00%</strong></td>
+<td>NO</td>
+<td>Flat — control</td>
+</tr>
+</tbody></table></div>
+<p>⛔ <strong>Rule 16(a) has nothing to adjudicate here, and that is the correct outcome, not a gap.</strong> 4098.0 gained 1.83% at an unchanged price. Rule 16(a) reads <strong>migration</strong> — a node that gains volume where it already sat has gained <em>value</em>, not <em>direction</em>. The growth happened precisely because price fell into it during the 07:25 collapse. Treating that as bullish would invert the evidence: the node grew <em>as a consequence of</em> selling, not in anticipation of buying.</p>
+<p>This is the third application of the thickening-in-place distinction (after 4196.4 and the earlier 4098.0 read), and it keeps doing the same useful work.</p>
+<p>⛔ <strong>Four flat controls on this board alone, at 43.2 / 110 / 173 / 250 points above the session high.</strong> Every single untouched node reads exactly 0.00%. With ES&#39;s 7814.50 and NQ&#39;s 31521.00 and 30893.00 (the latter now flat for three straight sessions), the node-overlap series stands at <strong>eleven clean controls across three boards and zero false positives.</strong></p>
+<p><strong>The auction governs the branch here, and it says <span class="d-SHORT">SHORT</span>.</strong></p>
+</div></details><details class="sec" id="scenarios-ranked"><summary><h2>6. Scenarios — ranked</h2></summary><div class="sec-body"><p>⛔ <strong>LAW 6 IS ACTIVE: Rule 11 is 3 of 3 and Rule 5 is 3 of 3. Fades are DISABLED on this board.</strong> Do not take a counter-trend rotation trade on gold Thursday regardless of how clean the level looks.</p>
+<p><strong>RANK 1 — [S3] 4126.8 Wed <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> BREAKS → <span class="d-SHORT">SHORT</span></strong> <em>(Class A)</em>
+Trigger: a 30-min close below 4126.8.
+T1 4118.8 · T2 4112.4 · T3 4098.0 · runner 4091.0
+Entry ~4126.8 · <strong>SL 4139.0</strong> · Risk 12.2
+R:R — T1 <strong>0.66R</strong> ⚠ · T2 1.18R · T3 2.36R · runner 2.93R
+Note: the 4125.8 node sits 1.0 below the trigger and has filled +5.56%, so it is PASS-THROUGH class and is skipped as a target.
+<em>If 4126.8 holds instead:</em> price is back inside value and the test becomes 4133.8, then 4143.2 — which is RANK 2&#39;s setup zone. A hold here does <strong>not</strong> make a long valid; Law 6 disables the fade and Rule 5 is 3 of 3 short. Stand aside and wait for the rally to fail.</p>
+<p><strong>RANK 2 — [S4] rally into 4143.2–4153.2, then reject → <span class="d-SHORT">SHORT</span></strong> <em>(Class X — the <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> ✅)</em>
+Trigger: price rallies to 4143.2 or above, then closes back below 4133.8 on 30 min.
+T1 4126.8 · T2 4118.8 · T3 4112.4 · runner 4098.0
+Entry ~4133.8 · <strong>SL 4146.0</strong> · Risk 12.2
+R:R — T1 <strong>0.57R</strong> ⚠ · T2 1.23R · T3 1.75R · runner 2.93R
+<strong>This is the trade that paid on Wednesday, and the setup is identical.</strong> 4147.5 turned price away four times; 4153.2 is now finished excess above it.
+<em>If price closes ABOVE 4143.2 and holds on 30 min instead:</em> that is the first genuine evidence against the six-session downtrend. It does not make a long valid on this plan — it makes the plan stale. Stop trading the short side and re-read.</p>
+<p><strong>RANK 3 — [S1] 4118.8 <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> ✅ BREAKS → <span class="d-SHORT">SHORT</span> continuation</strong> <em>(Class X)</em>
+Trigger: a 30-min close below 4118.8 after RANK 1 has triggered.
+T1 4112.4 · T2 4098.0 · T3 4091.0 · SL 4131.0 · Risk 12.4
+R:R — T1 0.52R ⚠ · T2 1.68R · T3 2.24R
+A continuation add, not a standalone entry.</p>
+<p><strong>RANK 4 — [S2] 4098.0 node + 4096.4 2-day <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> → <span class="d-SHORT">SHORT</span> the break</strong> <em>(Class V/A)</em>
+Trigger: a 30-min close below 4096.4.
+T1 4091.0 · T2 4083.6 · T3 4066.5 · SL 4110.5 · Risk 14.1
+R:R — T1 0.39R ⚠ · T2 0.91R ⚠ · T3 2.16R
+31.9 away. The destination if the trend runs, but the T1 geometry here is the worst on the board.</p>
+<p><strong>RANK 5 — rotation fade 4143.2 / 4126.8.</strong> <strong>DISABLED by Law 6.</strong> Written here only so the slot is not silently dropped. Rule 11 at 3 of 3 plus Rule 5 at 3 of 3 removes the fade from the menu entirely.</p>
+</div></details><details class="sec" id="the-and-why"><summary><h2>7. The ★ and why</h2></summary><div class="sec-body"><p><strong>★ 4126.8 — Wednesday&#39;s <abbr title="Value Area Low — bottom of the value area.">VAL</abbr>.</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Offset from price</td>
+<td>(4126.8 − 4129.90) / 24.56 = <strong>−0.13×</strong></td>
+</tr>
+<tr>
+<td>Rule 7 (within band)</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Rule 7(b) (favoured side, ≤ +0.25× for a short)</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Class</td>
+<td>A (value area)</td>
+</tr>
+</tbody></table></div>
+<p>⛔ <strong>Rule 5 is 3 of 3 on this board — a directional <code><span class="d-SHORT">SHORT</span>&gt;</code>, and the first in this entire series.</strong> All three tests agree:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Rule 5 test</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VA shifted lower</td>
+<td><strong>YES</strong> — 35.8, non-overlapping</td>
+</tr>
+<tr>
+<td>Close location corroborates</td>
+<td><strong>YES</strong> — closed BELOW the <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr></td>
+</tr>
+<tr>
+<td>Origin excess finished</td>
+<td><strong>YES</strong> — <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> ✅ 4153.2 and <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> ✅ 4118.8</td>
+</tr>
+</tbody></table></div>
+<p><strong>And Rule 11 is independently 3 of 3</strong>, with three consecutive lower daily lows across six sessions. <strong>Full alignment between the auction read and the trend sequence. That has not happened on any board in this series until now.</strong></p>
+<p>The ★ sits on 4126.8 because it is the level the trend has to break to continue. Price closed Wednesday 0.8 above it and the Globex reopen has sold back onto it — the snapshot has price at 4129.90, three points above the trigger. <strong>This is the most tightly-wound setup of the three boards.</strong></p>
+<p><strong>The split, stated and not resolved:</strong> there is no genuine two-sided split on gold Thursday. Every ranked scenario is a short, Law 6 has disabled the fade, and the only thing that invalidates the read is a 30-min close above 4143.2 — which I have named explicitly in RANK 2 as the stale-plan trigger rather than as a long setup. ★ marks 4126.8. No tiebreak rule is written, because there is nothing to break.</p>
+<p>⚠ <strong>The one thing that should give you pause: the <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> session was corrective.</strong> Gold opened 24.8 above its own daily low and spent the day grinding up. A trend that only extends outside RTH hours is a trend being driven by thin books, and the 1.04× close auction says the RTH participants were not the ones selling.</p>
+</div></details><details class="sec" id="alerts"><summary><h2>8. Alerts set</h2><span class="hint">repeating level alerts</span></summary><div class="sec-body"><p>Seven repeating level alerts on GC1!, all <code>CLAUDE</code>-prefixed, cross / on_bar_close / 1-min resolution. All seven are new — none of the 10-07 ladder survived, because every level has re-based onto Wednesday&#39;s value.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Price</th>
+<th>Level</th>
+<th>ID</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4153.2</td>
+<td>Wed <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> ✅</td>
+<td>5795178129</td>
+</tr>
+<tr>
+<td>4143.2</td>
+<td>Wed <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> — RANK 2 zone</td>
+<td>5795178132</td>
+</tr>
+<tr>
+<td>4133.8</td>
+<td>Wed <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> — RANK 2 trigger</td>
+<td>5795178215</td>
+</tr>
+<tr>
+<td><strong>4126.8 ★</strong></td>
+<td><strong>Wed <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> — RANK 1</strong></td>
+<td><strong>5795178216</strong></td>
+</tr>
+<tr>
+<td>4118.8</td>
+<td>Wed <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> ✅ — RANK 1 T1</td>
+<td>5795178315</td>
+</tr>
+<tr>
+<td>4112.4</td>
+<td>Naked Selling Tail ✅ — RANK 1 T2</td>
+<td>5795178316</td>
+</tr>
+<tr>
+<td>4098.0</td>
+<td>AVP node + 2-day VAH — RANK 1 T3</td>
+<td>5795178373</td>
+</tr>
+</tbody></table></div>
+<p>Deleted: 4179.0, 4170.6, 4163.0, 4152.8, 4147.5, 4133.0.</p>
+<p><strong>Spacing audit</strong> (floor 6.19 = 0.15%, ceiling 36.84 = 1.5× 30-min <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr>):
+4153.2 → 4143.2 = 10.0 ✅ · 4143.2 → 4133.8 = 9.4 ✅ · 4133.8 → 4126.8 = 7.0 ✅ · 4126.8 → 4118.8 = 8.0 ✅ · 4118.8 → 4112.4 = 6.4 ✅ · 4112.4 → 4098.0 = 14.4 ✅ · 4098.0 → bottom
+⛔ <strong>Every gap clears the floor and none breaches the ceiling — the first fully clean spacing audit on any board in this series.</strong> Four Class A value-area levels present. The entire RANK 1 ladder (trigger, T1, T2, T3) has a popup at every rung.</p>
+</div></details><details class="sec" id="rules-fired-and-what-i"><summary><h2>9. Rules fired, and what I would change</h2></summary><div class="sec-body"><p><strong>Applied today:</strong> <strong>Rule 2(a) PASS (only board)</strong> · Rule 2(b) sequence ALIVE, sixth session · <strong>Rule 5 = 3 of 3 → directional <code><span class="d-SHORT">SHORT</span>&gt;</code></strong> · Rule 7 / 7(b) PASS · Rule 8 · <strong>Rule 11 = 3 of 3</strong> · <strong>Law 6 (fades disabled)</strong> · Rule 16(a) no migration to adjudicate · Rule 19(a) class separation (R1 = A, R2 = X) · Rule 20 NORMAL range · node-overlap test · thickening-in-place distinction · spacing floor.</p>
+<p><strong>Rule 5 audit: 3 of 3.</strong> VA shift lower = YES. Close location corroborates = YES. Origin excess finished = YES.</p>
+<ol>
+<li><p>⛔ <strong>Pending item (f) now has its answer, and it is the opposite of what I argued for.</strong> I overrode Rule 11 twice on gold when it read 3 of 3 — the first override won, the second lost a full ladder. This session Rule 11 and Rule 5 agree at 3 of 3 and the favoured short paid T1 and T2 without the stop ever being threatened. <strong>The evidence across three instances now says a 3-of-3 Rule 11 should disable the fades automatically rather than leave it to my judgement.</strong> That is Law 6 behaving correctly, and I am asking you to let me write it as an automatic gate rather than a discretionary one.</p>
+</li>
+<li><p><strong>Gold&#39;s trigger wording is the single best-performing thing in these reports and I want to make it the standard.</strong> RANK 1&#39;s long was gated on a 30-minute <em>close</em> above 4147.5. Price poked 5.7 through on an intraday high and the gate held, which saved a −13.3 entry. <strong>Proposal, folding into new item (p): every ★ trigger is specified on a 30-minute close, and any level where a touch-entry would differ materially gets both branches written out.</strong> NQ&#39;s 31235.75 failure yesterday is the counter-example that makes the case.</p>
+</li>
+<li><p><strong>The T1-floor defect yet again — RANK 1 returns 0.66R, RANK 2 0.57R, RANK 3 0.52R, RANK 4 0.39R.</strong> ⚠ <strong>Not one ranked setup on this board clears 1.00R at T1.</strong> Gold&#39;s level spacing is simply tighter than a 0.5× <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr> stop can accommodate. Pending item (k), Rule 20(c) — on this board it is not a refinement, it is the difference between a good read and a profitable one.</p>
+</li>
+<li><p><strong>The pre-RTH extension is logged</strong> for the open-drive / trend-day file: second gold instance where the day&#39;s directional work finished before the cash open and the <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> session was corrective. Not enough cases to write a rule. Still counting.</p>
+</li>
+</ol>
+<p><strong>Still awaiting your decision, all unwritten:</strong> (a) AVP <code>in_1</code> vs chart timeframe · (b) MA Explorer on Daily · (c) widen the AVP re-resolution caveat · (d) Rule 6(a) stop extension · <strong>(e) should ★ mark highest-expectancy rather than nearest</strong> · <strong>(f) 3-of-3 Rule 11 auto-disables fades — ANSWERED above, asking to write</strong> · (g) Rule 18 ladder gap · <strong>(h) GC node volume without price migration — this session is the third instance</strong> · (i) NQ node-jump cross-check · <strong>(k) Rule 20(c) T1 floor</strong> · (l) creation-time ★ check · <strong>(m) the node-overlap test — eleven controls, asking again</strong> · (n) W→D bounce before <code>tv_launch</code> · (o) filled-LVN re-classification · (j) ETH-vs-RTH Rule 8 repair · <strong>(p) 30-min-close triggers as standard, new today.</strong></p>
+</div></details>
+<footer>Built from GC1-structured-2026-10-08.md · 2026-10-07 23:16 UTC</footer>
+</div>
+<script type="application/json" id="report-data">{"key":"GC","ticker":"GC1!","decimals":2,"last":4129.9,"star":4126.8,"favoured":"SHORT","atr30":24.56,"atrD":87.7,"ladder":[{"side":"up","p":[4133.8],"src":"Wed POC","cls":"target","dec":false},{"side":"up","p":[4143.2],"src":"Wed VAH","cls":"target","dec":false},{"side":"up","p":[4153.2],"src":"Wed Selling Tail ✅","cls":"target","dec":false},{"side":"up","p":[4157.2],"src":"2-day VAL","cls":"target","dec":false},{"side":"up","p":[4163],"src":"2-day POC","cls":"target","dec":false},{"side":"up","p":[4170.6],"src":"Weak High ⚠","cls":"target","dec":false},{"side":"up","p":[4179],"src":"Prior swing","cls":"target","dec":false},{"side":"up","p":[4189.2],"src":"Prior swing","cls":"target","dec":false},{"side":"up","p":[4196.4],"src":"AVP node (flat)","cls":"pass","dec":false},{"side":"down","p":[4126.8],"src":"Wed VAL","cls":"target","dec":true},{"side":"down","p":[4125.8],"src":"AVP node, +5.56%","cls":"pass","dec":false},{"side":"down","p":[4118.8],"src":"Wed Buying Tail ✅","cls":"target","dec":false},{"side":"down","p":[4112.4],"src":"Naked Selling Tail ✅","cls":"target","dec":false},{"side":"down","p":[4110.4],"src":"Spike Base","cls":"target","dec":false},{"side":"down","p":[4107.6],"src":"Single Print ⚠","cls":"pass","dec":false},{"side":"down","p":[4099.2],"src":"Single Print ⚠","cls":"pass","dec":false},{"side":"down","p":[4098],"src":"AVP node, +1.83%","cls":"target","dec":false},{"side":"down","p":[4096.4],"src":"2-day VAH","cls":"target","dec":false},{"side":"down","p":[4091.2],"src":"Daily low","cls":"target","dec":false},{"side":"down","p":[4091],"src":"Naked POC","cls":"target","dec":false},{"side":"down","p":[4083.6],"src":"2-day VAL","cls":"target","dec":false},{"side":"down","p":[4081.2],"src":"Buying Tail ✅ (older)","cls":"target","dec":false},{"side":"down","p":[4066.5],"src":"Prior swing","cls":"target","dec":false},{"side":"down","p":[4056.3],"src":"Prior swing","cls":"target","dec":false}],"alerts":[{"star":false,"level":4153.2,"name":"Wed Selling Tail ✅","long":null,"short":null},{"star":false,"level":4143.2,"name":"Wed VAH — RANK 2 zone","long":null,"short":{"t":[4126.8,4118.8,4112.4],"sl":4146}},{"star":false,"level":4133.8,"name":"Wed POC — RANK 2 trigger","long":null,"short":{"t":[4126.8,4118.8,4112.4],"sl":4146}},{"star":true,"level":4126.8,"name":"Wed VAL — RANK 1","long":null,"short":{"t":[4118.8,4112.4,4098],"sl":4139}},{"star":false,"level":4118.8,"name":"Wed Buying Tail ✅ — RANK 1 T1","long":null,"short":{"t":[4112.4,4098,4091],"sl":4131}},{"star":false,"level":4112.4,"name":"Naked Selling Tail ✅ — RANK 1 T2","long":null,"short":null},{"star":false,"level":4098,"name":"AVP node + 2-day VAH — RANK 1 T3","long":null,"short":{"t":[4091,4083.6,4066.5],"sl":4110.5}}],"scenarios":[{"rank":1,"slot":"S3","name":"4126.8 Wed VAL BREAKS → SHORT","star":true,"level":4126.8,"trigger":"a 30-min close below 4126.","why":"","favoured":"SHORT","branches":[{"label":"a 30-min close below 4126.","dir":"SHORT","entry":4126.8,"targets":[{"k":"T1","p":4118.8},{"k":"T2","p":4112.4},{"k":"T3","p":4098}],"runner":4091,"stop":4139,"rr":0.66}]},{"rank":2,"slot":"S4","name":"rally into 4143.2–4153.2, then reject → SHORT","star":false,"level":4143.2,"trigger":"price rallies to 4143.","why":"","favoured":null,"branches":[{"label":"price rallies to 4143.","dir":"SHORT","entry":4133.8,"targets":[{"k":"T1","p":4126.8},{"k":"T2","p":4118.8},{"k":"T3","p":4112.4}],"runner":4098,"stop":4146,"rr":0.57}]},{"rank":3,"slot":"S1","name":"4118.8 Buying Tail ✅ BREAKS → SHORT continuation","star":false,"level":4118.8,"trigger":"a 30-min close below 4118.","why":"","favoured":null,"branches":[{"label":"a 30-min close below 4118.","dir":"SHORT","entry":4118.6,"targets":[{"k":"T1","p":4112.4},{"k":"T2","p":4098},{"k":"T3","p":4091}],"runner":null,"stop":4131,"rr":0.52}]},{"rank":4,"slot":"S2","name":"4098.0 node + 4096.4 2-day VAH → SHORT the break","star":false,"level":4098,"trigger":"a 30-min close below 4096.","why":"","favoured":null,"branches":[{"label":"a 30-min close below 4096.","dir":"SHORT","entry":4096.4,"targets":[{"k":"T1","p":4091},{"k":"T2","p":4083.6},{"k":"T3","p":4066.5}],"runner":null,"stop":4110.5,"rr":0.39}]},{"rank":5,"slot":"","name":"rotation fade 4143.2 / 4126.8.","star":false,"level":4143.2,"trigger":"","why":"","favoured":null,"branches":[]}]}</script>
+<script src="../assets/report.js?v=b22695ca"></script>
+</body>
+</html>

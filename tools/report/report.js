@@ -398,12 +398,17 @@
   }
 
   function popupText(a){
-    function line(p){ return p ? "T1 " + fmt(p.t[0]) + " T2 " + fmt(p.t[1]) + " T3 " + fmt(p.t[2]) + " SL " + fmt(p.sl) : "—"; }
-    return "CLAUDE" + (a.star ? "★" : "") + " " + D.key + " " + fmt(a.level) + " " + a.name + "\n" +
-      "FROM ABOVE: HOLD → LONG " + line(a.long) + "\n" +
-      "FROM ABOVE: NO HOLD → wait backtest → SHORT " + line(a.short) + "\n" +
-      "FROM BELOW: REJECT → SHORT " + line(a.short) + "\n" +
-      "FROM BELOW: BREAK → wait backtest → LONG " + line(a.long);
+    function line(p){
+      var t = p.t.map(function(v, i){ return "T" + (i + 1) + " " + fmt(v); }).join(" ");
+      return t + (p.sl != null ? " SL " + fmt(p.sl) : "");
+    }
+    // A report that gives only one side for a level gets only that side's lines.
+    var out = ["CLAUDE" + (a.star ? "★" : "") + " " + D.key + " " + fmt(a.level) + " " + a.name];
+    if (a.long) out.push("FROM ABOVE: HOLD → LONG " + line(a.long));
+    if (a.short) out.push("FROM ABOVE: NO HOLD → wait backtest → SHORT " + line(a.short));
+    if (a.short) out.push("FROM BELOW: REJECT → SHORT " + line(a.short));
+    if (a.long) out.push("FROM BELOW: BREAK → wait backtest → LONG " + line(a.long));
+    return out.join("\n");
   }
 
   function renderPlan(){

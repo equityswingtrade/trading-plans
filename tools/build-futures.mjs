@@ -563,6 +563,124 @@ function parseRerank(md){
   return out.sort((a, b) => a.rank - b.rank);
 }
 
+// ---------- the "Structured Read" template, from 2026-10-08 ----------
+// "# ES1! — Structured Read for Thursday 2026-10-08", "**Snapshot: 7853.25 at 17:25 CT …**",
+// ladders written as "**UPSIDE ladder from 7853.25:**" over a Price | Source | Class |
+// Distance | Tag table, scenarios as bold "**RANK 1 — [S1] 7859.50 … → LONG**" paragraphs,
+// and "## 8. Alerts set" listing the levels without the ladders that used to sit beside them.
+const readStyle = body => /^\*\*RANK\s+\d+\s*[—–-]/m.test(body);
+
+function readLadders(bodyMd){
+  const rungs = [];
+  const parts = bodyMd.split(/\*\*(UPSIDE|DOWNSIDE) ladder[^*]*\*\*/i);
+  for (let i = 1; i < parts.length; i += 2){
+    const side = /UPSIDE/i.test(parts[i]) ? "up" : "down";
+    const t = tables(parts[i + 1] || "")[0];
+    if (!t) continue;
+    const col = re => t.head.findIndex(h => re.test(plain(h)));
+    const iP = col(/^price$/i), iS = col(/^source$/i), iT = col(/^tag$/i);
+    if (iP < 0) continue;
+    for (const r of t.rows){
+      if (r.length <= iP) continue;
+      const p = (plain(r[iP]).match(/\d{3,}(?:\.\d+)?/g) || []).map(Number);
+      if (!p.length) continue;
+      const tag = iT >= 0 && r.length > iT ? plain(r[iT]) : "";
+      rungs.push({
+        side, p, src: iS >= 0 && r.length > iS ? plain(r[iS]) : "",
+        cls: /^PASS/i.test(tag) ? "pass" : /^STOP/i.test(tag) ? "stop" : "target",
+        dec: tag.includes("★") || /\*\*/.test(r[iP]),
+      });
+    }
+  }
+  return rungs;
+}
+
+function readScenarios(sections){
+  const sec = sections.find(s => s.title && /scenarios/i.test(s.title));
+  if (!sec) return [];
+  const out = [];
+  for (const part of sec.md.split(/^(?=\*\*RANK\s+\d+\b)/m)){
+    const h = /^\*\*RANK\s+(\d+)\s*[—–-]\s*([\s\S]*?)\*\*/.exec(part);
+    if (!h) continue;
+    const title = plain(h[2]);
+    const flat = plain(part);
+    const slot = (/\[([^\]]+)\]/.exec(title) || [])[1] || "";
+    const name = (slot ? title.slice(title.indexOf("]") + 1) : title).replace(/★/g, "").trim();
+    const level = firstPrice(title.replace(/\[[^\]]*\]/g, ""));
+
+    const lines = part.split("\n").map(plain);
+    const tLine = lines.find(l => /^T1\b/.test(l)) || "";
+    const seen = new Set();
+    const targets = [...tLine.matchAll(/\bT([1-9])\s*([\d,]+(?:\.\d+)?)/g)]
+      .filter(m => !seen.has(m[1]) && seen.add(m[1]))
+      .map(m => ({ k: "T" + m[1], p: Number(m[2].replace(/,/g, "")) }))
+      .sort((a, b) => a.k.localeCompare(b.k));
+    const runner = /\brunner\s*([\d,]+(?:\.\d+)?)/i.exec(tLine);
+    const stop = /\bSL\s*\**\s*([\d,]+(?:\.\d+)?)/i.exec(flat);
+    const entry = /\bEntry\s*~?\s*\**\s*([\d,]+(?:\.\d+)?)/i.exec(flat);
+    const rr = /\bT1\s*\**\s*([\d.]+)\s*R\b/i.exec(flat.replace(/^.*?R:R/i, "R:R"));
+    const trig = /Trigger:\s*([^.]*\.)/.exec(flat);
+    const word = /(?:→|->)\s*\**\s*(LONG|SHORT)/i.exec(title);
+    // "SL 4110.5 · Risk 14.1" places the entry one risk from the stop, and the trigger names
+    // its own price; the stated R picks between those and the level in the heading.
+    const stopV = stop ? Number(stop[1].replace(/,/g, "")) : null;
+    const riskM = /\bRisk\s*\**\s*([\d,]+(?:\.\d+)?)/i.exec(flat);
+    const fromRisk = riskM && stopV != null && targets.length
+      ? Number((targets[0].p < stopV ? stopV - Number(riskM[1]) : stopV + Number(riskM[1])).toFixed(4))
+      : null;
+    const trigP = trig ? firstPrice(trig[1]) : null;
+    const cand = [entry && Number(entry[1].replace(/,/g, "")), fromRisk, trigP, level]
+      .filter(v => v != null);
+    let at = cand.length ? cand[0] : null;
+    if (rr && stopV != null && targets.length){
+      const want = Number(rr[1]);
+      const fit = cand.find(c => c !== stopV &&
+        Math.abs(Math.abs(targets[0].p - c) / Math.abs(stopV - c) - want) <= 0.06);
+      if (fit != null) at = fit;
+    }
+    const dir = word ? word[1].toUpperCase()
+              : at != null && targets.length && targets[0].p < at ? "SHORT" : "LONG";
+
+    out.push({
+      rank: Number(h[1]), slot, name, star: false, level,
+      trigger: trig ? trig[1].trim() : "", why: "", favoured: null,
+      branches: targets.length ? [{
+        label: trig ? trig[1].trim().slice(0, 120) : "On the trigger",
+        dir, entry: at, targets,
+        runner: runner ? Number(runner[1].replace(/,/g, "")) : null,
+        stop: stop ? Number(stop[1].replace(/,/g, "")) : null,
+        rr: rr ? Number(rr[1]) : null,
+      }] : [],
+    });
+  }
+  return out.sort((a, b) => a.rank - b.rank);
+}
+
+// "## 8. Alerts set" lists Price | Level | ID | Status and no ladders, so each level borrows
+// the ladder of the ranked scenario standing on it.
+function readAlerts(sections, scenarios, atr30){
+  const sec = sections.find(s => s.title && /alerts/i.test(s.title));
+  const t = sec && tables(sec.md).find(x => x.head.some(c => /^price$/i.test(plain(c))));
+  if (!t) return [];
+  const col = re => t.head.findIndex(c => re.test(plain(c)));
+  const iP = col(/^price$/i), iL = col(/^level$/i);
+  const near = Math.max(1, (atr30 || 20) * 0.06);
+  return t.rows.filter(r => r.length > iP && firstPrice(plain(r[iP])) != null).map(r => {
+    const level = firstPrice(plain(r[iP]));
+    const a = { star: r[iP].includes("★"), level, name: iL >= 0 && r.length > iL ? plain(r[iL]) : "",
+                long: null, short: null };
+    for (const s of scenarios){
+      for (const b of s.branches){
+        const own = [b.entry, s.level].filter(v => v != null);
+        if (!own.some(v => Math.abs(v - level) <= near)) continue;
+        const side = b.dir === "LONG" ? "long" : "short";
+        if (!a[side]) a[side] = { t: b.targets.map(x => x.p), sl: b.stop };
+      }
+    }
+    return a;
+  });
+}
+
 function parseScenarios(sections){
   const sec = sections.find(s => s.title && /(forward|ranked) scenarios/i.test(s.title));
   if (!sec) return [];
@@ -670,7 +788,15 @@ function parseReport(text){
   for (const block of headMd.split(/\n\s*\n/)){
     const b = block.trim();
     if (!b) continue;
-    if (/^Snapshot:/i.test(b)){ snapshot = b.replace(/^Snapshot:\s*/i, ""); continue; }
+    // "Snapshot: …" or, from 10-08, "**Snapshot: 7853.25 at 17:25 CT, …**" - drop the label
+    // and, when it was bold, the closing pair it leaves behind. Nothing else is touched.
+    if (/^\**Snapshot:/i.test(b)){
+      const bold = /^\*\*Snapshot:/i.test(b);
+      let t = b.replace(/^\**Snapshot:\s*/i, "");
+      if (bold) t = t.replace("**", "");
+      snapshot = t;
+      continue;
+    }
     // Also "**Primary setup (pre-open rerun):**" / "(as re-ranked at 06:00):", and a rerun
     // may put a warning mark in front of the label ("⛔ **Primary setup:**").
     const PRIM = /^[^A-Za-z*]{0,4}\*\*Primary setup(\s*\([^)]*\))?:\*\*\s*/i;
@@ -697,7 +823,8 @@ function parseReport(text){
     sections.push({ title: m ? m[1].trim() : null, md: body });
   }
 
-  const lastStr = (/Last \*\*([\d.,]+)\*\*/.exec(snapshot) || [])[1] ||
+  const lastStr = (/^([\d,]+(?:\.\d+)?)\s+at\b/.exec(snapshot) || [])[1] ||
+                  (/Last \*\*([\d.,]+)\*\*/.exec(snapshot) || [])[1] ||
                   (/^\*\*Last:\*\*\s*\**([\d.,]+)/m.exec(headMd) || [])[1] || "";
   const flat = plain(bodyMd);
   const num = re => { const m = re.exec(flat); return m ? Number(m[1].replace(/,/g, "")) : null; };
@@ -717,7 +844,32 @@ function parseReport(text){
   }
 
   const decimals = lastStr.includes(".") ? lastStr.split(".")[1].length : 0;
-  const scenarios = parseScenarios(sections);
+  const isRead = readStyle(bodyMd);
+  let readFavoured = "";
+  const scenarios = isRead ? readScenarios(sections) : parseScenarios(sections);
+  if (isRead){
+    // "**★ 7858.75 — Wednesday's VAH.**" names the level; the rank standing on it carries
+    // the favoured side, and the ★ may sit a tick off that rank's own trigger.
+    const starP = (/^\*\*★\s*([\d,]+(?:\.\d+)?)/m.exec(bodyMd) || [])[1];
+    if (starP){
+      const v = Number(starP.replace(/,/g, ""));
+      let best = null, gap = Infinity;
+      // Only a rank with a plan can carry the ★; the rotation often names the same price.
+      for (const s of scenarios.filter(x => x.branches.length)){
+        const own = [s.level].concat(s.branches.map(b => b.entry)).filter(x => x != null);
+        for (const o of own){ if (Math.abs(o - v) < gap){ gap = Math.abs(o - v); best = s; } }
+      }
+      if (best && gap <= 2 + (num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) || 20) * 0.1){
+        best.star = true;
+        best.favoured = best.branches[0].dir;
+        readFavoured = best.branches[0].dir;
+      }
+    }
+  }
+
+  const alerts = isRead
+    ? readAlerts(sections, scenarios, num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/))
+    : parseAlerts(sections);
 
   return {
     ticker, desc, snapshot, notes, sections, scenarios,
@@ -729,7 +881,7 @@ function parseReport(text){
     // Then the ★ row of the alert table, before the ★ scenario's entry - an entry written
     // as a range ("the backtest of 4347.8–4348.8") is not the level itself.
     star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] ||
-          String((parseAlerts(sections).find(a => a.star) || {}).level || "") ||
+          String((alerts.find(a => a.star) || {}).level || "") ||
           ((scenarios.find(s => s.star) || {}).branches || []).reduce((v, b) => v || (b.entry != null ? String(b.entry) : ""), "") || "",
     // "favoured LONG", "directional LONG" on a Rule 5 = 3/3 day, or "SHORT-favoured".
     // "favoured branch SHORT" wins: a callout may open by saying which side the PREVIOUS
@@ -740,13 +892,15 @@ function parseReport(text){
                 // The side may be marked up: "a DIRECTIONAL `LONG>`".
                 /(?:favou?red(?:\s+branch)?|directional)[\s*`]+(LONG|SHORT)/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
-                /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || "").toUpperCase(),
+                // The Structured Read names no side in prose; the ★ rank carries it.
+                /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || readFavoured || "").toUpperCase(),
     // Newer reports name the session they scored; older ones lead the Snapshot line with it.
     snapDate: scored ? plain(scored).replace(/\s*\(.*$/, "")
                      : plain((/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || ""),
     biasFull, biasShort,
     // "30-min ATR ≈ 18.85" or "30-min ATR = 0.28 × 66.50 = **18.62**"
-    atr30: num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
+    atr30: num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
+           num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*(?:≈|~)\s*([\d,]+(?:\.\d+)?)/) ||
            // "VA width 34.00 vs the 30-min ATR 20.86 = 1.63× ATR". This comes before the
            // "= x" form, which also fits a derived figure ("0.5× the 30-min ATR = 13.55").
@@ -756,10 +910,11 @@ function parseReport(text){
            num(/30-min ATR\s*=\s*([\d,]+(?:\.\d+)?)/),
     // "ATR condition: 72.25 …", "ATR condition: daily 74.50 …", "ATR: 67.25 …" or "ATR 66.50."
     // The label can be followed by a warning mark or "daily": "ATR condition: ⛔ 101.4 …".
-    atrD: num(/\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*([\d,]+(?:\.\d+)?)/) ||
+    atrD: num(/Daily ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
+          num(/\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*([\d,]+(?:\.\d+)?)/) ||
           num(/\bATR\s+([\d,]+(?:\.\d+)?)\b/),
-    ladder: parseLadders(bodyMd),
-    alerts: parseAlerts(sections),
+    ladder: isRead ? readLadders(bodyMd) : parseLadders(bodyMd),
+    alerts,
   };
 }
 
