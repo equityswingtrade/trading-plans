@@ -888,7 +888,9 @@ function parseReport(text){
     // plan favoured ("the weekend plan's favoured LONG was wrong") before naming today's.
     // A rerun may also just open with the side: "**SHORT** — continuation, …".
     // Within the same sentence, so "the favoured branch HAS FLIPPED TO LONG since 06:10" counts.
+    // Rule 16(b)'s branch is the favoured one: "…and that branch is now LONG".
     favoured: ((/favou?red\s+branch\b[^.]{0,40}?\**\b(LONG|SHORT)\b/i.exec(primary) ||
+                /\bbranch\b[^.]{0,30}?\bis now\s+\**\s*(LONG|SHORT)\b/i.exec(primary) ||
                 // The side may be marked up: "a DIRECTIONAL `LONG>`".
                 /(?:favou?red(?:\s+branch)?|directional)[\s*`]+(LONG|SHORT)/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
