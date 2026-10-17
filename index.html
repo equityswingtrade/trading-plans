@@ -131,6 +131,10 @@ select:focus-visible{border-color:var(--accent); box-shadow:0 0 0 3px var(--acce
 iframe{width:100%; height:100%; border:0; display:block; background:var(--surface)}
 /* The type selector above outranks the UA [hidden] rule, so restate it. */
 iframe[hidden]{display:none}
+/* While a report loads, keep its box laid out. A display:none iframe reports every
+   element inside it as hidden, and a report that paints its charts lazily then
+   shelves all of them and never comes back to them. The loading overlay covers it. */
+iframe.loading{visibility:hidden}
 
 .state{
   position:absolute; inset:0; display:none; flex-direction:column;
@@ -270,7 +274,9 @@ iframe[hidden]{display:none}
 
   function show(el){
     [stLoad, stEmpty, stErr].forEach(function(s){ s.classList.toggle("on", s === el); });
-    elFrame.hidden = (el !== null);
+    var loading = el === stLoad;
+    elFrame.classList.toggle("loading", loading);
+    elFrame.hidden = (el !== null && !loading);
   }
 
   function newestFirst(list){
@@ -533,10 +539,24 @@ iframe[hidden]{display:none}
     }
   }
 
+  // A report that draws its charts only once they scroll into view shelves them if it
+  // decided it was hidden while it loaded. Give it one more look now that it is on
+  // screen; reports without the lazy wiring are left alone.
+  function repaintLazy(){
+    var win, doc;
+    try { win = elFrame.contentWindow; doc = elFrame.contentDocument; } catch (e) { return; }
+    if (!doc || !win || typeof win.wire !== "function") return;
+    var shelved = doc.querySelectorAll(".plot[data-pending]");
+    if (!shelved.length) return;
+    for (var i = 0; i < shelved.length; i++) shelved[i].removeAttribute("data-pending");
+    try { win.wire(); } catch (e) {}
+  }
+
   elFrame.addEventListener("load", function(){
     if (!elFrame.getAttribute("src")) return;
     retargetLinks();
     show(null);
+    repaintLazy();
   });
 
   elPick.addEventListener("change", function(){
