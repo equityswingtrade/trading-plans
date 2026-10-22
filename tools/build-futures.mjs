@@ -414,9 +414,10 @@ function parseGroupedBranches(body, level, headDir){
       const rrLeg = leg(rrT, tag).replace(/^R:R[^:]*:/i, "");
       // "R:R: T1 0.54 · …", or from 10-01 "1.29R at T1 off the tactical stop · 2.21R at T2".
       let rr = /T1\s*(\d+(?:\.\d+)?)(?![\d.]|\s*÷)/.exec(rrLeg) ||
-               // A target pair carries a ratio each - "0.27R / 0.43R at T1" - and the map
+               // A target pair carries a ratio each - "0.27R / 0.43R at T1", and from 10-22 a
+               // triple: "0.74R / 0.86R / 1.08R at T1" - and the map
                // shows the first price, so take the first ratio with it.
-               /(\d+(?:\.\d+)?)\s*R\s*\/\s*\d+(?:\.\d+)?\s*R\s+(?:at|to)\s+T1\b/i.exec(rrLeg) ||
+               /(\d+(?:\.\d+)?)\s*R\s*(?:\/\s*\d+(?:\.\d+)?\s*R\s*)+(?:at|to)\s+T1\b/i.exec(rrLeg) ||
                /(\d+(?:\.\d+)?)\s*R\s+(?:at|to)\s+T1\b/i.exec(rrLeg);
       // 09-19 shows the arithmetic instead: "to T1 off the stop = 62.25 ÷ 62.00 = 1.00 ✅
       // — T2 = 1.94R …". The ratio is the last "= n" of the T1 clause, which ends at the
