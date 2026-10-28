@@ -1065,7 +1065,13 @@ function page(r, key, siblings, mdName){
   const kpis = [
     r.last != null && `<div class="kpi"><span>Last</span><b>${esc(r.last.toFixed(r.decimals))}</b>${r.atr30 ? `<small>30m ATR ${esc(r.atr30)}</small>` : ""}</div>`,
     starN != null && `<div class="kpi star"><span>★ Level</span><b>${esc(starN.toFixed(r.decimals))}</b>${starSub}</div>`,
-    favTxt && `<div class="kpi"><span>Favoured branch</span><b class="d-${r.favoured}">${favTxt}</b></div>`,
+    // A two-sided ★ can genuinely name no favoured side - from 10-29, Rule 5(b) on an
+    // audit of 0 of 3 with silent nodes. Say so rather than dropping the tile, so the
+    // page distinguishes "the report named none" from "the converter missed it".
+    `<div class="kpi"><span>Favoured branch</span>` +
+      (favTxt ? `<b class="d-${r.favoured}">${favTxt}</b>`
+              : `<b class="txt" title="The report names no favoured branch: the ★ is two-sided.">None named</b>`) +
+      `</div>`,
     r.biasShort && `<div class="kpi"><span>Bias</span><b class="txt" title="${esc(r.biasFull)}">${esc(r.biasShort)}</b></div>`,
   ].filter(Boolean).join("");
 
