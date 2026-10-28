@@ -916,9 +916,11 @@ function parseReport(text){
            num(/30-min ATR\s*=\s*([\d,]+(?:\.\d+)?)/),
     // "ATR condition: 72.25 …", "ATR condition: daily 74.50 …", "ATR: 67.25 …" or "ATR 66.50."
     // The label can be followed by a warning mark or "daily": "ATR condition: ⛔ 101.4 …".
+    // Never the 30-min figure, which from 10-28 is written with a colon too:
+    // "3.50 UNDER the 7765.25 node (0.16× the 30-min ATR: ON it), 103.75 over …".
     atrD: num(/Daily ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
-          num(/\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*([\d,]+(?:\.\d+)?)/) ||
-          num(/\bATR\s+([\d,]+(?:\.\d+)?)\b/),
+          num(/(?<!30-min\s)\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*([\d,]+(?:\.\d+)?)/) ||
+          num(/(?<!30-min\s)\bATR\s+([\d,]+(?:\.\d+)?)\b/),
     ladder: isRead ? readLadders(bodyMd) : parseLadders(bodyMd),
     alerts,
   };
