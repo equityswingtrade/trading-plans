@@ -905,15 +905,26 @@ function parseReport(text){
                      : plain((/^(.+?)(?:,|\s·)/.exec(snapshot) || [])[1] || ""),
     biasFull, biasShort,
     // "30-min ATR ≈ 18.85" or "30-min ATR = 0.28 × 66.50 = **18.62**"
-    atr30: num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
+    // "The 30-min ATR used is 23.87 (0.28× daily, Rule 6(a))" states the figure the whole
+    // report works from, so it is tried before any line that merely quotes it.
+    atr30: num(/30-min ATR used is\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
+           num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*(?:≈|~)\s*([\d,]+(?:\.\d+)?)/) ||
-           // "VA width 34.00 vs the 30-min ATR 20.86 = 1.63× ATR". This comes before the
-           // "= x" form, which also fits a derived figure ("0.5× the 30-min ATR = 13.55").
+           // "VA width 34.00 vs the 30-min ATR 20.86 = 1.63× ATR", and from 11-02 the same
+           // figure in brackets: "1.52× the 30-min ATR (23.87)".
            num(/30-min ATR\s+([\d,]+(?:\.\d+)?)\b/) ||
-           // "VA width vs the 30-min ATR: 39.00 against a 20.86 ATR = 1.87×"
+           num(/30-min ATR\s*\(\s*([\d,]+(?:\.\d+)?)\s*\)/) ||
+           // The figure can also lead the label: "against Monday's RTH close and a 19.11
+           // 30-min ATR". A multiplier never does ("2.85× the 30-min ATR" has "the" here).
+           num(/\b([\d,]+(?:\.\d+)?)\s+30-min ATR\b/) ||
+           // "VA width vs the 30-min ATR: 39.00 against a 20.86 ATR = 1.87×", and the same
+           // line without the article or the repeated label: "26.0 against 22.48 = 1.16×".
            num(/against\s+an?\s+([\d,]+(?:\.\d+)?)\s*ATR\b/i) ||
-           num(/30-min ATR\s*=\s*([\d,]+(?:\.\d+)?)/),
+           num(/VA width vs the 30-min ATR:[^\n]*?against\s+([\d,]+(?:\.\d+)?)/i) ||
+           // Last, and never a figure derived from the ATR by a multiplier - the level
+           // spacing check writes "1.5× the 30-min ATR = 35.81 maximum", which is not it.
+           num(/(?<![\d.]\s*×\s*(?:the\s+)?)30-min ATR\s*=\s*([\d,]+(?:\.\d+)?)/),
     // "ATR condition: 72.25 …", "ATR condition: daily 74.50 …", "ATR: 67.25 …" or "ATR 66.50."
     // The label can be followed by a warning mark or "daily": "ATR condition: ⛔ 101.4 …".
     // Never the 30-min figure, which from 10-28 is written with a colon too:
