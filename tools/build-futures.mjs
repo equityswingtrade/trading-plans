@@ -832,6 +832,10 @@ function parseReport(text){
                   (/^\*\*Last:\*\*\s*\**([\d.,]+)/m.exec(headMd) || [])[1] || "";
   const flat = plain(bodyMd);
   const num = re => { const m = re.exec(flat); return m ? Number(m[1].replace(/,/g, "")) : null; };
+  // The delta line above the rule sits in the head, and on a day with no "ATR condition"
+  // line of its own it is the only place the daily ATR is written.
+  const flatAll = plain(headMd) + "\n" + flat;
+  const numAll = re => { const m = re.exec(flatAll); return m ? Number(m[1].replace(/,/g, "")) : null; };
 
   // "**Current bias:** …", "**Bias:** …" or "**Bias: … .**"
   const biasLine = (bodyMd.split("\n").find(l => /^\s*[-*>]?\s*\*{0,2}(current bias|bias)\*{0,2}\s*:/i.test(l)) || "");
@@ -929,9 +933,16 @@ function parseReport(text){
     // The label can be followed by a warning mark or "daily": "ATR condition: ⛔ 101.4 …".
     // Never the 30-min figure, which from 10-28 is written with a colon too:
     // "3.50 UNDER the 7765.25 node (0.16× the 30-min ATR: ON it), 103.75 over …".
-    atrD: num(/Daily ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
-          num(/(?<!30-min\s)\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*([\d,]+(?:\.\d+)?)/) ||
-          num(/(?<!30-min\s)\bATR\s+([\d,]+(?:\.\d+)?)\b/),
+    // The capture must start with a digit: "ATR: COMPRESSED, …" otherwise hands back the
+    // comma that follows the word, which reads as nothing rather than failing over.
+    atrD: num(/Daily ATR\s*\|\s*\**\s*(\d[\d,]*(?:\.\d+)?)/) ||
+          num(/(?<!30-min\s)\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*(\d[\d,]*(?:\.\d+)?)/) ||
+          // "daily ATR 78.4 → 77.5" in the delta line carries the old figure then today's;
+          // today's is the one that counts, and some days write it nowhere else. The chain
+          // can run longer ("98.0 → 96.0 → 93.1"), so the repeat is greedy and the capture
+          // lands on the last figure.
+          numAll(/daily ATR\s+(?:[\d,]+(?:\.\d+)?\s*(?:→|->)\s*\**\s*)+(\d[\d,]*(?:\.\d+)?)/i) ||
+          num(/(?<!30-min\s)\bATR\s+(\d[\d,]*(?:\.\d+)?)\b/),
     ladder: isRead ? readLadders(bodyMd) : parseLadders(bodyMd),
     alerts,
   };
