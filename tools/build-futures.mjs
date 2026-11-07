@@ -171,6 +171,13 @@ function tocLabel(title){
     [/scoring|step\s*[−–-]\s*1/i, "Scorecard"], [/multi-timeframe/i, "Structure"],
     [/level inventory/i, "Price map"], [/ranked scenarios/i, "Full scenarios"],
     [/alerts set/i, "Alerts"], [/summary/i, "Takeaway"],
+    // from 2026-11-09, the Vietnamese reports. Same order of sections, same labels shown.
+    [/đọc trước|lịch kinh tế/i, "⛔ Read first"], [/bảng điểm/i, "Scorecard"],
+    [/bối cảnh dài hạn/i, "Long-term"], [/xu hướng ngày/i, "Trend & vol"],
+    [/bản đồ giá/i, "Price map"], [/5 phút/i, "5-min tape"],
+    [/bối cảnh market profile/i, "Profile"], [/phiên đấu giá/i, "Auction"],
+    [/cấu trúc thị trường/i, "Structure"], [/kịch bản/i, "Full scenarios"],
+    [/kết luận/i, "Takeaway"], [/cảnh báo/i, "Alerts"],
   ];
   for (const [re, label] of map) if (re.test(title)) return label;
   const p = title.replace(/^(?:section\s+[\d.]+|step\s*[−–-]?\s*\d+)\s*[—–-]\s*/i, "")
@@ -205,11 +212,15 @@ function parseLadders(bodyMd){
   const rungs = [];
   for (const c of chunks(bodyMd)){
     if (!c.title) continue;
-    const side = /UPSIDE LADDER/i.test(c.title) ? "up" : /DOWNSIDE LADDER/i.test(c.title) ? "down" : null;
+    // "🔼 THANG GIÁ LÊN (từ 7404.00)" is the Vietnamese upside ladder, 🔽 … XUỐNG the downside.
+    const side = /UPSIDE LADDER|THANG GIÁ LÊN/i.test(c.title) ? "up"
+               : /DOWNSIDE LADDER|THANG GIÁ XUỐNG/i.test(c.title) ? "down" : null;
     if (!side) continue;
     for (const t of tables(c.body)){
       const col = re => t.head.findIndex(h => re.test(plain(h)));
-      const iP = col(/^(level|price)$/i), iS = col(/^source/i), iC = col(/^(class|tag)$/i);
+      // Vietnamese: Mức = level, Nguồn = source, Phân loại = class.
+      const iP = col(/^(level|price|mức)$/i), iS = col(/^(source|nguồn)/i),
+            iC = col(/^(class|tag|phân loại)$/i);
       if (iP < 0 || iC < 0) continue;
       for (const r of t.rows){
         if (r.length <= Math.max(iP, iC)) continue;
@@ -228,7 +239,9 @@ function parseLadders(bodyMd){
 }
 
 function parseAlerts(sections){
-  const sec = sections.find(s => s.title && /alerts/i.test(s.title));
+  // "## Alerts — ES1! (6 …)" or, from 11-09, "## Cảnh báo — ES1! (6 …)". The table itself
+  // is read by position, so its Vietnamese column names need no translation.
+  const sec = sections.find(s => s.title && /alerts|cảnh báo/i.test(s.title));
   const t = sec && tables(sec.md).find(x => x.head.length >= 5);
   if (!t) return [];
   const plan = cell => {
@@ -600,7 +613,7 @@ function readLadders(bodyMd){
 }
 
 function readScenarios(sections){
-  const sec = sections.find(s => s.title && /scenarios/i.test(s.title));
+  const sec = sections.find(s => s.title && /scenarios|kịch bản/i.test(s.title));
   if (!sec) return [];
   const out = [];
   for (const part of sec.md.split(/^(?=\*\*RANK\s+\d+\b)/m)){
@@ -663,7 +676,7 @@ function readScenarios(sections){
 // "## 8. Alerts set" lists Price | Level | ID | Status and no ladders, so each level borrows
 // the ladder of the ranked scenario standing on it.
 function readAlerts(sections, scenarios, atr30){
-  const sec = sections.find(s => s.title && /alerts/i.test(s.title));
+  const sec = sections.find(s => s.title && /alerts|cảnh báo/i.test(s.title));
   const t = sec && tables(sec.md).find(x => x.head.some(c => /^price$/i.test(plain(c))));
   if (!t) return [];
   const col = re => t.head.findIndex(c => re.test(plain(c)));
@@ -686,7 +699,8 @@ function readAlerts(sections, scenarios, atr30){
 }
 
 function parseScenarios(sections){
-  const sec = sections.find(s => s.title && /(forward|ranked) scenarios/i.test(s.title));
+  // "## 6. Kịch bản phía trước (…) — XẾP HẠNG" is the Vietnamese ranked-scenarios section.
+  const sec = sections.find(s => s.title && /(forward|ranked) scenarios|kịch bản/i.test(s.title));
   if (!sec) return [];
   // A pre-open rerun re-ranks the evening list in place; that ranking is the live one.
   const rerank = parseRerank(sec.md);
@@ -764,8 +778,12 @@ function parseReport(text){
   let i = 0;
   while (i < lines.length && !lines[i].trim()) i++;
 
-  // "# Symbol: ES1! (E-mini S&P 500 · CME)" or "# ES1! — Structured Market Analysis"
-  const head = /^#\s*Symbol:\s*(\S+)\s*(?:\((.*)\))?\s*$/.exec(lines[i] || "");
+  // "# Symbol: ES1! (E-mini S&P 500 · CME)" or "# ES1! — Structured Market Analysis".
+  // From 11-09 the reports are written in Vietnamese, where the label is "Mã:". Failing
+  // here is not a small loss: the "# …" line then stays in the header block, glued to the
+  // Snapshot paragraph with no blank line between them, so the snapshot is never
+  // recognised and the last price and decimal count go with it.
+  const head = /^#\s*(?:Symbol|Mã):\s*(\S+)\s*(?:\((.*)\))?\s*$/.exec(lines[i] || "");
   const headNew = head ? null : /^#\s*(\S+)\s*[—–-]\s*(.*)$/.exec(lines[i] || "");
   const ticker = head ? head[1] : headNew ? headNew[1] : "";
   let desc = head ? (head[2] || "") : "";
@@ -901,6 +919,10 @@ function parseReport(text){
                 /\bbranch\b[^.]{0,30}?\bis now\s+\**\s*(LONG|SHORT)\b/i.exec(primary) ||
                 // The side may be marked up: "a DIRECTIONAL `LONG>`".
                 /(?:favou?red(?:\s+branch)?|directional)[\s*`]+(LONG|SHORT)/i.exec(primary) ||
+                // Vietnamese: "nhánh được ưu tiên là SHORT (Rule 16(a): …)", and the
+                // directional form "`SHORT>` định hướng".
+                /nhánh[^.]{0,30}?ưu tiên là\s*\**\s*`?(LONG|SHORT)/i.exec(primary) ||
+                /`(LONG|SHORT)>`\s*định hướng/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 // The Structured Read names no side in prose; the ★ rank carries it.
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || readFavoured || "").toUpperCase(),
@@ -912,6 +934,11 @@ function parseReport(text){
     // "The 30-min ATR used is 23.87 (0.28× daily, Rule 6(a))" states the figure the whole
     // report works from, so it is tried before any line that merely quotes it.
     atr30: num(/30-min ATR used is\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
+           // Vietnamese, same sentence: "ATR 30 phút dùng trong plan là **34.79**
+           // (0.28× ATR ngày, Rule 6(a))". Tried first for the same reason, and anchored on
+           // "dùng trong plan" so no line that merely quotes or scales the figure can win -
+           // the spacing check writes "1.5× ATR 30 phút = 52.19 tối đa".
+           num(/ATR 30 phút dùng trong plan là\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
            num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*(?:≈|~)\s*([\d,]+(?:\.\d+)?)/) ||
@@ -942,7 +969,14 @@ function parseReport(text){
           // can run longer ("98.0 → 96.0 → 93.1"), so the repeat is greedy and the capture
           // lands on the last figure.
           numAll(/daily ATR\s+(?:[\d,]+(?:\.\d+)?\s*(?:→|->)\s*\**\s*)+(\d[\d,]*(?:\.\d+)?)/i) ||
-          num(/(?<!30-min\s)\bATR\s+(\d[\d,]*(?:\.\d+)?)\b/),
+          // The Vietnamese delta line writes the same chain as "ATR ngày 118.25 → 124.25".
+          // Only the arrow form is safe here: a bare "ATR ngày" far more often follows a
+          // multiple ("32.50 dưới = 0.26 ATR ngày"), which is a distance, not the ATR.
+          numAll(/ATR ngày\s+(?:[\d,]+(?:\.\d+)?\s*(?:→|->)\s*\**\s*)+(\d[\d,]*(?:\.\d+)?)/i) ||
+          // Last resort. "30-min" precedes the label in English but follows it in
+          // Vietnamese ("ATR 30 phút 34.79"), where an unguarded capture would hand back
+          // the 30 of the label itself, so both sides are barred.
+          num(/(?<!30-min\s)\bATR\s+(?!30 phút)(\d[\d,]*(?:\.\d+)?)\b/),
     ladder: isRead ? readLadders(bodyMd) : parseLadders(bodyMd),
     alerts,
   };
