@@ -919,9 +919,11 @@ function parseReport(text){
                 /\bbranch\b[^.]{0,30}?\bis now\s+\**\s*(LONG|SHORT)\b/i.exec(primary) ||
                 // The side may be marked up: "a DIRECTIONAL `LONG>`".
                 /(?:favou?red(?:\s+branch)?|directional)[\s*`]+(LONG|SHORT)/i.exec(primary) ||
-                // Vietnamese: "nhánh được ưu tiên là SHORT (Rule 16(a): …)", and the
+                // Vietnamese: "nhánh được ưu tiên là SHORT (Rule 16(a): …)". The pre-open
+                // rerun names a direction rather than a branch - "hướng ưu tiên là LONG vì
+                // vùng khối lượng vừa tăng nằm dưới giá" - so both nouns are read. And the
                 // directional form "`SHORT>` định hướng".
-                /nhánh[^.]{0,30}?ưu tiên là\s*\**\s*`?(LONG|SHORT)/i.exec(primary) ||
+                /(?:nhánh|hướng)[^.]{0,30}?ưu tiên là\s*\**\s*`?(LONG|SHORT)/i.exec(primary) ||
                 /`(LONG|SHORT)>`\s*định hướng/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 // The Structured Read names no side in prose; the ★ rank carries it.
@@ -939,6 +941,12 @@ function parseReport(text){
            // "dùng trong plan" so no line that merely quotes or scales the figure can win -
            // the spacing check writes "1.5× ATR 30 phút = 52.19 tối đa".
            num(/ATR 30 phút dùng trong plan là\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
+           // The pre-open rerun states it as a reading rather than a choice: "Một cây nến
+           // 30 phút trung bình (ATR 30 phút) là **34.23**". Anchored on the bracketed label
+           // so the two near misses on the same page cannot win - the VA-width check writes
+           // "so với một cây nến 30 phút" against the PREVIOUS build's figure, and the ETH
+           // volume line writes "trung bình một nến 30 phút ETH = 9,628 hợp đồng".
+           num(/\(ATR 30 phút\)\s*là\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
            num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*(?:≈|~)\s*([\d,]+(?:\.\d+)?)/) ||
