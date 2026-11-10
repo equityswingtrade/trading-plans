@@ -923,13 +923,20 @@ function parseReport(text){
                 // rerun names a direction rather than a branch - "hướng ưu tiên là LONG vì
                 // vùng khối lượng vừa tăng nằm dưới giá" - so both nouns are read. And the
                 // directional form "`SHORT>` định hướng".
-                /(?:nhánh|hướng)[^.]{0,30}?ưu tiên là\s*\**\s*`?(LONG|SHORT)/i.exec(primary) ||
+                // The rerun also drops the copula: "hướng ưu tiên SHORT vì vùng khối
+                // lượng vừa tăng nằm trên giá", so "là" is optional. Safe because this runs on
+                // the primary-setup line alone, which states the side once.
+                /(?:nhánh|hướng)[^.]{0,30}?ưu tiên(?:\s*là)?\s*\**\s*`?(LONG|SHORT)\b/i.exec(primary) ||
                 /`(LONG|SHORT)>`\s*định hướng/i.exec(primary) ||
                 // A one-sided star carries the side itself and states no favoured branch:
                 // "★ là LONG một chiều: đủ 3/3 dấu hiệu xu hướng". Tried after the
                 // "hướng ưu tiên" forms, which is what a two-sided star uses. The side must
                 // follow "★ là" at once, so "★ là lệnh MUA KHI GIỮ" cannot match.
                 /★\s*là\s*[*`\s]*(LONG|SHORT)\b/i.exec(primary) ||
+                // And it may drop that prefix entirely: "không đổi — ★ 7600.50: Weak High
+                // + VAH thứ Hai, … LONG một chiều: đủ 3/3 dấu hiệu xu hướng". "một chiều"
+                // (one-sided) is the anchor; a two-sided star writes "hai chiều" instead.
+                /\b(LONG|SHORT)\**\s*một chiều/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 // The Structured Read names no side in prose; the ★ rank carries it.
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || readFavoured || "").toUpperCase(),
