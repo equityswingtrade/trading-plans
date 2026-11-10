@@ -925,6 +925,11 @@ function parseReport(text){
                 // directional form "`SHORT>` định hướng".
                 /(?:nhánh|hướng)[^.]{0,30}?ưu tiên là\s*\**\s*`?(LONG|SHORT)/i.exec(primary) ||
                 /`(LONG|SHORT)>`\s*định hướng/i.exec(primary) ||
+                // A one-sided star carries the side itself and states no favoured branch:
+                // "★ là LONG một chiều: đủ 3/3 dấu hiệu xu hướng". Tried after the
+                // "hướng ưu tiên" forms, which is what a two-sided star uses. The side must
+                // follow "★ là" at once, so "★ là lệnh MUA KHI GIỮ" cannot match.
+                /★\s*là\s*[*`\s]*(LONG|SHORT)\b/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 // The Structured Read names no side in prose; the ★ rank carries it.
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || readFavoured || "").toUpperCase(),
