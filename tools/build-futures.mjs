@@ -427,6 +427,10 @@ function parseGroupedBranches(body, level, headDir){
       const rrLeg = leg(rrT, tag).replace(/^R:R[^:]*:/i, "");
       // "R:R: T1 0.54 · …", or from 10-01 "1.29R at T1 off the tactical stop · 2.21R at T2".
       let rr = /T1\s*(\d+(?:\.\d+)?)(?![\d.]|\s*÷)/.exec(rrLeg) ||
+               // Vietnamese places the ratio before the target: "rủi ro 20.25 → **0.81R
+               // ở T1** · **1.37R ở T2**". "ở" never appears in an English leg, so this
+               // alternative cannot disturb the forms below.
+               /(\d+(?:\.\d+)?)\s*R\s*ở\s*T1\b/i.exec(rrLeg) ||
                // A target pair carries a ratio each - "0.27R / 0.43R at T1", and from 10-22 a
                // triple: "0.74R / 0.86R / 1.08R at T1" - and the map
                // shows the first price, so take the first ratio with it.
@@ -452,8 +456,9 @@ function parseGroupedBranches(body, level, headDir){
         // own note: "T1 4205.0 (5.0 from an assumed 4200.0 entry = 0.21× ATR)".
         const assumed = /from an assumed\s*\**\s*([\d,]+(?:\.\d+)?)\s*\**\s*entry/i.exec(rrLeg) ||
                         /from an assumed\s*\**\s*([\d,]+(?:\.\d+)?)\s*\**\s*entry/i.exec(targetT);
-        // "R:R: risk 13.0 → 0.38R at T1" places the entry one risk away from the stop.
-        const rrRisk = /\brisk\s*\**\s*([\d,]+(?:\.\d+)?)/i.exec(rrLeg);
+        // "R:R: risk 13.0 → 0.38R at T1" places the entry one risk away from the stop;
+        // "rủi ro 20.25" is the same statement in the Vietnamese reports.
+        const rrRisk = /(?:\brisk|rủi ro)\s*\**\s*([\d,]+(?:\.\d+)?)/i.exec(rrLeg);
         const fromRisk = rrRisk && stop != null
           ? Number((targets[0].p < stop ? stop - Number(rrRisk[1]) : stop + Number(rrRisk[1])).toFixed(4))
           : null;
@@ -927,6 +932,11 @@ function parseReport(text){
                 // lượng vừa tăng nằm trên giá", so "là" is optional. Safe because this runs on
                 // the primary-setup line alone, which states the side once.
                 /(?:nhánh|hướng)[^.]{0,30}?ưu tiên(?:\s*là)?\s*\**\s*`?(LONG|SHORT)\b/i.exec(primary) ||
+                // And it may trail a clause and a colon: "khối lượng im lặng, nên hướng ưu
+                // tiên lấy từ hai dấu hiệu đã đạt (value dới hẳn xuống, tail ở điểm xuất
+                // phát): SHORT". The colon must sit right before the side, and [^.] keeps the
+                // match inside one sentence - a price would end it too.
+                /(?:nhánh|hướng)[^.]{0,30}?ưu tiên[^.]{0,120}?:\s*\**\s*`?(LONG|SHORT)\b/i.exec(primary) ||
                 /`(LONG|SHORT)>`\s*định hướng/i.exec(primary) ||
                 // A one-sided star carries the side itself and states no favoured branch:
                 // "★ là LONG một chiều: đủ 3/3 dấu hiệu xu hướng". Tried after the
