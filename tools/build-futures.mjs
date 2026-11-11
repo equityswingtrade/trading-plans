@@ -931,7 +931,7 @@ function parseReport(text){
                 // The rerun also drops the copula: "hướng ưu tiên SHORT vì vùng khối
                 // lượng vừa tăng nằm trên giá", so "là" is optional. Safe because this runs on
                 // the primary-setup line alone, which states the side once.
-                /(?:nhánh|hướng)[^.]{0,30}?ưu tiên(?:\s*là)?\s*\**\s*`?(LONG|SHORT)\b/i.exec(primary) ||
+                /(?:nhánh|hướng)[^.]{0,30}?ưu tiên(?:\s+(?:là|giữ|vẫn|chuyển|đổi|sang)){0,3}\s*\**\s*`?(LONG|SHORT)\b/i.exec(primary) ||
                 // And it may trail a clause and a colon: "khối lượng im lặng, nên hướng ưu
                 // tiên lấy từ hai dấu hiệu đã đạt (value dới hẳn xuống, tail ở điểm xuất
                 // phát): SHORT". The colon must sit right before the side, and [^.] keeps the
@@ -969,6 +969,10 @@ function parseReport(text){
            // "so với một cây nến 30 phút" against the PREVIOUS build's figure, and the ETH
            // volume line writes "trung bình một nến 30 phút ETH = 9,628 hợp đồng".
            num(/\(ATR 30 phút\)\s*là\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
+           // From the 11-11 rerun the figure follows the label instead: "Plan vẫn dùng ATR
+           // đã chốt **122.50**, một cây nến 30 phút **34.30**". The number must come after, so
+           // "0.75 cây nến 30 phút" in the T1 spacing rule cannot win.
+           num(/một cây nến 30 phút\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
            num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*(?:≈|~)\s*([\d,]+(?:\.\d+)?)/) ||
@@ -992,7 +996,12 @@ function parseReport(text){
     // "3.50 UNDER the 7765.25 node (0.16× the 30-min ATR: ON it), 103.75 over …".
     // The capture must start with a digit: "ATR: COMPRESSED, …" otherwise hands back the
     // comma that follows the word, which reads as nothing rather than failing over.
-    atrD: num(/Daily ATR\s*\|\s*\**\s*(\d[\d,]*(?:\.\d+)?)/) ||
+    // When a rerun lands mid-bar the report gives two dailies and says which one the plan
+    // works from: "ATR: **126.25** … trên nến đang chạy (122.50 tối qua) … Plan vẫn dùng ATR
+    // đã chốt **122.50**". The settled one is the plan's, so it is tried before the
+    // "ATR:" label, which would otherwise hand back the running bar's reading.
+    atrD: num(/d[ùu]ng ATR đã chốt\s*\**\s*(\d[\d,]*(?:\.\d+)?)/i) ||
+          num(/Daily ATR\s*\|\s*\**\s*(\d[\d,]*(?:\.\d+)?)/) ||
           num(/(?<!30-min\s)\bATR(?: condition)?:\s*[^\d\n]{0,12}?(?:daily\s+)?\**\s*(\d[\d,]*(?:\.\d+)?)/) ||
           // "daily ATR 78.4 → 77.5" in the delta line carries the old figure then today's;
           // today's is the one that counts, and some days write it nowhere else. The chain
