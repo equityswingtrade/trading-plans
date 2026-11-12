@@ -947,6 +947,11 @@ function parseReport(text){
                 // + VAH thứ Hai, … LONG một chiều: đủ 3/3 dấu hiệu xu hướng". "một chiều"
                 // (one-sided) is the anchor; a two-sided star writes "hai chiều" instead.
                 /\b(LONG|SHORT)\**\s*một chiều/i.exec(primary) ||
+                // 11-12 reverses the order and shouts it: "★ MỘT CHIỀU — SHORT: đủ 3/3 dấu
+                // hiệu xu hướng". The dash between the two is required, so the only text that
+                // can match is the label itself; a two-sided star writes "hai chiều" and the
+                // JS i flag case-folds the Vietnamese capitals.
+                /một chiều\s*[—–-]+\s*\**\s*(LONG|SHORT)\b/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 // The Structured Read names no side in prose; the ★ rank carries it.
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || readFavoured || "").toUpperCase(),
@@ -972,7 +977,11 @@ function parseReport(text){
            // From the 11-11 rerun the figure follows the label instead: "Plan vẫn dùng ATR
            // đã chốt **122.50**, một cây nến 30 phút **34.30**". The number must come after, so
            // "0.75 cây nến 30 phút" in the T1 spacing rule cannot win.
-           num(/một cây nến 30 phút\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
+           // The 11-12 evening build separates the two with an equals sign: "Một cây nến
+           // 30 phút = **34.65**", so the sign is optional. The only other line on the page
+           // that puts a number after an equals sign there is the RTH volume, which writes
+           // "một nến 30 phút RTH = 84,900 hợp đồng" - no "cây", so it cannot match.
+           num(/một cây nến 30 phút\s*=?\s*\**\s*([\d,]+(?:\.\d+)?)/i) ||
            num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*=\s*[\d.]+\s*×\s*[\d.,]+\s*=\s*([\d,]+(?:\.\d+)?)/) ||
            num(/30-min ATR\s*(?:≈|~)\s*([\d,]+(?:\.\d+)?)/) ||
