@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ES price map — 2026-11-13</title>
+<script>if (window.self !== window.top) document.documentElement.classList.add("framed");</script>
+<link rel="stylesheet" href="../assets/report.css?v=b22695ca">
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="crumbs">
+    <a href="../../index.html#futures/2026-11-13/ES">Trading Plans</a><span>/</span><span>Futures · Fri, Nov 13, 2026</span>
+    <nav class="sib" aria-label="Products"><a href="ES.html" aria-current="page">ES</a><a href="NQ.html">NQ</a><a href="GC.html">GC</a><a href="SUM.html">Summary</a></nav>
+  </div>
+  <h1>ES1!<span class="desc">E-mini S&amp;P 500 Futures · CME</span></h1>
+  <p class="snap"><strong>2026-11-12 17:35 CT — BẢN DỰNG TỐI: recap RTH thứ Năm 11-12, plan cho ETH tối nay và RTH thứ Sáu 11-13</strong> (đọc MỘT lần) · Last <strong>7636.00</strong> · <strong>ETH tối nay 7636.25 / 7619.25</strong> (mở lại 17:00 ở 7620.25) · RTH thứ Năm 7674.75 / 7581.50, mở 7584.25, đóng 7616.25 (settlement 7615.25) · đáy ngày gồm tiền mở cửa 7572.00 (07:15) · ATH ≈ 7906.25</p>
+  <div class="kpis"><div class="kpi"><span>Last</span><b>7636.00</b><small>30m ATR 33.74</small></div><div class="kpi star"><span>★ Level</span><b>7649.00</b><small>+13.00 from last · 0.39× 30m ATR</small></div><div class="kpi"><span>Favoured branch</span><b class="d-LONG">▲ LONG</b></div></div>
+</header>
+<nav class="toc" aria-label="Sections"><a href="#primary">Setup</a><a href="#desk">Map & planner</a><a href="#ranked">Scenarios</a><a href="#read-first">⛔ Read first</a><a href="#scorecard">Scorecard</a><a href="#long-term">Long-term</a><a href="#trend-vol">Trend &amp; vol</a><a href="#price-map">Price map</a><a href="#5-min-tape">5-min tape</a><a href="#profile">Profile</a><a href="#auction">Auction</a><a href="#structure">Structure</a><a href="#full-scenarios">Full scenarios</a><a href="#takeaway">Takeaway</a><a href="#alerts">Alerts</a></nav>
+<section class="primary" id="primary">
+  <div class="lbl">★ Primary setup</div>
+  <p><strong>★ 7649.00 <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> thứ Năm — 13.00 trên giá (+0.39 cây nến 30 phút: trong cả hai giới hạn khoảng cách, đúng phía cho lệnh mua). ★ hai chiều; hướng ưu tiên <span class="d-LONG">LONG</span> (vùng khối lượng 7612.50 tăng +7.5% và nằm dưới giá).</strong> Trigger: <strong>nến 30 phút đóng trên 7649.00</strong> → T1 7656.25 · T2 7663.50 · T3 7675.50 · runner 7686.00. Stop 7632.00. Rủi ro ≈20.00 từ giá vào ≈7652.00 → ⚠ <strong>0.21R ở T1</strong>, ⚠ 0.58R ở T2, 1.18R ở T3, 1.70R ở runner. ⚠ <strong>Nhánh <span class="d-SHORT">SHORT</span> của cùng popup: chạm rồi nến 30 phút đóng lại dưới 7649.00 → 7637.75 / 7617.50 / 7612.50, stop 7666.00. PPI ra 07:30 sáng mai — trước giờ mở cửa; không vào lệnh 07:15 – 07:45. Đọc lại lúc 08:25.</strong></p>
+  <div class="notes"><p><strong>Delta so với bản cập nhật sáng:</strong> ⛔ <strong>RTH lấp trọn cú gap tin Nvidia: mở 7584.25 (bán quá đà 1.68 cây nến), chạy một mạch lên 7674.75 lúc 10:20 — vượt VAH thứ Tư 5.50 rồi bị từ chối, để lại Selling Tail 7675.50; chiều tháo dần về đóng 7616.25, 1.25 DƯỚI VAL mới</strong> · ⛔ <strong>★ 7597.25 <span class="d-SHORT">SHORT</span>: thủng lúc 07:05 (trước giờ mở), nến 30 phút 08:00 đóng 7595.00 → vào 7595.00, chạm T1 7584.00 (08:25) rồi stop 7614.50 bị quét lúc 08:35 — SAI hướng</strong> · ⛔ <strong>Khối lượng: 7612.50 tăng mạnh nhất (858.2K → 922.3K, +7.5%) và MOC 80.7K mua đúng ở đó; 7656.25 tăng +3.0%. Vùng tăng mạnh nhất nằm DƯỚI giá → hướng ưu tiên đổi sang <span class="d-LONG">LONG</span></strong> · <strong>EMA 20 7637.50 → 7637.75; ATR 123.75 → 120.50, co lại.</strong> · ⛔ <strong>★ đổi sang 7649.00 POC thứ Năm — POC trùng vùng khối lượng 7656.25 (cách 0.21 cây nến).</strong></p>
+</div>
+</section>
+
+
+<section class="desk" id="desk">
+  <div class="desk-grid">
+    <div class="card map-card" id="map-card">
+      <div class="card-head">
+        <h2>Price map</h2>
+        <div class="seg" id="zoomSeg" role="group" aria-label="Map range">
+          <button type="button" data-zoom="plan" aria-pressed="true">This plan</button>
+          <button type="button" data-zoom="levels" aria-pressed="false">All levels</button>
+          <button type="button" data-zoom="wide" aria-pressed="false">±2 daily ATR</button>
+        </div>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="k-line k-price"></i>Last price</span>
+        <span><i class="k-star">★</i>Decision level</span>
+        <span><i class="k-line"></i>Alert level</span>
+        <span><i class="k-dot k-long"></i>Long targets</span>
+        <span><i class="k-dot k-short"></i>Short targets</span>
+        <span><i class="k-zone"></i>Thin zone / risk</span>
+      </div>
+      <div class="map-wrap"><svg id="map" role="img" aria-label="Price map"></svg><div class="tip" id="tip" hidden></div></div>
+      <p class="map-note">Hover a line for its source; click an alert level to plan it. Every level is also in the <a href="#price-map">Price map</a> tables.</p>
+    </div>
+    <div class="card plan-card">
+      <div class="card-head"><h2>Trade planner</h2><span class="sub">7 alert levels</span></div>
+      <div class="lvls" id="lvls" role="listbox" aria-label="Alert levels"></div>
+      <div class="plan-ctl">
+        <div class="seg" id="dirSeg" role="group" aria-label="Direction">
+          <button type="button" data-dir="long">▲ Long</button>
+          <button type="button" data-dir="short">▼ Short</button>
+          <button type="button" data-dir="both">Both</button>
+        </div>
+        <span class="note">R measured from the level — your fill is the confirming 30-min close.</span>
+      </div>
+      <div id="planOut"></div>
+      <div class="popup" id="popupBox">
+        <div class="popup-head"><span>Alert text</span><button type="button" class="btn" id="copyBtn">Copy</button></div>
+        <pre id="popupText"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="scen" id="ranked">
+  <div class="card">
+    <div class="card-head"><h2>Ranked scenarios</h2><span class="sub">best first · ★ = today's A+ level</span></div>
+    <div class="rank-tabs" id="rankTabs" role="tablist" aria-label="Scenarios"></div>
+    <div id="rankOut"></div>
+  </div>
+</section>
+<details class="sec" id="read-first"><summary><h2>Lịch kinh tế — đọc trước</h2></summary><div class="sec-body"><p><strong>Danh sách Trading Economics của bạn cho tuần 11-09 (CT = UTC−6). Chỉ những gì chưa xảy ra; <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> hôm nay nằm ở §0 và §3b.</strong> <strong>Sự kiện lớn kế tiếp là PPI 07:30 sáng thứ Sáu.</strong> <em>(Danh sách cho tuần 11-16 chưa có — gửi ảnh khi có.)</em></p>
+<div class="sub"><h3 id="read-first-phi-n-t-i">Phiên tới</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>CT</th>
+<th>Ngày</th>
+<th>Sự kiện</th>
+<th>Số liệu</th>
+<th>Kỳ vọng tác động, theo từng mã</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>17:00 → 07:15</td>
+<td>T5 → T6</td>
+<td><abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> tối nay <em>(đang chạy)</em></td>
+<td>ETH 7636.25 / 7619.25 tới 17:35</td>
+<td><strong>ETH là phiên quan sát: popup kêu ban đêm là tín hiệu để theo dõi, vào lệnh trong RTH (hoặc vào nhỏ với stop rộng hơn).</strong></td>
+</tr>
+<tr>
+<td><strong>07:30</strong></td>
+<td><strong>T6 11-13</strong></td>
+<td><strong>PPI MoM</strong></td>
+<td><strong>1.3% / 0.4% / 0.2%</strong></td>
+<td>⚠ <strong>Không vào lệnh 07:15 – 07:45. Sau CPI nóng, PPI cao xác nhận lạm phát dai dẳng → lợi suất tăng, kỳ vọng cắt lãi giảm → ES giảm, dễ thủng <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> 7617.50 / vùng 7612.50. PPI ≤ 0.2% làm dịu cú CPI → hỗ trợ ES, mở đường cho lệnh mua ★ trên 7649.00.</strong></td>
+</tr>
+<tr>
+<td><strong>08:30</strong></td>
+<td><strong>T6 11-13 RTH</strong></td>
+<td><em>(cửa sổ của plan)</em></td>
+<td>Ngưỡng quá đà <strong>7650.00 / 7582.50</strong></td>
+<td><strong>Mở trên 7650.00: mua đã quá đà — nhịp chỉnh xuống thường đến trước; không mua đuổi nến mở cửa, chờ giá về test 7649.00 / 7637.75 giữ. Mở giữa hai mức: không quá đà, thứ hạng giữ nguyên. Mở dưới 7582.50: bán quá đà — nhịp hồi lên 7602.50 – 7617.50 thường đến trước.</strong></td>
+</tr>
+</tbody></table></div>
+</div><div class="sub"><h3 id="read-first-ph-a-tr-c-c-ng-danh-s-ch-nh-v">Phía trước (cùng danh sách, để định vị)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>CT</th>
+<th>Ngày</th>
+<th>Sự kiện</th>
+<th>Prev / Cons / Fcst</th>
+<th>Kỳ vọng tác động cho ES</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sau 15:00</td>
+<td>T3 11-17</td>
+<td><strong>Nvidia báo cáo lợi nhuận</strong> <em>(không có trong danh sách TE — từ tin tức)</em></td>
+<td>—</td>
+<td><strong>Hôm nay ES đã lấp trọn cú gap tin CEO; câu hỏi CEO sẽ còn treo tới báo cáo. Tin mới về NVDA là rủi ro gap cho ES và nhất là NQ.</strong></td>
+</tr>
+</tbody></table></div>
+</div></div></details><details class="sec" id="scorecard"><summary><h2>0. Kế hoạch hôm qua so với thực tế — BẢNG ĐIỂM</h2></summary><div class="sec-body"><p><em>Chấm bản cập nhật sáng (05:45), từ thời điểm kích hoạt của từng alert (UTC − 6 = CT) và nến 5 phút / 30 phút từ 07:00 đến 15:00. Mỗi lệnh được chấm như thể vào ở giá đóng của nến 30 phút xác nhận. Popup lặp lại chỉ giữ lần kích hoạt cuối (7584.00: 08:29; 7597.25: 08:35; 7669.25: 10:25; 7646.75: 12:44; 7621.25: 15:53; 7571.25 và 7543.00 không kích hoạt).</em></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Mức</th>
+<th>Hướng</th>
+<th>Kích hoạt?</th>
+<th>Kết quả</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>★ 7597.25 <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> thứ Tư MẤT (RANK 1)</strong></td>
+<td><strong><span class="d-SHORT">SHORT</span> (ưu tiên)</strong></td>
+<td><strong>Có: nến 07:00 đóng 7583.75 (trong cửa sổ 07:15 – 07:45 → không vào); nến 07:30 đóng 7595.00 → vào 7595.00 lúc 08:00</strong></td>
+<td><strong>T1 7584.00 chạm 08:25 (đáy 7581.00): +0.56R. Stop 7614.50 bị quét 08:35 (đỉnh 7617.50) trước T2 7571.25. SAI — phiên đi lên 93 điểm từ đáy.</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>7621.25 <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> thứ Tư BỊ TỪ CHỐI (RANK 2)</strong></td>
+<td><strong><span class="d-SHORT">SHORT</span></strong></td>
+<td><strong>Có: nến 08:30 lên 7633.00, đóng 7620.75 → vào 7620.75</strong></td>
+<td><strong>T1 7612.50 chạm 09:00 (đáy 7603.00): 0.45R. T2 7600.50 hụt 2.50. Stop 7639.00 bị chạm 09:55.</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>RANK 3 xoay 7600.50 – 7628.50</td>
+<td>hai chiều</td>
+<td><strong><abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> mở DƯỚI hộp (7584.25) — hộp đã vỡ trước giờ mở; giá vào lại hộp lúc 08:35</strong></td>
+<td><strong>Short cạnh trên 7626.00 khớp 08:50 → tâm 7612.50 lúc 09:00 (1.04R). Long cạnh dưới 7603.00 khớp 09:05 → tâm lúc 09:15, cạnh đối diện 7628.50 lúc 09:40 (1.00R).</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>7646.75 <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> thứ Tư LẤY LẠI (RANK 4)</strong></td>
+<td><strong><span class="d-LONG">LONG</span></strong></td>
+<td><strong>Có: nến 09:30 đóng 7651.75 → vào 7651.75</strong></td>
+<td><strong>T1 7656.25 (10:05) · T2 7669.25 (10:10) — 0.79R. T3 7688.00 hụt (đỉnh 7674.75). Stop 7629.50 bị chạm 12:50 (đáy 7627.00) — chỉ phần runner mất.</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>7567.00 – 7571.25 GIỮ (RANK 5)</td>
+<td><span class="d-LONG">LONG</span></td>
+<td>Không — đáy ngày 7572.00 (07:15), cách POC thứ Hai 0.75</td>
+<td>Không vào lệnh.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>7541.75 – 7543.00 MẤT (RANK 6)</td>
+<td><span class="d-SHORT">SHORT</span></td>
+<td>Không</td>
+<td>Không chạm.</td>
+</tr>
+</tbody></table></div>
+<p><strong>Điều gì đúng với plan.</strong> <strong>Bản đồ đúng từng mức: đáy RTH dừng ở 7581.50 – 7584.25 (đáy balance qua đêm thứ Tư), cú lấp gap dừng đúng ở <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> + <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> thứ Tư (7669.25 – 7672.25, vượt 2.50), và giá đóng ngay trên vùng khối lượng 7612.50. Câu cảnh báo trong bản sáng — &quot;nếu RTH mở dưới 7607.85, nhịp hồi lên thường đến trước; đừng bán đuổi&quot; — chính là điều đã xảy ra. RANK 4 (POC thứ Tư lấy lại) trả T1 + T2; popup VAH 7669.25 (bị từ chối 10:25, vào 7663.25) trả cả T1 7656.25, T2 7646.75 lẫn T3 7637.50, stop 7686.50 không bị chạm.</strong></p>
+<p><strong>Điều gì KHÔNG đúng.</strong> <strong>★ <span class="d-SHORT">SHORT</span> thua, và bản sáng đã viết sẵn lý do: tín hiệu in ra trước giờ mở cửa (08:00) — một tín hiệu ngoài RTH chỉ là để theo dõi, vào lệnh phải chờ RTH. Lúc 08:30 RTH mở 7584.25, tức bán quá đà 58.25 = 1.68 cây nến dưới giá đóng thứ Tư; quá một cây nến thì nhịp điều chỉnh đến trước và lệnh đi theo hướng phá phải xếp dưới lệnh xoay. Hai quy tắc có sẵn đều nói &quot;đừng vào&quot; — không cần quy tắc mới. Thêm một điều: khối lượng nói <span class="d-SHORT">SHORT</span> (vùng 7612.50 nằm trên giá lúc 05:45) nhưng giá mở dưới nó và lấy lại nó ngay nến thứ hai — tín hiệu khối lượng đã đổi phía trong 5 phút đầu.</strong></p>
+<p>⛔ <strong>Áp dụng hôm nay:</strong> <strong>Bỏ ★ phá sàn; ★ mới là POC 7649.00 (trùng vùng khối lượng 7656.25), hai chiều, hướng ưu tiên <span class="d-LONG">LONG</span> theo vùng 7612.50. Năm popup mới (7675.50, 7663.50, 7649.00, 7617.50, 7602.50), hai popup giữ mức (7571.25, 7543.00).</strong></p>
+<p><strong>Tổng cộng dồn — hướng ưu tiên: 78 đúng · 49 sai · 53 không vào lệnh = 61.4%</strong> <em>(RTH 11-12: ES ★ sai, NQ ★ sai, vàng ★ không vào lệnh — giá chạy quá điểm vào tối đa)</em>. <strong>Độ chính xác nội dung: 567 / 620 = 91.5%</strong> <em>(11 alert có nhánh được thực thi; 6 chạm T1 trước stop — ES 7597.25, 7621.25, 7646.75, 7669.25; NQ 28256.00, 28408.00)</em>. <strong>Đọc theo khối lượng: 72 đúng · 29 sai · 33 hòa</strong> <em>(ES và NQ nói <span class="d-SHORT">SHORT</span>, phiên đi lên — sai; vàng im lặng — hòa)</em>.</p>
+</div></details><details class="sec" id="long-term"><summary><h2>1. Bối cảnh dài hạn</h2></summary><div class="sec-body"><ul>
+<li><abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr> chính (AVP, anchor 2022): <strong>7765.25 (1.397M, phẳng)</strong> · <strong>7656.25 (1.132M ↑ +3.0%)</strong> · <strong>7612.50 (922.271K ↑ +7.5%)</strong> · 7840.00 (844.913K) · <strong>7541.75 (927.956K, phẳng)</strong> · 7412.50 (297.194K) · 7292.50 (527.272K) · 7132.50 (1.445M) · 7069.00 (1.549M)</li>
+<li><abbr title="Low-volume node — thin trade: rejection, price moves fast through it (Law 9).">LVN</abbr> chính: <strong>7634.50 (589.881K ↑ +3.1% — vẫn là vùng trũng)</strong> · <strong>7676.25 (747.697K — MỚI, giữa 7656.25 và 7765.25)</strong> · <strong>7556.25 (758.953K, phẳng)</strong> · 7454.50 (181.261K) · 7343.50 (39.089K) · 7814.50 (406.807K) · 7218.00 (29.953K)</li>
+<li>Giá so với HVN: <strong>23.50 TRÊN vùng 7612.50 (0.70 cây nến 30 phút) và 20.25 DƯỚI vùng 7656.25 (0.60 cây) — giá nằm giữa hai vùng vừa tăng.</strong> 94.25 trên vùng 7541.75.</li>
+<li>Thiên hướng dài hạn: <strong>trên EMA 200 (đã xác nhận); giá đứng ngay dưới EMA 20 (1.75). MA Explorer ghi Bullish Trend.</strong> Hai ngày value chồng nhau ở 7617 – 7669 — vùng cân bằng ngay dưới EMA 50.</li>
+<li>⚠ <strong>Công bố như các lần trước:</strong> số liệu AVP là bản đọc 30 phút với anchor 2022, không phải một bản đọc daily riêng. TradingView được khởi động lại đầu lần chạy (dữ liệu nến bị kẹt) — các mức khối lượng khớp bản sáng tới từng tick, không thấy dời.</li>
+<li><strong>Kiểm tra khối lượng có thật không (biên độ ngày 7572.00 – 7674.75, gồm cả tiền mở cửa).</strong> <strong>THẬT: 7612.50 (858.2K → 922.3K, +7.5%) và 7656.25 (1.099M → 1.132M, +3.0%) — giá đi qua cả hai; vùng mỏng 7634.50 tăng +3.1%.</strong> <strong>Đối chứng — ngoài biên độ và đúng là không đổi: 7541.75 (928.4K → 928.0K), 7556.25, 7765.25.</strong> <strong>7676.25 là vùng trũng mới nằm 1.50 trên đỉnh ngày — chỉ là cách nhóm lại của profile, không phải bằng chứng.</strong> <strong>Ý nghĩa: vùng tăng mạnh nhất (7612.50, +64.1K) nằm DƯỚI giá và <abbr title="Market-on-close — the closing auction.">MOC</abbr> mua đúng ở đó → người mua đang xây sàn → hướng ưu tiên <span class="d-LONG">LONG</span>; vùng 7656.25 cũng tăng (+33.0K) và nằm trên giá — đó là trần trong hộp.</strong></li>
+</ul>
+</div></details><details class="sec" id="trend-vol"><summary><h2>2. Xu hướng ngày &amp; Biến động</h2></summary><div class="sec-body"><p><em>(Mọi giá trị ở đây được đọc từ MA Explorer trên chart NGÀY lúc 17:25 — nến ngày thứ Sáu vừa mở lúc 17:00 — đặt cạnh giá trị đọc sáng nay.)</em></p>
+<ul>
+<li>Xu hướng: <strong>giảm trên khung ngày (LH 7746.25, LL 7322.25), nhưng bốn ngày gần nhất đỉnh và đáy đều cao dần (đáy 7363.75 → 7493.00 → 7547.50 → 7572.00).</strong> MA Explorer ghi <strong>Bullish Trend</strong>, không đổi.</li>
+<li>Độ dốc MA: <strong>20 7637.75 &lt; 50 7686.00 &gt; 100 7651.50 &gt; 200 7488.00 &gt; 300 7316.00</strong>. Giá <strong>DƯỚI EMA 20 1.75</strong> (0.05 cây nến 30 phút), <strong>dưới EMA 50 50.00</strong>, <strong>dưới EMA 100 15.50</strong>, <strong>TRÊN EMA 200 148.00</strong> và <strong>trên EMA 300 320.00</strong>.
+<strong>Phiên trước: EMA 20 7637.50 → 7637.75, +0.25</strong> (bản sáng 05:45 → bản tối 17:25). EMA 50 7688.00 → 7686.00 (−2.00), EMA 100 7651.75 → 7651.50 (−0.25), EMA 200 7486.50 → 7488.00 (+1.50), EMA 300 7314.00 → 7316.00 (+2.00).</li>
+<li><abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr>: <strong>120.50 = 1.58% giá — THẤP theo phần trăm; 123.75 → 120.50, co lại.</strong> Một cây nến 30 phút = <strong>33.74</strong>.</li>
+<li>Phân loại môi trường: <strong>downtrend ngày đang cân bằng ngay dưới EMA 50: hai ngày value chồng nhau ở 7617 – 7669, cú sốc tin Nvidia đã được lấp trong một buổi sáng.</strong></li>
+<li>Gap chưa lấp: <strong>Không</strong> <em>(gap 17:00 thứ Tư trong Globex đã được lấp lúc 08:50 — giá vượt giá đóng thứ Tư 7642.50 lúc 09:55).</em></li>
+</ul>
+</div></details><details class="sec" id="price-map"><summary><h2>3. Bản đồ giá chính</h2></summary><div class="sec-body"><div class="tw"><table>
+<thead>
+<tr>
+<th>Nguồn</th>
+<th>Mức</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><abbr title="High-volume node — heavy trade at a price: acceptance, price slows here (Law 9).">HVN</abbr> dài hạn (AVP ngày)</td>
+<td><strong>7612.50 (922.3K, 23.50 dưới giá)</strong> · <strong>7656.25 (1.132M, 20.25 trên)</strong> · <strong>7541.75 (928.0K, 94.25 dưới)</strong> · 7765.25 (1.397M) · 7412.50 (297.2K)</td>
+</tr>
+<tr>
+<td>HVN trong ngày (AVP 30 phút, anchor 2022)</td>
+<td><strong>7612.50 (+7.5%: THẬT)</strong> · <strong>7656.25 (+3.0%: THẬT)</strong> · 7541.75 / 7765.25 (phẳng — ngoài biên độ: đối chứng)</td>
+</tr>
+<tr>
+<td><abbr title="Low-volume node — thin trade: rejection, price moves fast through it (Law 9).">LVN</abbr> trong ngày (vùng mỏng — giá chạy nhanh qua)</td>
+<td><strong>7634.50 (589.9K)</strong> · <strong>7676.25 (747.7K, mới)</strong> · <strong>7556.25 (759.0K)</strong> · 7454.50 · 7343.50 · 7814.50 · 7218.00</td>
+</tr>
+<tr>
+<td>Mức ngày</td>
+<td>EMA 20 <strong>7637.75</strong> · EMA 50 <strong>7686.00</strong> · EMA 100 <strong>7651.50</strong> · EMA 200 <strong>7488.00</strong> · EMA 300 <strong>7316.00</strong> · <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> H/L 7674.75 / 7581.50 · đáy ngày 7572.00 · RTH close 7616.25 · settlement 7615.25 · <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> tối nay 7636.25 / 7619.25</td>
+</tr>
+<tr>
+<td>Gap</td>
+<td>Không</td>
+</tr>
+<tr>
+<td>Vùng hội tụ</td>
+<td><strong>7646.75 / 7649.00 / 7651.50 / 7656.25</strong>: <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> thứ Tư, POC thứ Năm, EMA 100, vùng khối lượng. <strong>★ / RANK 2</strong> · <strong>7663.50 / 7669.25 / 7674.75 / 7675.50</strong>: <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> thứ Năm, VAH thứ Tư, đỉnh RTH, <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr>. <strong>RANK 4</strong> · <strong>7612.50 / 7615.25 / 7616.25 / 7617.50 / 7621.25</strong>: vùng khối lượng, settlement, giá đóng, <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> thứ Năm, VAL thứ Tư. <strong>RANK 1</strong> · <strong>7597.25 / 7600.50 / 7602.50</strong>: hai <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr>, đáy ETH cũ. <strong>RANK 5</strong> · <strong>7571.25 / 7572.00</strong>: POC thứ Hai còn trần, đáy ngày · <strong>7541.75 / 7543.00</strong>: vùng khối lượng, VAH thứ Ba. <strong>RANK 6</strong></td>
+</tr>
+</tbody></table></div>
+<div class="sub"><h3 id="price-map-market-profile-t5-11-12-t4-11-11-2-ng-y">Market Profile — T5 11-12, T4 11-11, 2 ngày</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>Phiên</th>
+<th>VAH</th>
+<th>POC</th>
+<th>VAL</th>
+<th>Độ rộng VA</th>
+<th>Cực trị</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>T5 11-12</strong></td>
+<td><strong>7663.50</strong></td>
+<td><strong>7649.00</strong></td>
+<td><strong>7617.50</strong></td>
+<td><strong>46.00</strong></td>
+<td><strong>Buying Tail ✅ 7602.50 · Selling Tail ✅ 7675.50</strong></td>
+</tr>
+<tr>
+<td>T4 11-11</td>
+<td>7669.25</td>
+<td>7646.75</td>
+<td>7621.25</td>
+<td>48.00</td>
+<td>Buying Tail ✅ 7597.25 (thủng trước giờ mở, lấy lại 08:35) · Selling Tail ✅ 7672.25 (vượt 2.50 rồi bị từ chối)</td>
+</tr>
+<tr>
+<td>2 ngày (T4+T5)</td>
+<td>7669.25</td>
+<td>7646.75 / 7649.00 <em>(hai POC cách 2.25)</em></td>
+<td>7617.50</td>
+<td>51.75</td>
+<td>value chồng 92% — vùng cân bằng hai ngày</td>
+</tr>
+</tbody></table></div>
+<p><strong>Số đọc gốc (<code>My Market Profile</code>, RTH)</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th>Hôm qua (T4 11-11)</th>
+<th>Hôm nay (T5 11-12)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Open / High / Low / Close</td>
+<td>7612.50 / 7671.50 / 7593.25 / 7642.50</td>
+<td>7584.25 / 7674.75 / 7581.50 / 7616.25</td>
+</tr>
+<tr>
+<td>VAH / VAL / POC</td>
+<td>7669.25 / 7621.25 / 7646.75</td>
+<td>7663.50 / 7617.50 / 7649.00</td>
+</tr>
+<tr>
+<td><strong>Close Loc</strong></td>
+<td>Inside VA &lt; POC</td>
+<td><strong>Below VA</strong></td>
+</tr>
+<tr>
+<td><strong>VA Shift</strong></td>
+<td>Higher</td>
+<td><strong>Overlap Higher</strong></td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>VA Shift:</strong> <strong>Overlap Higher — chồng 42.25 trên 46.00 điểm value (92%); POC chỉ cao hơn 2.25. Value gần như không dời.</strong></li>
+<li><strong>Close Loc:</strong> <code>Below VA</code> — <strong>value nhích lên nhưng giá đóng 1.25 dưới VAL: hướng dời và giá đóng KHÔNG cùng phía. Đây là phiên thứ HAI liên tiếp value dời lên mà giá đóng sai phía (thứ Tư đóng dưới POC, thứ Năm đóng dưới value) — hai phiên liên tiếp mất lực là đủ để nói nhịp hồi từ 7322.25 đã chuyển sang cân bằng.</strong></li>
+<li><strong>Độ rộng VA so với một cây nến 30 phút:</strong> <strong>46.00 so với 33.74 = 1.36 cây</strong> — value bình thường; giá hiện tại 18.50 trên VAL, trong value.</li>
+<li><strong>Value area so với vùng khối lượng:</strong> <strong>POC 7649.00 so với vùng 7656.25 = 7.25 (0.21 cây): TRÙNG — thời gian và khối lượng cùng gọi 7649 – 7656 là giá hợp lý; đây là mức mạnh nhất trên chart và là ★.</strong> <strong>VAL 7617.50 so với vùng 7612.50 = 5.00 (0.15 cây): TRÙNG — sàn của value cũng là sàn khối lượng, và <abbr title="Market-on-close — the closing auction.">MOC</abbr> đã mua ở đó.</strong> <strong>VAH 7663.50 so với vùng gần nhất phía trên 7765.25 = 101.75 (3.02 cây): TÁCH — trên value là khoảng trống tới EMA 50 7686.00.</strong></li>
+</ul>
+</div><div class="sub"><h3 id="price-map-m-c-l-ch-s-c-n-tr-n-ch-a-test">Mức lịch sử còn trần (chưa test)</h3><p><strong>Phía trên:</strong> <strong>7713.25 Selling Tail ✅ (11-05 — bản đọc trước; study hôm nay không in lại nhãn này)</strong> · 7731.25 POC / 7741.75 VAH · <strong>7746.25 <abbr title="Unfinished high — a repair magnet likely to be revisited.">Weak High</abbr> ⚠</strong> · 7748.75 POC / 7757.25 VAH · <strong>7768.25 Selling Tail ✅</strong> · 7771.00 POC / 7779.50 VAH · <strong>7794.50 Selling Tail ✅</strong> · 7812.00 VAH / <strong>7812.25 Weak High ⚠</strong> · <strong>7838.00 Selling Tail ✅</strong> · 7843.50 / 7847.00 / 7856.50 · <strong>7863.25 / 7870.00 / 7870.50 Weak Highs ⚠</strong> · 7879.75 / 7887.25 · <strong>7897.50 / 7898.50 / 7906.25 Weak Highs ⚠ (ATH)</strong>
+<strong>Phía dưới:</strong> <strong>7571.25 POC thứ Hai</strong> (RTH chưa test — đáy ngày 7572.00 hụt 0.75) · <strong>7567.00 Selling Tail ✅ (T3)</strong> · 7543.00 VAH / 7526.50 POC / 7508.00 VAL (T3) · <strong>7500.00 Buying Tail ✅</strong> · 7452.00 VAH / 7429.50 POC / 7415.00 VAL (T6) · <strong>7396.00 Buying Tail ✅</strong> · 7391.25 VAL · <strong>7387.25 Buying Tail ✅ / <abbr title="Where the prior session's closing spike began. Open above = support; below = rejected.">Spike Base</abbr></strong> · <strong>7371.50 <abbr title="One-timeframe zone left by a fast move; revisits travel fast.">Single Print</abbr> ⚠</strong> · 7355.00 POC · <strong>7342.50 VAL + Buying Tail ✅</strong> · 7324.75 POC · <strong>7290.25 VAL + Buying Tail ✅</strong> · 7284.50 POC / 7279.00 VAL · <strong>7267.00 <abbr title="Unfinished low with no excess — a repair magnet likely to be revisited.">Poor Low</abbr> ⚠</strong> · 7259.25 VAL · <strong>7245.25 Buying Tail ✅</strong> · 7200.00 POC / 7188.50 VAL · <strong>7176.50 <abbr title="Unfinished low — a repair magnet likely to be revisited.">Weak Low</abbr> ⚠</strong> · <strong>7176.00 Single Print ⚠</strong> · 7173.00 / 7160.50 / 7144.00 · <strong>7141.00 Buying Tail ✅</strong> · 7121.00 POC · <strong>7112.50 / 7097.50 Single Prints ⚠</strong> · 7105.50 VAL · <strong>7085.50 Buying Tail ✅</strong> · 7064.75 POC</p>
+<p><strong>RTH thứ Năm đã TIÊU THỤ: toàn bộ value thứ Tư (7621.25 / 7646.75 / 7669.25), cả hai tail thứ Tư (7597.25, 7672.25), đáy ETH 7600.50 và đáy balance 7584.00. Value thứ Năm (7617.50 – 7663.50) và hai tail của nó là mức MỚI. Chưa chạm: POC thứ Hai 7571.25 (hụt 0.75) và toàn bộ value thứ Ba.</strong></p>
+</div><div class="sub"><h3 id="price-map-thang-gi-l-n-t-7636-00">🔼 THANG GIÁ LÊN (từ 7636.00)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Mức</th>
+<th>Nguồn</th>
+<th>Phân loại</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>7637.75</strong></td>
+<td><strong>EMA 20</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>7646.75 / 7649.00 / 7651.50</strong></td>
+<td><strong>POC thứ Tư (đã test), POC thứ Năm, EMA 100. ★ / RANK 2</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>7656.25</strong></td>
+<td><strong>vùng khối lượng 1.132M (+3.0%)</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>7663.50 / 7669.25</strong></td>
+<td><strong>VAH thứ Năm, VAH thứ Tư (đã test). RANK 4</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>7674.75 / 7675.50 ✅</strong></td>
+<td><strong>đỉnh RTH, Selling Tail thứ Năm</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>7676.25</td>
+<td>vùng mỏng mới 747.7K</td>
+<td class="k-pass"><strong>PASS-THROUGH — giá chạy nhanh qua</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>7686.00</strong></td>
+<td><strong>EMA 50</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>7713.25 ✅</td>
+<td>Selling Tail 11-05</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>9</td>
+<td>7731.25 / 7741.75 / 7746.25 ⚠ / 7748.75 / 7757.25</td>
+<td>value 11-04, Weak High, value 10-29</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>7765.25 / 7768.25 ✅</strong></td>
+<td><strong>vùng khối lượng 1.397M + Selling Tail</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>11</td>
+<td>7771.00 / 7779.50 / 7794.50 ✅ / 7812.00 / 7812.25 ⚠</td>
+<td>value 10-28, đỉnh range</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>12</td>
+<td>7814.50</td>
+<td>vùng mỏng 406.8K</td>
+<td class="k-pass"><strong>PASS-THROUGH — giá chạy nhanh qua</strong></td>
+</tr>
+<tr>
+<td>13</td>
+<td>7838.00 ✅ / 7840.00 / 7843.50 – 7887.25</td>
+<td>Selling Tail + vùng khối lượng + value, Weak Highs ⚠</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>7897.50 / 7898.50 / 7906.25</strong></td>
+<td><strong>Weak Highs ⚠, ATH</strong></td>
+<td class="k-tgt">TARGET (điểm cuối runner)</td>
+</tr>
+</tbody></table></div>
+</div><div class="sub"><h3 id="price-map-thang-gi-xu-ng-t-7636-00">🔽 THANG GIÁ XUỐNG (từ 7636.00)</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Mức</th>
+<th>Nguồn</th>
+<th>Phân loại</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>7634.50</td>
+<td>vùng mỏng 589.9K (giá đang đứng trên nó)</td>
+<td class="k-pass"><strong>PASS-THROUGH — giá chạy nhanh qua</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>7621.25 / 7617.50 / 7616.25 / 7615.25</strong></td>
+<td><strong>VAL thứ Tư (đã test), VAL thứ Năm, giá đóng RTH, settlement. RANK 1</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>7612.50</strong></td>
+<td><strong>vùng khối lượng 922.3K (+7.5%), MOC 80.7K mua ở đây. RANK 1</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>7602.50 ✅ / 7600.50 / 7597.25</strong></td>
+<td><strong>Buying Tail thứ Năm, đáy ETH cũ, Buying Tail thứ Tư (thủng rồi lấy lại). RANK 5</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>7584.25 / 7584.00 / 7582.50 / 7581.50</strong></td>
+<td><strong>giá mở RTH, đáy balance cũ, ngưỡng quá đà phía bán, đáy RTH</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>7572.00 / 7571.25 / 7567.00 ✅</strong></td>
+<td><strong>đáy ngày (07:15), POC thứ Hai còn trần, Selling Tail thứ Ba</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>7556.25</td>
+<td>vùng mỏng 759.0K</td>
+<td class="k-pass"><strong>PASS-THROUGH — giá chạy nhanh qua</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>7547.50 / 7544.25 / 7543.00 / 7541.75</strong></td>
+<td><strong>đáy ETH thứ Tư, settlement thứ Ba, VAH thứ Ba, vùng khối lượng 928.0K. RANK 6</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td>7537.75 / 7526.50</td>
+<td>VAL thứ Hai, POC thứ Ba</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>7508.00 / 7500.00 ✅ / 7493.00</strong></td>
+<td><strong>VAL thứ Ba, Buying Tail, đáy RTH thứ Ba</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>7488.00</strong></td>
+<td><strong>EMA 200</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>12</td>
+<td>7469.00 / 7470.00</td>
+<td>high + Selling Tail thứ Sáu</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>13</td>
+<td>7454.50</td>
+<td>vùng mỏng 181.3K</td>
+<td class="k-pass"><strong>PASS-THROUGH — giá chạy nhanh qua</strong></td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>7452.00 / 7429.50 / 7415.00 / 7412.50</strong></td>
+<td><strong>value thứ Sáu + vùng khối lượng 297.2K</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>15</td>
+<td>7396.00 ✅ / 7391.25 / 7387.25 ✅ / 7371.50 ⚠ / 7363.75 / 7355.00</td>
+<td>Buying Tails, VAL, spike base <em>(single print 7371.50: giá chạy nhanh qua)</em></td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>16</td>
+<td>7343.50</td>
+<td>vùng mỏng 39.1K</td>
+<td class="k-pass"><strong>PASS-THROUGH — giá chạy nhanh qua</strong></td>
+</tr>
+<tr>
+<td>17</td>
+<td><strong>7342.50 ✅ / 7324.75 / 7322.25 / 7316.00</strong></td>
+<td><strong>naked VAL + Buying Tail, naked POC, swing low, EMA 300</strong></td>
+<td class="k-tgt"><strong>TARGET / STOP</strong></td>
+</tr>
+<tr>
+<td>18</td>
+<td>7292.50 / 7290.25 ✅ / 7284.50 / 7279.00 / 7267.00 ⚠ / 7259.25 / 7245.25 ✅</td>
+<td>vùng khối lượng 527.3K, naked value, Poor Low</td>
+<td class="k-tgt">TARGET</td>
+</tr>
+<tr>
+<td>19</td>
+<td>7218.00</td>
+<td>vùng mỏng 30.0K</td>
+<td class="k-pass"><strong>PASS-THROUGH — giá chạy nhanh qua</strong></td>
+</tr>
+<tr>
+<td>20</td>
+<td><strong>7200.00 … 7064.75</strong></td>
+<td><strong>value, Weak Low, vùng khối lượng 1.445M / 1.549M, naked POC</strong></td>
+<td class="k-tgt">TARGET (điểm cuối runner)</td>
+</tr>
+</tbody></table></div>
+</div></div></details><details class="sec" id="5-min-tape"><summary><h2>3b. Hành động giá 5 phút — GIÁ PHẢN ỨNG THẾ NÀO TẠI TỪNG MỨC</h2></summary><div class="sec-body"><p><strong>Cửa sổ: tiền mở cửa 07:00 → <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> 08:30 – 15:00 → sau giờ → <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> tối nay tới 17:35, nến 5 phút.</strong> <strong>Khối lượng trung bình một nến 5 phút RTH = 17,221 hợp đồng (1,343,260 trong 78 nến).</strong> &quot;Phản ứng&quot; đo trong ba nến 5 phút kế tiếp.</p>
+<div class="sub"><h3 id="5-min-tape-b-ng-a-nh-t-k-ph-n-ng-t-i-m-c-gi">BẢNG A — NHẬT KÝ PHẢN ỨNG TẠI MỨC GIÁ</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>Mức</th>
+<th>Tên</th>
+<th>Số lần chạm</th>
+<th>Thời điểm (CT)</th>
+<th>Giá đã làm gì</th>
+<th>Phản ứng</th>
+<th>KL lúc chạm</th>
+<th>Kết luận</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>7669.25 – 7672.25</strong></td>
+<td><strong><abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> + <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> thứ Tư</strong></td>
+<td><strong>4</strong></td>
+<td><strong>10:10 · 10:15 · 10:20 · 10:25</strong></td>
+<td><strong>10:15 đóng 7670.75 trên VAH, 10:20 lên 7674.75 (vượt tail 2.50), 10:25 đóng lại 7663.25 dưới VAH</strong></td>
+<td><strong>−28.00 (7674.75 → 10:35 7646.75)</strong></td>
+<td>1.7× / 1.1× / 1.2× / 1.5×</td>
+<td><strong>REJECTED — nhìn lên trên rồi thất bại; để lại Selling Tail 7675.50</strong></td>
+</tr>
+<tr>
+<td>7646.75 – 7656.25</td>
+<td><abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> thứ Tư / EMA 100 / vùng khối lượng</td>
+<td>30+</td>
+<td>09:55 · 10:00 · 10:30 – 12:40 · 12:45</td>
+<td>09:55 đóng 7651.75 trên POC thứ Tư, 10:05 lên 7665.50; 10:30 – 12:40 giá xoay quanh 7641.75 – 7663.25 và POC thứ Năm hình thành ở 7649.00; 12:45 đóng 7636.25 dưới</td>
+<td>+13.75 (09:55 → 10:05) · −13.25 (12:40 → 12:50)</td>
+<td>1.4× · 0.4 – 1.0× · 0.8×</td>
+<td>BROKE lên (09:55), rồi thành value thứ Năm, rồi BROKE xuống (12:45)</td>
+</tr>
+<tr>
+<td>7634.50 – 7637.75</td>
+<td>vùng mỏng / EMA 20</td>
+<td>6</td>
+<td>09:50 · 12:45 · 12:55 · 13:05 · 13:15 · 13:20</td>
+<td>09:50 đi qua một nến (đóng 7637.75), nến sau 7652.25; chiều qua lại 4 lần, không phản ứng quá 15 điểm</td>
+<td>+14.50 (09:50 → 09:55)</td>
+<td>1.3× · 0.5 – 0.8×</td>
+<td>PASSED THROUGH — đúng vai vùng mỏng</td>
+</tr>
+<tr>
+<td><strong>7621.25 – 7628.50</strong></td>
+<td><strong><abbr title="Value Area Low — bottom of the value area.">VAL</abbr> thứ Tư / đỉnh ETH</strong></td>
+<td><strong>6</strong></td>
+<td><strong>08:40 · 08:50 · 08:55 · 09:35 · 09:40 · 13:35 – 15:00</strong></td>
+<td><strong>08:50 lên 7633.00, đóng 7623.75 trên; 08:55 đóng lại 7620.75 dưới → 09:05 7603.00; 09:40 đóng 7629.75 — phá thật; chiều quay về xoay quanh nó</strong></td>
+<td><strong>−30.00 (7633.00 → 09:05 7603.00)</strong></td>
+<td>1.7× / 1.4×</td>
+<td><strong>REJECTED (08:55) rồi BROKE lên (09:40)</strong></td>
+</tr>
+<tr>
+<td><strong>7612.50 – 7616.75</strong></td>
+<td><strong>vùng khối lượng / giá mở lại 17:00 thứ Tư</strong></td>
+<td><strong>9</strong></td>
+<td><strong>08:35 · 09:00 · 09:05 · 09:10 · 14:25 · 14:30 · 14:40 · 14:50 · 14:55</strong></td>
+<td><strong>09:05 đóng 7603.50 dưới, 09:10 đóng lại 7612.50, 09:15 lên 7618.75; 14:30 và 14:50 đóng dưới (7611.75, 7612.00), <abbr title="Market-on-close — the closing auction.">MOC</abbr> 14:55 xuống 7607.25 rồi đóng 7616.25</strong></td>
+<td><strong>+15.25 (09:05 → 09:15) · +9.00 (14:55 low → close)</strong></td>
+<td>1.5× / 4.7× (MOC)</td>
+<td><strong>REJECTED — nhìn dưới rồi thất bại, hai lần; MOC mua ở đây</strong></td>
+</tr>
+<tr>
+<td>7597.25 – 7600.50</td>
+<td><abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> thứ Tư / đáy ETH</td>
+<td>3</td>
+<td>07:05 · 08:30 · 08:35</td>
+<td>07:05 thủng (đóng 7586.25, trước giờ mở); 08:30 đóng 7597.75 trên tail, 08:35 đóng 7616.75</td>
+<td>+19.75 (08:30 → 08:35)</td>
+<td>1.2× · 2.7× · 2.4×</td>
+<td>BROKE (07:05) → lấy lại 08:30</td>
+</tr>
+<tr>
+<td><strong>7581.50 – 7584.25</strong></td>
+<td><strong>đáy balance qua đêm thứ Tư / giá mở RTH</strong></td>
+<td><strong>1 (RTH)</strong></td>
+<td><strong>08:30</strong></td>
+<td><strong>mở 7584.25, xuống 7581.50, không có nến RTH nào đóng dưới 7584.00</strong></td>
+<td><strong>+43.00 (7581.50 → 08:40 7624.50)</strong></td>
+<td><strong>2.7×</strong></td>
+<td><strong>HELD (hỗ trợ) — sàn của cả ngày</strong></td>
+</tr>
+</tbody></table></div>
+<p><em>Không chạm: 7571.25 POC thứ Hai (đáy ngày 7572.00 lúc 07:15, hụt 0.75), 7543.00 (dưới); 7686.00 EMA 50 (trên).</em></p>
+</div><div class="sub"><h3 id="5-min-tape-b-ng-b-di-n-bi-n-theo-tr-nh-t">BẢNG B — DIỄN BIẾN THEO TRÌNH TỰ</h3><div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Giờ (CT)</th>
+<th>Từ → Đến</th>
+<th>Biên độ</th>
+<th>Mức liên quan</th>
+<th>KL</th>
+<th>Ghi chú</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>07:00 – 07:15</td>
+<td>7606.50 → 7626.00 → 7572.00</td>
+<td>−54.00</td>
+<td>★ 7597.25 thủng, 7584.00 thủng</td>
+<td>1.2× / 0.7× / 0.8×</td>
+<td>cú quét tiền mở cửa — đáy ngày</td>
+</tr>
+<tr>
+<td>2</td>
+<td>07:20 – 08:25</td>
+<td>7572.00 ↔ 7598.00</td>
+<td>±26.00</td>
+<td>dưới ★</td>
+<td>0.2 – 1.1×</td>
+<td>★ trigger 08:00 (đóng 7595.00)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>08:30 – 08:50</strong></td>
+<td><strong>7581.50 → 7633.00</strong></td>
+<td><strong>+51.50</strong></td>
+<td><strong>7597.25 lấy lại, 7612.50, 7621.25</strong></td>
+<td><strong>2.7× → 1.7×</strong></td>
+<td><strong>mở bán quá đà 1.68 cây → điều chỉnh lên</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>08:55 – 09:05</td>
+<td>7633.00 → 7603.00</td>
+<td>−30.00</td>
+<td>VAL thứ Tư từ chối</td>
+<td>1.4 – 1.9×</td>
+<td>RANK 2 vào 7620.75, chạm T1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>09:10 – 09:45</td>
+<td>7603.00 → 7631.00</td>
+<td>+28.00</td>
+<td>7612.50 giữ, VAL phá</td>
+<td>1.0 – 1.5×</td>
+<td>đáy cao hơn</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>09:50 – 10:20</strong></td>
+<td><strong>7622.25 → 7674.75</strong></td>
+<td><strong>+52.50</strong></td>
+<td><strong>EMA 20, POC thứ Tư, VAH thứ Tư</strong></td>
+<td><strong>1.3 – 1.7×</strong></td>
+<td><strong>RANK 4 vào 7651.75; đỉnh ngày 10:20</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>10:25 – 10:40</td>
+<td>7674.75 → 7643.50</td>
+<td>−31.25</td>
+<td>VAH thứ Tư bị từ chối</td>
+<td>1.0 – 1.5×</td>
+<td>Selling Tail 7675.50</td>
+</tr>
+<tr>
+<td>8</td>
+<td>10:45 – 12:35</td>
+<td>7641.75 ↔ 7663.25</td>
+<td>±21.50</td>
+<td>POC 7649.00 hình thành</td>
+<td>0.4 – 1.0×</td>
+<td>cân bằng giữa trưa</td>
+</tr>
+<tr>
+<td>9</td>
+<td>12:40 – 13:00</td>
+<td>7654.75 → 7623.25</td>
+<td>−31.50</td>
+<td>POC thứ Tư, EMA 20, vùng mỏng</td>
+<td>0.6 – 1.3×</td>
+<td>tháo lệnh đầu chiều</td>
+</tr>
+<tr>
+<td>10</td>
+<td>13:05 – 13:20</td>
+<td>7623.25 → 7642.50</td>
+<td>+19.25</td>
+<td>EMA 20</td>
+<td>0.5 – 0.8×</td>
+<td>hồi yếu, không qua POC</td>
+</tr>
+<tr>
+<td>11</td>
+<td>13:25 – 14:25</td>
+<td>7642.50 → 7612.75</td>
+<td>−29.75</td>
+<td>VAL 7617.50</td>
+<td>0.6 – 0.9×</td>
+<td>trôi xuống đáy value</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>14:30 – 14:55</strong></td>
+<td><strong>7625.50 → 7607.25 → 7616.25</strong></td>
+<td><strong>−18.25 / +9.00</strong></td>
+<td><strong>vùng 7612.50</strong></td>
+<td><strong>1.0× → 4.7×</strong></td>
+<td><strong>MOC 80.7K mua ở kệ</strong></td>
+</tr>
+<tr>
+<td>13</td>
+<td>15:00 – 15:55</td>
+<td>7614.25 → 7625.25 → 7621.75</td>
+<td>+11.00</td>
+<td>VAL</td>
+<td>0.1 – 1.4×</td>
+<td>sau giờ, nhích lên</td>
+</tr>
+<tr>
+<td>14</td>
+<td>17:00 – 17:35</td>
+<td>7620.25 → 7636.25</td>
+<td>+16.00</td>
+<td>VAL lấy lại, vùng mỏng 7634.50</td>
+<td>0.01 – 0.06×</td>
+<td>ETH mở, đi lên mỏng</td>
+</tr>
+</tbody></table></div>
+</div><div class="sub"><h3 id="5-min-tape-nh-t-k-n-i-g">Nhật ký nói gì</h3><ul>
+<li><strong>Các mức đã GIỮ: 7581.50 – 7584.25 (sàn của ngày, 2.7× khối lượng).</strong> <strong>Các mức REJECTED (đáng giao dịch nhất): 7669.25 – 7672.25 (nhìn lên rồi thất bại → Selling Tail) và 7612.50 – 7616.75 (nhìn xuống rồi thất bại, hai lần, MOC mua).</strong> <strong>Đây là hai đầu của hộp cho thứ Sáu.</strong></li>
+<li><strong>Các mức bị PHÁ: ★ 7597.25 (07:05, rồi lấy lại 08:30), VAL thứ Tư 7621.25 (09:40), POC thứ Tư 7646.75 (09:55 lên, 12:45 xuống).</strong> <strong>Value thứ Tư đã bị đi xuyên qua hai lần — nó không còn là mốc, value thứ Năm thay chỗ.</strong></li>
+<li><strong>Các mức PASSED THROUGH: 7634.50 – 7637.75 (vùng mỏng + EMA 20) — đúng vai.</strong> ⚠ <strong>Không có mức mục tiêu nào bị hạ cấp.</strong></li>
+</ul>
+<p><strong>Giá đóng cửa và khối lượng.</strong> <strong>MOC 14:55 là nến nặng nhất ngày (80.7K = 4.7× trung bình): xuống 7607.25 rồi đóng 7616.25 — lệnh lớn in ra ngay ở kệ khối lượng 7612.50, tức là định vị ở giá trị (ổn định), không phải bán vào cực trị.</strong> <strong>ETH tối nay: 7 nến, trung bình ~640 hợp đồng = 0.04× RTH — chưa có tồn kho qua đêm để đọc.</strong></p>
+</div></div></details><details class="sec" id="profile"><summary><h2>4. Bối cảnh Market Profile</h2></summary><div class="sec-body"><ul>
+<li>Quan hệ value area: <strong>Overlap Higher (chồng 92%); Close Loc <code>Below VA</code>.</strong></li>
+<li>Cân bằng hay mất cân bằng: <strong>CÂN BẰNG — hai ngày value chồng nhau (7617.50 – 7669.25); cú sốc tin đã được lấp và giá quay về đáy value.</strong></li>
+<li>Nếu cân bằng — biên độ: <strong>lõi 7617.50 – 7663.50 (value thứ Năm, 46.00 = 1.36 cây nến); biên làm việc 7581.50 – 7675.50 (hai cực trị <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr>, cả hai là tail).</strong></li>
+<li>Ghi chú chấp nhận / từ chối: <strong>từ chối ở 7669 – 7675 (<abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr>) và ở 7603 – 7612 (hai lần nhìn xuống thất bại); chấp nhận 7641 – 7663 (giữa trưa, <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> 7649.00).</strong></li>
+<li>Bất thường cấu trúc: <strong>hai tail ở hai đầu RTH; không có poor / weak extreme nào gần giá; POC thứ Hai 7571.25 còn trần (hụt 0.75).</strong></li>
+<li><strong>Opening read:</strong> ⚠ <strong>n/a — trước phiên (RTH mở 08:30 thứ Sáu, sau PPI 07:30).</strong> <strong>Quy tắc cho 08:30 (giá đóng 7616.25 ± 33.74): mở TRÊN 7650.00 = mua quá đà — nhịp chỉnh xuống thường đến trước, nên lệnh mua phá ★ bị hạ dưới RANK 1 (mua ở sàn) và RANK 3 (xoay trong value). Mở giữa 7582.50 và 7650.00 = không quá đà — thứ hạng giữ nguyên. Mở DƯỚI 7582.50 = bán quá đà — giá thường hồi lên 7602.50 – 7617.50 trước; đừng bán đuổi.</strong> <strong>Đọc tạm lúc 17:35 (chưa phải số đọc): +19.75 = 0.59 cây.</strong> ⚠ <strong>Các ngưỡng chỉ đúng cho lần mở cửa thứ Sáu. Đọc lại lúc 08:25 CT.</strong></li>
+</ul>
+</div></details><details class="sec" id="auction"><summary><h2>4.5 Ý đồ &amp; Kết quả của phiên đấu giá</h2></summary><div class="sec-body"><ul>
+<li><p><strong>Đã thử:</strong> <strong>điều chỉnh tồn kho bán quá đà qua đêm (mở 1.68 cây dưới giá đóng thứ Tư), lấy lại value thứ Tư và thử lên trên <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr> thứ Tư.</strong></p>
+</li>
+<li><p><strong>Kết quả:</strong> <strong>THẤT BẠI</strong> — bằng chứng: giá chạm 7674.75 (vượt VAH thứ Tư 5.50) rồi bị từ chối, để lại <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> 7675.50 (từ chối dứt khoát); value chồng 92% với thứ Tư — không có value mới nào được chấp nhận phía trên; giá đóng DƯỚI value. <strong>Nhưng phía dưới cũng là excess: <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> 7602.50 và hai lần nhìn xuống 7612.50 thất bại. Phiên đấu giá không tìm được hướng mới — nó đóng ở sàn của một hộp hai ngày.</strong></p>
+</li>
+<li><p><strong>Việc còn dở dang</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Mức</th>
+<th>Là gì</th>
+<th>Khoảng cách (theo ATR ngày)</th>
+<th>Trạng thái</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>7746.25</td>
+<td><abbr title="Unfinished high — a repair magnet likely to be revisited.">Weak High</abbr> ⚠ (11-04)</td>
+<td>110.25 trên = 0.91 <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr> ngày</td>
+<td>⚠ ngoài tầm</td>
+</tr>
+<tr>
+<td>7571.25</td>
+<td><abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> thứ Hai còn trần</td>
+<td>64.75 dưới = 0.54</td>
+<td>⚠ ngoài tầm (hụt 0.75 hôm nay)</td>
+</tr>
+<tr>
+<td>7371.50</td>
+<td><abbr title="One-timeframe zone left by a fast move; revisits travel fast.">Single Print</abbr> ⚠</td>
+<td>264.50 dưới = 2.20</td>
+<td>⚠ ngoài tầm</td>
+</tr>
+<tr>
+<td>7267.00</td>
+<td><abbr title="Unfinished low with no excess — a repair magnet likely to be revisited.">Poor Low</abbr> ⚠</td>
+<td>369.00 dưới = 3.06</td>
+<td>⚠ ngoài tầm</td>
+</tr>
+<tr>
+<td>7675.50</td>
+<td>Selling Tail T5</td>
+<td>39.50 trên</td>
+<td>✅ <strong>excess đã hoàn tất</strong></td>
+</tr>
+<tr>
+<td>7602.50</td>
+<td>Buying Tail T5</td>
+<td>33.50 dưới</td>
+<td>✅ <strong>excess đã hoàn tất</strong></td>
+</tr>
+</tbody></table></div>
+<p><strong>Không còn việc dở dang nào trong tầm 0.3 ATR ngày.</strong></p>
+</li>
+</ul>
+<p>⛔ <strong>Kiểm tra 3 dấu hiệu xu hướng — (1) value dời hẳn sang vùng mới, không chồng lên value hôm trước ❌ (chồng 92%) · (2) giá đóng cửa cùng phía với hướng dời ❌ (dời lên nhưng đóng dưới value) · (3) điểm xuất phát của nhịp tăng có tail ✅ (Buying Tail 7602.50). 1/3: ★ hai chiều. Phiên đấu giá nghiêng xuống (đóng dưới value), nhưng khối lượng nói ngược lại và khối lượng được ưu tiên: vùng tăng mạnh nhất (7612.50, +7.5%) nằm DƯỚI giá và <abbr title="Market-on-close — the closing auction.">MOC</abbr> mua đúng ở đó — người mua đang xây sàn, nên hướng ưu tiên là <span class="d-LONG">LONG</span>.</strong> <em>(Đổi so với bản sáng: 2/3 → 1/3, hướng theo khối lượng <span class="d-SHORT">SHORT</span> → <span class="d-LONG">LONG</span>.)</em></p>
+</div></details><details class="sec" id="structure"><summary><h2>5. Tóm tắt cấu trúc thị trường</h2></summary><div class="sec-body"><div class="tw"><table>
+<thead>
+<tr>
+<th>Điểm xoay</th>
+<th>Mức</th>
+<th>Ngày</th>
+<th>Loại</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Swing low</strong></td>
+<td><strong>7672.75</strong></td>
+<td><strong>10-01</strong></td>
+<td><strong>HL: gốc của nhịp lên ATH</strong></td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>7897.50</strong></td>
+<td><strong>10-06</strong></td>
+<td><strong>HH (vùng ATH)</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>7783.00</td>
+<td>10-08</td>
+<td>LL</td>
+</tr>
+<tr>
+<td>Swing high</td>
+<td>7870.50</td>
+<td>10-09</td>
+<td>HH</td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>7879.75</strong></td>
+<td><strong>10-14</strong></td>
+<td><strong>LH, do nến CPI in ra</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>7717.25</td>
+<td>10-15</td>
+<td>LL</td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>7809.50</strong></td>
+<td><strong>10-16</strong></td>
+<td><strong>LH</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>7676.00</td>
+<td>10-16</td>
+<td>LL <em>(đáy range tháng 10)</em></td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>7812.25</strong></td>
+<td><strong>10-21</strong></td>
+<td><strong>HH 2.75 trên râu</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>7648.50</td>
+<td>10-23</td>
+<td>LL</td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>7819.50</strong></td>
+<td><strong>10-28</strong></td>
+<td><strong>LH so với 7897.50, đã xác nhận</strong></td>
+</tr>
+<tr>
+<td><strong>Swing low</strong></td>
+<td><strong>7558.25</strong></td>
+<td><strong>10-30</strong></td>
+<td><strong>LL</strong></td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>7693.75</strong></td>
+<td><strong>11-02</strong></td>
+<td><strong>LH so với 7819.50</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>7490.00</td>
+<td>11-04</td>
+<td>LL</td>
+</tr>
+<tr>
+<td><strong>Swing high</strong></td>
+<td><strong>7746.25</strong></td>
+<td><strong>11-04</strong></td>
+<td><strong>LH so với 7819.50</strong></td>
+</tr>
+<tr>
+<td>Swing low</td>
+<td>7346.00</td>
+<td>11-05</td>
+<td>LL, 144.00 dưới 7490.00</td>
+</tr>
+<tr>
+<td><strong>Swing low</strong></td>
+<td><strong>7322.25</strong></td>
+<td><strong>11-06</strong></td>
+<td><strong>LL, 23.75 dưới 7346.00 — pivot đã xác nhận</strong></td>
+</tr>
+<tr>
+<td>Low</td>
+<td>7493.00</td>
+<td>11-10</td>
+<td><em>(chưa là pivot theo định nghĩa 2 nến — đáy 11-09 7363.75 thấp hơn; nhưng ba ngày sau đáy đều cao dần: 7547.50, 7572.00)</em></td>
+</tr>
+<tr>
+<td>High</td>
+<td>7674.75</td>
+<td>11-12</td>
+<td><em>(chưa là pivot — đỉnh nhịp hồi, 3.25 trên đỉnh thứ Tư 7671.50, 71.50 dưới lower high 7746.25)</em></td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>Chuỗi:</strong> <strong>vẫn DOWNTREND trên khung ngày (LH 7746.25, LL 7322.25); bốn ngày gần nhất đỉnh và đáy cao dần, nhưng đỉnh thứ Năm chỉ cao hơn thứ Tư 3.25 — nhịp hồi đang dẹt lại dưới EMA 50.</strong> Đổi so với sáng nay (đỉnh mới 7674.75, đáy mới cao hơn 7572.00).</li>
+<li><strong>Phá cấu trúc:</strong> <strong>EMA 200 lấy lại đã xác nhận; chưa phá lower high 7746.25.</strong></li>
+<li><strong>Phá cụm EMA:</strong> <strong>giá đóng ngày 7615.25 dưới EMA 20 (7637.75); <abbr title="Electronic (overnight) session, 17:00–08:30 CT.">ETH</abbr> tối nay quay lại ngay dưới nó. Vẫn dưới EMA 100 và 50.</strong></li>
+<li><strong>Hành vi biên độ:</strong> <strong><abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> thứ Năm 93.25 = 0.77× <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr> ngày (thứ Tư 0.63×); biên ngày gồm tiền mở cửa 102.75 = 0.85×.</strong></li>
+<li><strong>Vị trí cấu trúc hiện tại:</strong> <strong>13.00 dưới ★ (7649.00)</strong>, 1.75 dưới EMA 20, 20.25 dưới vùng 7656.25, 27.50 dưới <abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr>, 39.50 dưới <abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr>, 50.00 dưới EMA 50; 18.50 trên <abbr title="Value Area Low — bottom of the value area.">VAL</abbr>, 23.50 trên vùng 7612.50, 33.50 trên <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> 7602.50, 64.75 trên <abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr> thứ Hai.</li>
+<li><strong>Xu hướng ngày đã xác nhận chưa:</strong> <strong>Downtrend ngày 2/3 điều kiện — giá dưới EMA 20 và 50 ✅ (dưới EMA 20 chỉ 1.75), EMA 50 dốc xuống ✅ (7688.00 → 7686.00), đáy mới thấp hơn ❌ (đáy thứ Năm 7572.00 cao hơn).</strong> <strong>Khung ngày giảm, phiên đang cân bằng — mọi kịch bản hai chiều đều còn hiệu lực.</strong> So sánh: <strong>ES 2/3, NQ 2/3, GC 3/3.</strong></li>
+<li><strong>Thiên hướng cấu trúc:</strong> <strong>GIẢM trên khung ngày; ngắn hạn: cân bằng trong hộp 7581.50 – 7675.50 với value 7617.50 – 7663.50 — nghiêng lên khi giá trên 7612.50.</strong></li>
+</ul>
+</div></details><details class="sec" id="full-scenarios"><summary><h2>6. Kịch bản phía trước (ETH tối nay + RTH thứ Sáu 11-13) — XẾP HẠNG</h2></summary><div class="sec-body"><p><strong>TRẠNG THÁI CHI PHỐI: CÂN BẰNG hai ngày trong value 7617.50 – 7669.25. Phiên thứ Năm thử lên và thất bại (<abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr>, đóng dưới value), nhưng khối lượng được ưu tiên: vùng 7612.50 tăng mạnh nhất, nằm dưới giá, <abbr title="Market-on-close — the closing auction.">MOC</abbr> mua ở đó → hướng ưu tiên <span class="d-LONG">LONG</span>. Vùng 7656.25 cũng tăng và nằm trên giá — nó là T1 của ★, cũng là trần của hộp. Cả sáu kịch bản đều còn hiệu lực. PPI 07:30 ra trước giờ mở cửa: không vào lệnh 07:15 – 07:45.</strong></p>
+<p><strong>Biên độ <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> trước 93.25 = 0.77× <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr> ngày — một phiên bình thường, không bị nén (thứ tự target giữ nguyên; T1 nên nằm trong 25.31 điểm = 0.75 cây nến 30 phút để một phiên bình thường chạm được).</strong> <em>Mỗi RANK dưới đây ghi khoảng cách T1 tính bằng số cây nến 30 phút. T1 nào xa hơn 0.75 cây đều được gắn cờ.</em></p>
+<article class="rank" data-rank="1"><h3 id="full-scenarios-rank-1-s2-7612-50-7617-50-v-ng-kh-i-l-ng-val-gi-long-mua-s-n-m-moc-v-a-b-o-v-class-v-avp-node">RANK 1 — [S2] 7612.50 – 7617.50 vùng khối lượng + VAL GIỮ → <span class="d-LONG">LONG</span>, mua ở sàn mà MOC vừa bảo vệ (Class V — AVP node)</h3><p><em>Vì sao xếp ở đây: đây chính là tín hiệu khối lượng — vùng tăng mạnh nhất ngày, đã giữ hai lần (09:05, 14:55) và lệnh lớn cuối phiên mua đúng ở đó. <abbr title="Value Area Low — bottom of the value area.">VAL</abbr> thứ Năm trùng nó (cách 5.00). Cách giá −0.55 cây nến (dưới giá — cần giá lùi về trước, nên không mang ★).</em></p>
+<ul>
+<li>Trigger: giá giao dịch tới <strong>7612.50 – 7617.50</strong>, không có nến 30 phút đóng dưới 7612.50, rồi <strong>nến 30 phút đóng trở lại trên 7617.50</strong></li>
+<li>Entry: tại nến đóng đó, ≈7620.00. ⚠ <strong>Nếu nến xác nhận đóng trên 7642.75 thì đã trễ — đừng đuổi, chờ giá về test lại.</strong></li>
+<li>Target: <strong>T1 7637.75</strong> <em>(20.25 từ trigger = 0.60 cây ✅; EMA 20, qua vùng mỏng 7634.50; <strong>0.83R</strong>)</em> · <strong>T2 7649.00</strong> <em>(<abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr>; <strong>1.35R</strong>)</em> · <strong>T3 7663.50</strong> <em>(<abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr>; <strong>2.02R</strong>)</em> · runner <strong>7675.50 ✅</strong> <em>(Selling Tail; <strong>2.58R</strong>)</em></li>
+<li>Stop Loss: <strong>tactical 7598.50</strong> (nửa cây nến dưới vùng, dưới <abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> 7602.50) · invalidation 7581.50 (đáy RTH) = <strong>38.50 rủi ro</strong></li>
+<li>R:R: rủi ro 21.50 → <strong>0.83R ở T1</strong> · <strong>1.35R ở T2</strong> · <strong>2.02R ở T3</strong> · <strong>2.58R ở runner</strong></li>
+<li><strong>Nếu nó KHÔNG GIỮ ngược lại</strong> → <span class="d-SHORT">SHORT</span> khi nến 30 phút đóng dưới 7612.50: T1 7602.50 · T2 7581.50 · T3 7571.25 · tactical SL 7639.00 <em>(phía short của popup 7617.50)</em></li>
+</ul>
+</article><article class="rank star" data-rank="2"><h3 id="full-scenarios-rank-2-s1-7649-00-poc-th-n-m-c-l-y-l-i-long-tr-v-gi-a-value-r-i-l-n-vah-class-a-value-area">RANK 2 — [S1] 7649.00 POC thứ Năm ĐƯỢC LẤY LẠI → <span class="d-LONG">LONG</span>, trở về giữa value rồi lên VAH (Class A — value area) ★</h3><p><em>Vì sao xếp ở đây: RANK 1 dựa trên khối lượng, nên RANK 2 dựa trên loại bằng chứng khác — value area — để một cách đọc sai không kéo cả hai lệnh sai theo. POC trùng vùng khối lượng 7656.25 (cách 0.21 cây): cả thời gian lẫn khối lượng gọi đây là giá hợp lý, nên là mức mạnh nhất trên chart. Cách giá +0.39 cây nến, trên giá — đúng phía cho lệnh mua, nên mang ★.</em></p>
+<ul>
+<li>Trigger: <strong>nến 30 phút đóng trên 7649.00</strong></li>
+<li>Entry: tại nến đóng đó, ≈7652.00. ⚠ <strong>Nếu nến xác nhận đóng trên 7674.25 thì đã trễ — đừng đuổi, chờ giá về test 7649.00.</strong></li>
+<li>Target: ⚠ <strong>T1 7656.25</strong> <em>(7.25 từ trigger = 0.21 cây ✅; vùng khối lượng; <strong>0.21R</strong>)</em> · ⚠ <strong>T2 7663.50</strong> <em>(VAH; <strong>0.58R</strong>)</em> · <strong>T3 7675.50 ✅</strong> <em>(Selling Tail + đỉnh RTH; <strong>1.18R</strong>)</em> · runner <strong>7686.00</strong> <em>(EMA 50, qua vùng mỏng 7676.25; <strong>1.70R</strong>)</em>, xa hơn 7713.25 ✅ (<strong>3.06R</strong>)</li>
+<li>Stop Loss: <strong>tactical 7632.00</strong> (nửa cây nến dưới POC, dưới EMA 20) · invalidation 7617.50 (VAL) = <strong>34.50 rủi ro</strong></li>
+<li>R:R: rủi ro 20.00 → ⚠ <strong>0.21R ở T1</strong> · ⚠ <strong>0.58R ở T2</strong> · <strong>1.18R ở T3</strong> · <strong>1.70R ở runner</strong></li>
+<li>⚠ <strong>Điểm chốt đầu tiên đáng lấy là 7675.50.</strong></li>
+<li><strong>Nếu nó BỊ TỪ CHỐI ngược lại</strong> → <span class="d-SHORT">SHORT</span> khi giá chạm rồi nến 30 phút đóng lại dưới 7649.00: T1 7637.75 · T2 7617.50 · T3 7612.50 · tactical SL 7666.00 <em>(phía short của popup ★)</em></li>
+</ul>
+</article><article class="rank" data-rank="3"><h3 id="full-scenarios-rank-3-s5-xoay-trong-value-th-n-m-7617-50-7663-50">RANK 3 — [S5] xoay trong value thứ Năm 7617.50 – 7663.50</h3><p><em>Biên 46.00 = 1.36 cây nến, tâm là POC 7649.00. Hai ngày value chồng nhau; nếu RTH mở bên trong và không có nến 30 phút đóng ngoài cạnh nào, giá thường xoay giữa hai cạnh.</em></p>
+<ul>
+<li>Trigger: phiên ở trong <strong>7617.50 – 7663.50</strong> không có nến 30 phút đóng ngoài cạnh nào</li>
+<li>Entry: đánh ngược ở từng cạnh: long 7620.00, short 7661.00</li>
+<li>Target: <strong>7649.00 (POC) trước, rồi cạnh đối diện</strong></li>
+<li>Stop Loss: <strong>tactical 7598.50 cho long (dưới Buying Tail), 7681.00 cho short (trên Selling Tail)</strong></li>
+<li>R:R: về POC: long 29.00 / 21.50 = <strong>1.35R</strong>, ⚠ short 12.00 / 20.00 = <strong>0.60R</strong> · tới cạnh đối diện: long 41.00 / 21.50 = <strong>1.91R</strong>, short 41.00 / 20.00 = <strong>2.05R</strong> — <strong>cạnh dưới đi cùng hướng ưu tiên; cạnh trên chỉ đáng đánh nếu nhắm cạnh đối diện</strong></li>
+</ul>
+</article><article class="rank" data-rank="4"><h3 id="full-scenarios-rank-4-s4-7663-50-7675-50-vah-selling-tail-b-t-ch-i-short-l-p-l-i-phi-n-th-n-m-class-x-c-c-tr-c-u-tr-c">RANK 4 — [S4] 7663.50 – 7675.50 VAH + Selling Tail BỊ TỪ CHỐI → <span class="d-SHORT">SHORT</span>, lặp lại phiên thứ Năm (Class X — cực trị cấu trúc)</h3><p><em>Vì sao xếp ở đây: đi ngược hướng ưu tiên, nhưng đây là mức REJECTED rõ nhất của hôm nay (−28.00 trong 15 phút) và popup VAH thứ Tư đã trả tới T3 ở đúng chỗ này. Cách giá +0.82 cây nến.</em></p>
+<ul>
+<li>Trigger: giá giao dịch tới <strong>7663.50 – 7675.50</strong> rồi <strong>nến 30 phút đóng lại dưới 7663.50</strong></li>
+<li>Entry: tại nến đóng đó, ≈7660.00. ⚠ <strong>Nếu nến xác nhận đóng dưới 7638.25 thì đã trễ.</strong></li>
+<li>Target: ⚠ <strong>T1 7656.25</strong> <em>(7.25 từ trigger = 0.21 cây ✅; vùng khối lượng; <strong>0.18R</strong>)</em> · ⚠ <strong>T2 7649.00</strong> <em>(POC; <strong>0.52R</strong>)</em> · <strong>T3 7637.75</strong> <em>(EMA 20; <strong>1.06R</strong>)</em> · runner <strong>7617.50</strong> <em>(VAL, qua vùng mỏng 7634.50; <strong>2.02R</strong>)</em></li>
+<li>Stop Loss: <strong>tactical 7681.00</strong> (nửa cây nến trên VAH, trên Selling Tail) · invalidation 7686.00 (EMA 50) = <strong>26.00 rủi ro</strong></li>
+<li>R:R: rủi ro 21.00 → ⚠ <strong>0.18R ở T1</strong> · ⚠ <strong>0.52R ở T2</strong> · <strong>1.06R ở T3</strong> · <strong>2.02R ở runner</strong></li>
+<li>⚠ <strong>Điểm chốt đầu tiên đáng lấy là 7637.75.</strong></li>
+<li><strong>Nếu nó BỊ PHÁ ngược lại</strong> → <span class="d-LONG">LONG</span> khi nến 30 phút đóng trên 7675.50 rồi test giữ: T1 7686.00 · T2 7713.25 · T3 7731.25 · tactical SL 7658.50 <em>(phía long của popup 7675.50)</em></li>
+</ul>
+</article><article class="rank" data-rank="5"><h3 id="full-scenarios-rank-5-s3-7602-50-buying-tail-m-t-short-s-n-hai-ng-y-v-class-x-c-c-tr-c-u-tr-c">RANK 5 — [S3] 7602.50 Buying Tail MẤT → <span class="d-SHORT">SHORT</span>, sàn hai ngày vỡ (Class X — cực trị cấu trúc)</h3><p><em>Vì sao xếp ở đây: ngược hướng ưu tiên — nến 30 phút đóng dưới 7602.50 nghĩa là vùng 7612.50 và hai lần nhìn xuống thất bại đều đã bị xóa; đường xuống tới đáy RTH và POC thứ Hai còn trần. Đây là kịch bản PPI nóng. Cách giá −0.99 cây nến.</em></p>
+<ul>
+<li>Trigger: <strong>nến 30 phút đóng dưới 7602.50</strong></li>
+<li>Entry: tại nến đóng đó, ≈7599.00. ⚠ <strong>Nếu nến xác nhận đóng dưới 7577.25 thì đã trễ — chờ giá hồi về 7602.50.</strong></li>
+<li>Target: <strong>T1 7581.50</strong> <em>(21.00 từ trigger = 0.62 cây ✅; đáy RTH, giá mở; <strong>0.83R</strong>)</em> · <strong>T2 7571.25</strong> <em>(POC thứ Hai còn trần, đáy ngày 7572.00; <strong>1.32R</strong>)</em> · <strong>T3 7543.00</strong> <em>(VAH thứ Ba + vùng khối lượng, qua vùng mỏng 7556.25; <strong>2.67R</strong>)</em> · runner <strong>7526.50</strong> <em>(POC thứ Ba; <strong>3.45R</strong>)</em></li>
+<li>Stop Loss: <strong>tactical 7620.00</strong> (nửa cây nến trên tail, trên VAL) · invalidation 7637.75 (EMA 20) = <strong>38.75 rủi ro</strong></li>
+<li>R:R: rủi ro 21.00 → <strong>0.83R ở T1</strong> · <strong>1.32R ở T2</strong> · <strong>2.67R ở T3</strong> · <strong>3.45R ở runner</strong></li>
+<li><strong>Nếu nó GIỮ ngược lại</strong> → <span class="d-LONG">LONG</span> khi nến 30 phút đóng trở lại trên 7602.50 sau khi test: T1 7612.50 · T2 7617.50 · T3 7637.75 · tactical SL 7585.50 <em>(phía long của popup 7602.50)</em></li>
+</ul>
+</article><article class="rank" data-rank="6"><h3 id="full-scenarios-rank-6-s6-7541-75-7543-00-v-ng-kh-i-l-ng-vah-th-ba-m-t-short-x-a-tr-n-nh-p-h-i-tu-n-n-y-class-v-avp-node">RANK 6 — [S6] 7541.75 – 7543.00 vùng khối lượng + VAH thứ Ba MẤT → <span class="d-SHORT">SHORT</span>, xóa trọn nhịp hồi tuần này (Class V — AVP node)</h3><p><em>Vì sao xếp ở đây: mức quyết định riêng, sâu hơn RANK 5. Chỉ thành hiện thực nếu PPI nóng biến thành một ngày bán lan rộng: mất kệ 928K là dấu hiệu nhịp hồi từ 7322.25 đã hết. Cách giá −2.79 cây nến.</em></p>
+<ul>
+<li>Trigger: <strong>nến 30 phút đóng dưới 7541.75</strong></li>
+<li>Entry: tại nến đóng đó, ≈7538.00. ⚠ <strong>Nếu nến xác nhận đóng dưới 7516.50 thì đã trễ.</strong></li>
+<li>Target: ⚠ <strong>T1 7526.50</strong> <em>(15.25 từ trigger = 0.45 cây ✅; POC thứ Ba; <strong>0.52R</strong>)</em> · <strong>T2 7508.00</strong> <em>(VAL thứ Ba, Buying Tail 7500.00; <strong>1.36R</strong>)</em> · <strong>T3 7488.00</strong> <em>(EMA 200; <strong>2.27R</strong>)</em> · runner <strong>7452.00</strong> <em>(VAH thứ Sáu, qua vùng mỏng 7454.50; <strong>3.91R</strong>)</em></li>
+<li>Stop Loss: <strong>tactical 7560.00</strong> (nửa cây nến trên kệ, trên vùng mỏng 7556.25) · invalidation 7571.25 (POC thứ Hai) = <strong>33.25 rủi ro</strong></li>
+<li>R:R: rủi ro 22.00 → ⚠ <strong>0.52R ở T1</strong> · <strong>1.36R ở T2</strong> · <strong>2.27R ở T3</strong> · <strong>3.91R ở runner</strong></li>
+<li><strong>Nếu nó GIỮ ngược lại</strong> → <span class="d-LONG">LONG</span> khi nến 30 phút đóng trở lại trên 7543.00: T1 7571.25 · T2 7581.50 · T3 7602.50 · tactical SL 7524.75 <em>(phía long của popup 7543.00)</em></li>
+</ul>
+<p><strong>Loại bằng chứng: R1 V · R2 A · R3 A · R4 X · R5 X · R6 V — RANK 1 và RANK 2 khác loại ✅</strong> (RANK 1 dựa trên khối lượng, RANK 2 dựa trên value area).</p>
+</article></div></details><details class="sec" id="takeaway"><summary><h2>7. Kết luận</h2></summary><div class="sec-body"><ul>
+<li><strong>Thiên hướng hiện tại:</strong> <strong><span class="d-LONG">LONG</span>, hai chiều — ĐỔI từ <span class="d-SHORT">SHORT</span>. <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr> lấp trọn cú gap Nvidia, rồi cân bằng; vùng khối lượng tăng mạnh nhất nằm dưới giá và được <abbr title="Market-on-close — the closing auction.">MOC</abbr> bảo vệ. Giá đóng dưới value là điểm trừ — vì vậy ★ hai chiều.</strong></li>
+<li><strong>Kết luận phiên đấu giá:</strong> <strong>thứ Năm thử lên trên value thứ Tư và THẤT BẠI (<abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> 7675.50, đóng dưới value), nhưng phía dưới cũng bị từ chối (<abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr> 7602.50, hai lần nhìn xuống 7612.50 thất bại) — một hộp hai ngày 7581.50 – 7675.50, giá đóng ở sàn của value.</strong></li>
+<li><strong>Mức đáng theo dõi nhất:</strong> <strong>7649.00</strong> (★ / RANK 2, cách 0.39 cây nến) · <strong>7612.50 – 7617.50</strong> (RANK 1) · <strong>7617.50 – 7663.50</strong> (RANK 3) · <strong>7663.50 – 7675.50</strong> (RANK 4) · <strong>7602.50</strong> (RANK 5) · <strong>7541.75</strong> (RANK 6) · <strong>7656.25</strong> (vùng khối lượng, T1 của ★) · <strong>7582.50 / 7650.00</strong> (ngưỡng mở cửa quá đà).</li>
+<li><strong>Rủi ro chính:</strong> ⚠ <strong>PPI 07:30 ra trước giờ mở — một số nóng có thể đẩy giá mở dưới 7582.50 (bán quá đà) và đưa RANK 5 lên đầu; một số mát có thể đẩy giá mở trên 7650.00 (mua quá đà) — khi đó đừng mua đuổi, chờ test 7649.00 giữ.</strong> ⚠ <strong>ES và NQ cùng nghiêng <span class="d-LONG">LONG</span>. ES và NQ thường chạy cùng chiều; vào cả hai là gấp đôi cùng một lệnh — chọn một, hoặc chia nửa khối lượng cho mỗi mã.</strong></li>
+<li><strong>Setup xác suất cao nhất:</strong> <strong>nến 30 phút đóng trên 7649.00 → T1 7656.25 · T2 7663.50 · T3 7675.50; tactical stop 7632.00; 0.21R ở T1, 0.58R ở T2, 1.18R ở T3.</strong> <strong>Biên độ RTH thứ Năm 93.25 = 0.77× <abbr title="Average True Range. Stops here are sized ~0.5× the 30-minute ATR.">ATR</abbr> ngày, một phiên bình thường; T1 cách trigger 0.21 cây nến. Nếu giá lùi về 7612.50 – 7617.50 trước, lệnh tốt hơn là RANK 1: mua khi nến 30 phút đóng lại trên 7617.50 (0.83R ở T1, 2.02R ở T3).</strong></li>
+</ul>
+</div></details><details class="sec" id="alerts"><summary><h2>Cảnh báo — ES1! (7 cảnh báo mức giá lặp lại) — 7 THÊM, 7 BỎ</h2></summary><div class="sec-body"><p>⛔ <strong>Xoá bảy popup của bản sáng, tạo bảy popup mới. Mức mới: 7675.50 (<abbr title="Excess at a high — a finished, decisive rejection. Trade against it with confidence.">Selling Tail</abbr> + đỉnh <abbr title="Regular trading hours, 08:30–15:00 CT.">RTH</abbr>), 7663.50 (<abbr title="Value Area High — top of the range where ~70% of the session traded.">VAH</abbr>), ★ 7649.00 (<abbr title="Point of Control — the most-traded price; a magnet.">POC</abbr>), 7617.50 (<abbr title="Value Area Low — bottom of the value area.">VAL</abbr> + vùng khối lượng), 7602.50 (<abbr title="Excess at a low — a finished, decisive rejection. Trade against it with confidence.">Buying Tail</abbr>); 7571.25 và 7543.00 tạo lại với số mới; bỏ 7669.25, 7646.75, 7621.25, ★ cũ 7597.25 và 7584.00 (đã bị đi xuyên qua).</strong> Cả bảy đều <code>cross</code> / <code>on_bar_close</code> / resolution 1, lặp lại, chart đã xác nhận ở ES1!.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>★</th>
+<th>Mức</th>
+<th>Tên</th>
+<th><span class="d-LONG">LONG</span> (giữ từ trên / backtest sau khi phá lên)</th>
+<th><span class="d-SHORT">SHORT</span> (từ chối từ dưới / backtest sau khi phá xuống)</th>
+<th>ID</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>7675.50</td>
+<td>Selling Tail + đỉnh RTH</td>
+<td>T1 7686.00 T2 7713.25 T3 7731.25 SL 7658.50</td>
+<td>T1 7663.50 T2 7656.25 T3 7649.00 SL 7692.50</td>
+<td>6060399846</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>7663.50</strong></td>
+<td><strong>VAH thứ Năm — RANK 4</strong></td>
+<td>T1 7675.50 T2 7686.00 T3 7713.25 SL 7646.50</td>
+<td><strong>T1 7656.25 T2 7649.00 T3 7637.75 SL 7681.00</strong></td>
+<td>6060399848</td>
+</tr>
+<tr>
+<td><strong>★</strong></td>
+<td><strong>7649.00</strong></td>
+<td><strong>POC thứ Năm — RANK 2</strong></td>
+<td><strong>T1 7656.25 T2 7663.50 T3 7675.50 SL 7632.00</strong></td>
+<td>T1 7637.75 T2 7617.50 T3 7612.50 SL 7666.00</td>
+<td>6060399852</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>7617.50</strong></td>
+<td><strong>VAL + vùng 7612.50 — RANK 1</strong></td>
+<td><strong>T1 7637.75 T2 7649.00 T3 7663.50 SL 7598.50</strong></td>
+<td>T1 7602.50 T2 7581.50 T3 7571.25 SL 7639.00</td>
+<td>6060399856</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>7602.50</strong></td>
+<td><strong>Buying Tail thứ Năm — RANK 5</strong></td>
+<td>T1 7612.50 T2 7617.50 T3 7637.75 SL 7585.50</td>
+<td><strong>T1 7581.50 T2 7571.25 T3 7543.00 SL 7620.00</strong></td>
+<td>6060399857</td>
+</tr>
+<tr>
+<td></td>
+<td>7571.25</td>
+<td>POC thứ Hai + đáy ngày</td>
+<td>T1 7581.50 T2 7602.50 T3 7612.50 SL 7554.25</td>
+<td>T1 7543.00 T2 7526.50 T3 7508.00 SL 7588.50</td>
+<td>6060399860</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>7543.00</strong></td>
+<td><strong>VAH thứ Ba + vùng khối lượng — RANK 6</strong></td>
+<td>T1 7571.25 T2 7581.50 T3 7602.50 SL 7524.75</td>
+<td><strong>T1 7526.50 T2 7508.00 T3 7488.00 SL 7560.00</strong></td>
+<td>6060399862</td>
+</tr>
+</tbody></table></div>
+<p><strong>Độ phủ value area:</strong> năm trên bảy là mức value area (VAH / POC / VAL thứ Năm, POC thứ Hai, VAH thứ Ba) ✅; RANK 2 (★) có popup riêng (7649.00).</p>
+<p><strong>Kiểm tra khoảng cách mức</strong> <em>(tối thiểu 11.45 = 0.15% giá, để hai alert không kêu cùng một nhịp; tối đa 50.61 = 1.5 cây nến 30 phút trong vùng ±67.48 quanh giá, tức 7568.52 – 7703.48, để không có khoảng trống nào giá đảo chiều mà không có alert)</em>: mép trên vùng cao hơn 7675.50 27.98 ✅ · 7675.50→7663.50 = <strong>12.00 ✅</strong> · 7663.50→7649.00 = <strong>14.50 ✅</strong> · 7649.00→7617.50 = <strong>31.50 ✅</strong> · 7617.50→7602.50 = <strong>15.00 ✅</strong> · 7602.50→7571.25 = <strong>31.25 ✅</strong> · 7571.25→7543.00 = <strong>28.25 ✅</strong> · mép dưới vùng thấp hơn 7571.25 2.73 ✅.
+✅ <strong>Mọi khoảng cách đều nằm trong cả hai giới hạn và cả hai mép vùng đều được phủ.</strong> <em>(EMA 20 7637.75 không có popup riêng: cách ★ 11.25, dưới mức tối thiểu — nó là T1 / T3 trong các popup.)</em></p>
+</div></details>
+<footer>Built from ES1-structured-2026-11-13.md · 2026-11-13 00:03 UTC</footer>
+</div>
+<script type="application/json" id="report-data">{"key":"ES","ticker":"ES1!","decimals":2,"last":7636,"star":7649,"favoured":"LONG","atr30":33.74,"atrD":120.5,"ladder":[{"side":"up","p":[7637.75],"src":"EMA 20","cls":"target","dec":true},{"side":"up","p":[7646.75,7649,7651.5],"src":"POC thứ Tư (đã test), POC thứ Năm, EMA 100. ★ / RANK 2","cls":"target","dec":true},{"side":"up","p":[7656.25],"src":"vùng khối lượng 1.132M (+3.0%)","cls":"target","dec":true},{"side":"up","p":[7663.5,7669.25],"src":"VAH thứ Năm, VAH thứ Tư (đã test). RANK 4","cls":"target","dec":true},{"side":"up","p":[7674.75,7675.5],"src":"đỉnh RTH, Selling Tail thứ Năm","cls":"target","dec":true},{"side":"up","p":[7676.25],"src":"vùng mỏng mới 747.7K","cls":"pass","dec":false},{"side":"up","p":[7686],"src":"EMA 50","cls":"target","dec":true},{"side":"up","p":[7713.25],"src":"Selling Tail 11-05","cls":"target","dec":false},{"side":"up","p":[7731.25,7741.75,7746.25,7748.75,7757.25],"src":"value 11-04, Weak High, value 10-29","cls":"target","dec":false},{"side":"up","p":[7765.25,7768.25],"src":"vùng khối lượng 1.397M + Selling Tail","cls":"target","dec":true},{"side":"up","p":[7771,7779.5,7794.5,7812,7812.25],"src":"value 10-28, đỉnh range","cls":"target","dec":false},{"side":"up","p":[7814.5],"src":"vùng mỏng 406.8K","cls":"pass","dec":false},{"side":"up","p":[7838,7840,7843.5,7887.25],"src":"Selling Tail + vùng khối lượng + value, Weak Highs ⚠","cls":"target","dec":false},{"side":"up","p":[7897.5,7898.5,7906.25],"src":"Weak Highs ⚠, ATH","cls":"target","dec":true},{"side":"down","p":[7634.5],"src":"vùng mỏng 589.9K (giá đang đứng trên nó)","cls":"pass","dec":false},{"side":"down","p":[7621.25,7617.5,7616.25,7615.25],"src":"VAL thứ Tư (đã test), VAL thứ Năm, giá đóng RTH, settlement. RANK 1","cls":"target","dec":true},{"side":"down","p":[7612.5],"src":"vùng khối lượng 922.3K (+7.5%), MOC 80.7K mua ở đây. RANK 1","cls":"target","dec":true},{"side":"down","p":[7602.5,7600.5,7597.25],"src":"Buying Tail thứ Năm, đáy ETH cũ, Buying Tail thứ Tư (thủng rồi lấy lại). RANK 5","cls":"target","dec":true},{"side":"down","p":[7584.25,7584,7582.5,7581.5],"src":"giá mở RTH, đáy balance cũ, ngưỡng quá đà phía bán, đáy RTH","cls":"target","dec":true},{"side":"down","p":[7572,7571.25,7567],"src":"đáy ngày (07:15), POC thứ Hai còn trần, Selling Tail thứ Ba","cls":"target","dec":true},{"side":"down","p":[7556.25],"src":"vùng mỏng 759.0K","cls":"pass","dec":false},{"side":"down","p":[7547.5,7544.25,7543,7541.75],"src":"đáy ETH thứ Tư, settlement thứ Ba, VAH thứ Ba, vùng khối lượng 928.0K. RANK 6","cls":"target","dec":true},{"side":"down","p":[7537.75,7526.5],"src":"VAL thứ Hai, POC thứ Ba","cls":"target","dec":false},{"side":"down","p":[7508,7500,7493],"src":"VAL thứ Ba, Buying Tail, đáy RTH thứ Ba","cls":"target","dec":true},{"side":"down","p":[7488],"src":"EMA 200","cls":"target","dec":true},{"side":"down","p":[7469,7470],"src":"high + Selling Tail thứ Sáu","cls":"target","dec":false},{"side":"down","p":[7454.5],"src":"vùng mỏng 181.3K","cls":"pass","dec":false},{"side":"down","p":[7452,7429.5,7415,7412.5],"src":"value thứ Sáu + vùng khối lượng 297.2K","cls":"target","dec":true},{"side":"down","p":[7396,7391.25,7387.25,7371.5,7363.75,7355],"src":"Buying Tails, VAL, spike base (single print 7371.50: giá chạy nhanh qua)","cls":"target","dec":false},{"side":"down","p":[7343.5],"src":"vùng mỏng 39.1K","cls":"pass","dec":false},{"side":"down","p":[7342.5,7324.75,7322.25,7316],"src":"naked VAL + Buying Tail, naked POC, swing low, EMA 300","cls":"target","dec":true},{"side":"down","p":[7292.5,7290.25,7284.5,7279,7267,7259.25,7245.25],"src":"vùng khối lượng 527.3K, naked value, Poor Low","cls":"target","dec":false},{"side":"down","p":[7218],"src":"vùng mỏng 30.0K","cls":"pass","dec":false},{"side":"down","p":[7200,7064.75],"src":"value, Weak Low, vùng khối lượng 1.445M / 1.549M, naked POC","cls":"target","dec":true}],"alerts":[{"star":false,"level":7675.5,"name":"Selling Tail + đỉnh RTH","long":{"t":[7686,7713.25,7731.25],"sl":7658.5},"short":{"t":[7663.5,7656.25,7649],"sl":7692.5}},{"star":false,"level":7663.5,"name":"VAH thứ Năm — RANK 4","long":{"t":[7675.5,7686,7713.25],"sl":7646.5},"short":{"t":[7656.25,7649,7637.75],"sl":7681}},{"star":true,"level":7649,"name":"POC thứ Năm — RANK 2","long":{"t":[7656.25,7663.5,7675.5],"sl":7632},"short":{"t":[7637.75,7617.5,7612.5],"sl":7666}},{"star":false,"level":7617.5,"name":"VAL + vùng 7612.50 — RANK 1","long":{"t":[7637.75,7649,7663.5],"sl":7598.5},"short":{"t":[7602.5,7581.5,7571.25],"sl":7639}},{"star":false,"level":7602.5,"name":"Buying Tail thứ Năm — RANK 5","long":{"t":[7612.5,7617.5,7637.75],"sl":7585.5},"short":{"t":[7581.5,7571.25,7543],"sl":7620}},{"star":false,"level":7571.25,"name":"POC thứ Hai + đáy ngày","long":{"t":[7581.5,7602.5,7612.5],"sl":7554.25},"short":{"t":[7543,7526.5,7508],"sl":7588.5}},{"star":false,"level":7543,"name":"VAH thứ Ba + vùng khối lượng — RANK 6","long":{"t":[7571.25,7581.5,7602.5],"sl":7524.75},"short":{"t":[7526.5,7508,7488],"sl":7560}}],"scenarios":[{"rank":1,"slot":"S2","name":"7612.50 – 7617.50 vùng khối lượng + VAL GIỮ → LONG, mua ở sàn mà MOC vừa bảo vệ (Class V — AVP node)","star":false,"trigger":"","why":"Vì sao xếp ở đây: đây chính là tín hiệu khối lượng — vùng tăng mạnh nhất ngày, đã giữ hai lần (09:05, 14:55) và lệnh lớn cuối phiên mua đúng ở đó. VAL thứ Năm trùng nó (cách 5.00). Cách giá −0.55 cây nến (dưới giá — cần giá lùi về trước, nên không mang ★).","favoured":null,"branches":[{"label":"giá giao dịch tới 7612.50 – 7617.50, không có nến 30 phút đóng dưới 7612.50, rồi nến 30 phút đóng trở lại trên 7617.50","dir":"LONG","entry":7620,"targets":[{"k":"T1","p":7637.75},{"k":"T2","p":7649},{"k":"T3","p":7663.5}],"runner":7675.5,"stop":7598.5,"rr":0.83},{"label":"Nếu nó KHÔNG GIỮ ngược lại","dir":"SHORT","entry":7612.5,"targets":[{"k":"T1","p":7602.5},{"k":"T2","p":7581.5},{"k":"T3","p":7571.25}],"runner":null,"stop":7639,"rr":null}]},{"rank":2,"slot":"S1","name":"7649.00 POC thứ Năm ĐƯỢC LẤY LẠI → LONG, trở về giữa value rồi lên VAH (Class A — value area)","star":true,"trigger":"","why":"Vì sao xếp ở đây: RANK 1 dựa trên khối lượng, nên RANK 2 dựa trên loại bằng chứng khác — value area — để một cách đọc sai không kéo cả hai lệnh sai theo. POC trùng vùng khối lượng 7656.25 (cách 0.21 cây): cả thời gian lẫn khối lượng gọi đây là giá hợp lý, nên là mức mạnh nhất trên chart. Cách giá +0.39 cây nến, trên giá — đúng phía cho lệnh mua, nên mang ★.","favoured":"LONG","branches":[{"label":"nến 30 phút đóng trên 7649.00","dir":"LONG","entry":7652,"targets":[{"k":"T1","p":7656.25},{"k":"T2","p":7663.5},{"k":"T3","p":7675.5}],"runner":7686,"stop":7632,"rr":0.21}]},{"rank":3,"slot":"S5","name":"xoay trong value thứ Năm 7617.50 – 7663.50","star":false,"trigger":"","why":"Biên 46.00 = 1.36 cây nến, tâm là POC 7649.00. Hai ngày value chồng nhau; nếu RTH mở bên trong và không có nến 30 phút đóng ngoài cạnh nào, giá thường xoay giữa hai cạnh.","favoured":null,"branches":[]},{"rank":4,"slot":"S4","name":"7663.50 – 7675.50 VAH + Selling Tail BỊ TỪ CHỐI → SHORT, lặp lại phiên thứ Năm (Class X — cực trị cấu trúc)","star":false,"trigger":"","why":"Vì sao xếp ở đây: đi ngược hướng ưu tiên, nhưng đây là mức REJECTED rõ nhất của hôm nay (−28.00 trong 15 phút) và popup VAH thứ Tư đã trả tới T3 ở đúng chỗ này. Cách giá +0.82 cây nến.","favoured":null,"branches":[{"label":"giá giao dịch tới 7663.50 – 7675.50 rồi nến 30 phút đóng lại dưới 7663.50","dir":"SHORT","entry":7660,"targets":[{"k":"T1","p":7656.25},{"k":"T2","p":7649},{"k":"T3","p":7637.75}],"runner":7617.5,"stop":7681,"rr":0.18}]},{"rank":5,"slot":"S3","name":"7602.50 Buying Tail MẤT → SHORT, sàn hai ngày vỡ (Class X — cực trị cấu trúc)","star":false,"trigger":"","why":"Vì sao xếp ở đây: ngược hướng ưu tiên — nến 30 phút đóng dưới 7602.50 nghĩa là vùng 7612.50 và hai lần nhìn xuống thất bại đều đã bị xóa; đường xuống tới đáy RTH và POC thứ Hai còn trần. Đây là kịch bản PPI nóng. Cách giá −0.99 cây nến.","favoured":null,"branches":[{"label":"nến 30 phút đóng dưới 7602.50","dir":"SHORT","entry":7599,"targets":[{"k":"T1","p":7581.5},{"k":"T2","p":7571.25},{"k":"T3","p":7543}],"runner":7526.5,"stop":7620,"rr":0.83}]},{"rank":6,"slot":"S6","name":"7541.75 – 7543.00 vùng khối lượng + VAH thứ Ba MẤT → SHORT, xóa trọn nhịp hồi tuần này (Class V — AVP node)","star":false,"trigger":"","why":"Vì sao xếp ở đây: mức quyết định riêng, sâu hơn RANK 5. Chỉ thành hiện thực nếu PPI nóng biến thành một ngày bán lan rộng: mất kệ 928K là dấu hiệu nhịp hồi từ 7322.25 đã hết. Cách giá −2.79 cây nến.","favoured":null,"branches":[{"label":"nến 30 phút đóng dưới 7541.75","dir":"SHORT","entry":7538,"targets":[{"k":"T1","p":7526.5},{"k":"T2","p":7508},{"k":"T3","p":7488}],"runner":7452,"stop":7560,"rr":0.52}]}]}</script>
+<script src="../assets/report.js?v=b22695ca"></script>
+</body>
+</html>
