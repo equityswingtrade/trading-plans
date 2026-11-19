@@ -952,6 +952,10 @@ function parseReport(text){
                 // can match is the label itself; a two-sided star writes "hai chiều" and the
                 // JS i flag case-folds the Vietnamese capitals.
                 /một chiều\s*[—–-]+\s*\**\s*(LONG|SHORT)\b/i.exec(primary) ||
+                // 11-19 calls the same thing "directional" rather than one-sided: "★ có
+                // hướng — LONG (đủ 3/3 dấu hiệu xu hướng...)". The dash is required and "xu
+                // hướng" in the same sentence is never followed by one, so only the label matches.
+                /có hướng\s*[*`\s]*[—–-]+\s*\**\s*(LONG|SHORT)\b/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 // The Structured Read names no side in prose; the ★ rank carries it.
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || readFavoured || "").toUpperCase(),
