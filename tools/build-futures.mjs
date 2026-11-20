@@ -902,6 +902,18 @@ function parseReport(text){
     ? readAlerts(sections, scenarios, num(/30-min ATR\s*\|\s*\**\s*([\d,]+(?:\.\d+)?)/))
     : parseAlerts(sections);
 
+  // The ★ may be a band ("★ 3591.6 – 3603.7 … BỊ PHÁ → SHORT"), and the report's own
+  // level table can mark the far edge with ★ while the level the trade actually
+  // triggers on is the near one ("3591.6: trigger của ★"). The primary states that
+  // distance itself, signed from price: "Cách giá −13.6 (−0.51 cây nến 30 phút…)",
+  // so last plus it IS the decision level and no edge has to be guessed. Both figures
+  // are required together - the points, then the same distance in 30-min bars - and no
+  // other line on the page pairs them that way, so only the ★ clause can match.
+  const gapM = /Cách giá\s*\**\s*([+−–-])\s*([\d,]+(?:\.\d+)?)\s*\(\s*\**\s*[+−–-]?\s*[\d.]+\s*cây nến 30 phút/.exec(primary || "");
+  const lastN = lastStr ? Number(lastStr.replace(/,/g, "")) : null;
+  const starGap = (gapM && lastN != null)
+    ? String(Number((lastN + (gapM[1] === "+" ? 1 : -1) * Number(gapM[2].replace(/,/g, ""))).toFixed(4)))
+    : "";
   return {
     ticker, desc, snapshot, notes, sections, scenarios,
     primary: primary || synthPrimary(scenarios, decimals),
@@ -911,7 +923,8 @@ function parseReport(text){
     // "★ two-sided `DECISION> 7665.25`" / "★ `7715.00`" / "### ★ RANK 1 — 7656.25 · …"
     // Then the ★ row of the alert table, before the ★ scenario's entry - an entry written
     // as a range ("the backtest of 4347.8–4348.8") is not the level itself.
-    star: (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] ||
+    star: starGap ||
+          (/★[^`]*`(?:DECISION>\s*)?([\d.,]{3,})`/.exec(primary) || [])[1] ||
           String((alerts.find(a => a.star) || {}).level || "") ||
           ((scenarios.find(s => s.star) || {}).branches || []).reduce((v, b) => v || (b.entry != null ? String(b.entry) : ""), "") || "",
     // "favoured LONG", "directional LONG" on a Rule 5 = 3/3 day, or "SHORT-favoured".
