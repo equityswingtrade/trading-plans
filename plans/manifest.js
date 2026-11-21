@@ -1,5 +1,6 @@
 window.PLAN_MANIFEST = {
   "plans": [
+    {"id":"2026-11-23","label":"Nov 23, 2026","equities":{"file":"equities.html","generated":"2026-11-23"}},
     {"id":"2026-11-16","label":"Nov 16, 2026","equities":{"file":"equities.html","generated":"2026-11-16"}},
     {"id":"2026-11-09","label":"Nov 9, 2026","equities":{"file":"equities.html","generated":"2026-11-09"}},
     {"id":"2026-11-02","label":"Nov 2, 2026","equities":{"file":"equities.html","generated":"2026-11-02"}},
