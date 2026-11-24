@@ -969,6 +969,12 @@ function parseReport(text){
                 // hướng — LONG (đủ 3/3 dấu hiệu xu hướng...)". The dash is required and "xu
                 // hướng" in the same sentence is never followed by one, so only the label matches.
                 /có hướng\s*[*`\s]*[—–-]+\s*\**\s*(LONG|SHORT)\b/i.exec(primary) ||
+                // 11-24 drops the dash as well: "★ có hướng LONG (đủ 3 dấu hiệu xu
+                // hướng của phiên…)". The side has to follow "có hướng" immediately, which is
+                // what keeps the dashed phrasings that name no side here out - "có hướng — đổi
+                // từ SHORT" and "có hướng — giữ nguyên" both put words in between. "xu hướng"
+                // cannot match at all: it does not contain "có hướng".
+                /có hướng\s*\**\s*(LONG|SHORT)\b/i.exec(primary) ||
                 /\b(LONG|SHORT)\**[-\s]favou?red\b/i.exec(primary) ||
                 // The Structured Read names no side in prose; the ★ rank carries it.
                 /^\**\s*(LONG|SHORT)\b/i.exec(primary) || [])[1] || readFavoured || "").toUpperCase(),
